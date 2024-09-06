@@ -58,8 +58,6 @@ class _BrowseState extends State<Browse> {
       fullAnswer = '$fullAnswer/${soundalikesController.text}';
     }
 
-    print('fullAnswer: $fullAnswer');
-
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
     int qIndex = providerSessionLogic.questionsList.indexWhere((question) => question.id == q.id);
     Question updatedQuestion = Question(
