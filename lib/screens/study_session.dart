@@ -32,25 +32,9 @@ class _StudySessionState extends State<StudySession> {
 
   FToast fToast = FToast();
 
-  void showToast(String message, int duration) {
-    Widget toast = Container(
-      constraints: const BoxConstraints(minHeight: 150),
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Colors.greenAccent,
-      ),
-      // alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(message),
-        ],
-      ),
-    );
-
+  void showToast(Widget child, int duration) {
     fToast.showToast(
-      child: toast,
+      child: child,
       gravity: ToastGravity.CENTER,
       toastDuration: Duration(seconds: duration),
     );
@@ -91,6 +75,28 @@ class _StudySessionState extends State<StudySession> {
           return Stack(children: [
             // top
             QuestionQueueDescending(maxHeight: maxHeight, maxWidth: maxWidth),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: maxHeight * 0.6,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [
+                      0.42,
+                      1,
+                    ],
+                    colors: [
+                      Colors.white.withOpacity(1),
+                      Colors.white.withOpacity(0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Positioned(
               left: 10,
               top: 50,
@@ -297,7 +303,17 @@ class _StudySessionState extends State<StudySession> {
                       allSpokenWords += '${providerSessionLogic.recogRes[x].words}\n';
                     }
 
-                    showToast('Heard:\n$allSpokenWords', 5);
+                    showToast(
+                        Container(
+                          constraints: const BoxConstraints(minHeight: 150),
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25.0),
+                            color: Colors.greenAccent,
+                          ),
+                          child: Text('Heard:\n$allSpokenWords'),
+                        ),
+                        5);
                   },
                   child: const Icon(Icons.more_vert),
                 ),
