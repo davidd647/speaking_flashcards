@@ -300,24 +300,6 @@ class _MenuContainerState extends State<MenuContainer> {
                 child: WideButton(
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.of(context).pushNamed(Languages.routeName);
-                  },
-                  child: const Row(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: Icon(Icons.language, size: 24),
-                      ),
-                      Text('Languages'),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: WideButton(
-                  onTap: () {
-                    Navigator.pop(context);
                     Navigator.of(context).pushNamed(BatchAdd.routeName);
                   },
                   child: const Row(
@@ -327,6 +309,24 @@ class _MenuContainerState extends State<MenuContainer> {
                         child: Icon(Icons.playlist_add, size: 24),
                       ),
                       Text('Batch Add'),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: WideButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(Languages.routeName);
+                  },
+                  child: const Row(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Icon(Icons.language, size: 24),
+                      ),
+                      Text('Languages'),
                     ],
                   ),
                 ),
