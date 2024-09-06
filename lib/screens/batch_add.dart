@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/widgets/wide_button.dart';
@@ -45,7 +46,7 @@ class _BatchAddState extends State<BatchAdd> {
   void initState() {
     super.initState();
     batchAddController.addListener(() {
-      print('checking...');
+      // print('checking...');
       validateCSV();
     });
   }
@@ -60,7 +61,7 @@ class _BatchAddState extends State<BatchAdd> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth;
+          // final maxWidth = constraints.maxWidth;
           // final maxHeight = constraints.maxHeight;
 
           return (providerSessionLogic.commonLangs.isEmpty)
@@ -110,17 +111,19 @@ class _BatchAddState extends State<BatchAdd> {
                       if (invalidRow != '') Text(invalidRow, style: const TextStyle(color: Colors.red)),
                       const SizedBox(height: 10),
                       WideButton(
-                        disabled: true,
-                        onTap: () {},
-                        child: Row(
+                        // disabled: true,
+                        onTap: () async {
+                          final Uri url = Uri.parse('https://speaking-flashcards-web.web.app/');
+                          if (!await launchUrl(url)) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
+                        child: const Row(
                           children: [
-                            const SizedBox(width: 10),
-                            Icon(Icons.exit_to_app_sharp, color: Colors.grey[300]),
-                            const SizedBox(width: 10),
-                            Text(
-                              'Open website to copy batch from',
-                              style: TextStyle(color: Colors.grey[400]),
-                            ),
+                            SizedBox(width: 10),
+                            Icon(Icons.exit_to_app_sharp),
+                            SizedBox(width: 10),
+                            Text('Open website to copy batch from'),
                           ],
                         ),
                       ),
