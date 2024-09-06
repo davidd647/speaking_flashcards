@@ -980,7 +980,23 @@ class ProviderSessionLogic with ChangeNotifier {
         // IF VOICE SUBMISSION IS CORRECT:
         if (assessAnswer(res)) {
           if (_showToast != null && prevQuestion != null) {
-            _showToast!('✔️\n${prevQuestion!.a}', 3);
+            Widget child = Container(
+              constraints: const BoxConstraints(minHeight: 150),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: Colors.greenAccent,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('✔️'),
+                  Text(prevQuestion!.a),
+                ],
+              ),
+            );
+
+            _showToast!(child, 3);
           }
 
           firstRecogGuessHintPlayed = false;
@@ -988,7 +1004,7 @@ class ProviderSessionLogic with ChangeNotifier {
           await userCorrect(taskDetails);
         } else {
           // IF VOICE SUBMISSION IS WRONG:
-          print('user was wrong, sending sfx task...');
+          // print('user was wrong, sending sfx task...');
           sessionTaskDelegator(
             appendTask: SessionTask(taskName: TaskName.sfx, value: 'bad', language: ''),
           );
@@ -1033,13 +1049,11 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   void runSfx(currentTask) async {
-    print('running sfx...');
     delegationStack.removeAt(0);
 
     sfxPlaying = true;
     notifyListeners();
     await Future.delayed(const Duration(milliseconds: 300), () {});
-    print('started sfxing...');
     final player = AudioPlayer();
 
     if (currentTask.value == 'bad') {
@@ -1056,7 +1070,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
     await Future.delayed(const Duration(milliseconds: 800), () {});
     sfxPlaying = false;
-    print('finished sfxing...');
+    // print('finished sfxing...');
     notifyListeners();
 
     sessionTaskDelegator(appendTask: null);
@@ -1088,7 +1102,24 @@ class ProviderSessionLogic with ChangeNotifier {
     // get the current question
     hintInfo = getCurrentQuestion();
     if (_showToast != null) {
-      _showToast!('Question:\n${hintInfo.q}\n\nAnswer:\n${hintInfo.a}\n\nHistory: ${hintInfo.history}', 3);
+      Widget child = Container(
+        constraints: const BoxConstraints(minHeight: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.greenAccent,
+        ),
+        // alignment: Alignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('✔️'),
+            Text('Question:\n${hintInfo.q}\n\nAnswer:\n${hintInfo.a}\n\nHistory: ${hintInfo.history}'),
+          ],
+        ),
+      );
+
+      _showToast!(child, 3);
     }
     notifyListeners();
   }
@@ -1096,7 +1127,7 @@ class ProviderSessionLogic with ChangeNotifier {
   // TASK DELEGATOR:
   void sessionTaskDelegator({SessionTask? appendTask}) async {
     if (appendTask != null) {
-      print('attempting to run task: ${appendTask.taskName}');
+      // print('attempting to run task: ${appendTask.taskName}');
     }
     whenUserLastActed = secondsPassed;
 
