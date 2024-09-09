@@ -488,6 +488,32 @@ class ProviderSessionLogic with ChangeNotifier {
     );
   }
 
+  void queueSubmitTyped() {
+    // if (sfx.isPlaying) return;
+    if (checkIsBusy()) return;
+
+    // if there's already submitByText or recog queued, then exit this method
+    // (lastIndexWhere should return a -1 if the searched-for thing isn't found)
+    if (delegationStack.lastIndexWhere((task) => task.taskName == TaskName.submitByText) != -1) return;
+    if (delegationStack.lastIndexWhere((task) => task.taskName == TaskName.recog) != -1) return;
+
+    final userInput = answerController.text;
+    sessionTaskDelegator(
+      // language is not important here because just submitting via text...
+      appendTask: SessionTask(taskName: TaskName.submitByText, value: userInput, language: ''),
+    );
+
+    if (runCongratsAsap) {
+      sessionTaskDelegator(
+        appendTask: SessionTask(
+            taskName: TaskName.congrats,
+            language: 'en-US',
+            value: 'You\'ve studied ${secondsPassed ~/ 60} minutes, congrats!'),
+      );
+      runCongratsAsap = false;
+    }
+  }
+
   Question getCurrentQuestion() {
     updateCurrentQuestionIndex();
     return questionsList[currentQuestionIndex];
@@ -534,7 +560,6 @@ class ProviderSessionLogic with ChangeNotifier {
         child: grandChild,
       );
 
-      print('attempting to show toast...');
       _showToast!(child, 3);
     }
 
@@ -989,6 +1014,16 @@ class ProviderSessionLogic with ChangeNotifier {
           isRecogingQuestion = false;
         } else if (taskDetails.value == 'answer') {
           isRecogingAnswer = false;
+        }
+
+        if (runCongratsAsap) {
+          sessionTaskDelegator(
+            appendTask: SessionTask(
+                taskName: TaskName.congrats,
+                language: 'en-US',
+                value: 'You\'ve studied ${secondsPassed ~/ 60} minutes, congrats!'),
+          );
+          runCongratsAsap = false;
         }
 
         // isRecoging = false;
