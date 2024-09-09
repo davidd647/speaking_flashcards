@@ -41,19 +41,6 @@ class _SettingsState extends State<Settings> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Column(
                     children: [
-                      Container(
-                        width: maxWidth,
-                        color: Colors.red,
-                        padding: const EdgeInsets.all(10),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'CURRENTLY NOT OPERATIONAL',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
                       SwitchListTile(
                         activeColor: Colors.blue,
                         title: const Text('Show Queue'),
@@ -73,19 +60,19 @@ class _SettingsState extends State<Settings> {
                           providerSessionLogic.toggleallowAutoRecog();
                         },
                       ),
-                      const SizedBox(height: 24),
-                      WideButton(
-                        onTap: () {},
-                        child: const Row(
-                          // mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(Icons.arrow_forward_ios_sharp),
-                            SizedBox(width: 10),
-                            Text('About'),
-                          ],
-                        ),
-                      ),
+                      // const SizedBox(height: 24),
+                      // WideButton(
+                      //   onTap: () {},
+                      //   child: const Row(
+                      //     // mainAxisAlignment: MainAxisAlignment.end,
+                      //     children: [
+                      //       SizedBox(width: 10),
+                      //       Icon(Icons.arrow_forward_ios_sharp),
+                      //       SizedBox(width: 10),
+                      //       Text('About'),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 );
