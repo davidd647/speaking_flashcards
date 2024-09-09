@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
-import 'package:speaking_flashcards/widgets/wide_button.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -27,7 +26,7 @@ class _SettingsState extends State<Settings> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth;
+          // final maxWidth = constraints.maxWidth;
           // final maxHeight = constraints.maxHeight;
 
           return (providerSessionLogic.commonLangs.isEmpty)
