@@ -87,6 +87,8 @@ class DbChrons {
         totalTimeStudied += chron['timeStudied'] as int;
       }
 
+      if (rawChronsList.isEmpty) return null;
+
       chron = Chron(
         id: rawChronsList[0]['id'],
         date: rawChronsList[0]['date'],
@@ -100,15 +102,14 @@ class DbChrons {
         whereArgs: [date, languageCombo],
       );
 
+      if (rawChronsList.isEmpty) return null;
+
       chron = Chron(
         id: rawChronsList[0]['id'],
         date: rawChronsList[0]['date'],
         languageCombo: rawChronsList[0]['languageCombo'],
         timeStudied: rawChronsList[0]['timeStudied'],
       );
-    }
-    if (rawChronsList.isEmpty) {
-      return null;
     }
 
     return chron;
