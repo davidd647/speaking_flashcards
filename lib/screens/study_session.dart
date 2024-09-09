@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/widgets/grey_ink_well.dart';
 import 'package:speaking_flashcards/widgets/flag_box.dart';
 import 'package:speaking_flashcards/widgets/custom_circular_progress_indicator.dart';
@@ -21,6 +22,7 @@ class StudySession extends StatefulWidget {
 
 class _StudySessionState extends State<StudySession> {
   late ProviderSessionLogic providerSessionLogic;
+  late ProviderSettings providerSettings;
 
   void handleRecordAnswer() {
     if (providerSessionLogic.isRecoging) return;
@@ -56,6 +58,8 @@ class _StudySessionState extends State<StudySession> {
   void initState() {
     super.initState();
 
+    providerSettings = Provider.of<ProviderSettings>(context, listen: false);
+    providerSettings.init();
     providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
     providerSessionLogic.init(showToast);
     fToast.init(context);
@@ -64,6 +68,7 @@ class _StudySessionState extends State<StudySession> {
   @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
+    final providerSettings = Provider.of<ProviderSettings>(context);
 
     return Scaffold(
       endDrawer: const MenuContainer(),
@@ -74,7 +79,7 @@ class _StudySessionState extends State<StudySession> {
 
           return Stack(children: [
             // top
-            QuestionQueueDescending(maxHeight: maxHeight, maxWidth: maxWidth),
+            if (providerSettings.showQueue) QuestionQueueDescending(maxHeight: maxHeight, maxWidth: maxWidth),
             Positioned(
               top: 0,
               left: 0,
