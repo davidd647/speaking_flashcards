@@ -15,6 +15,7 @@ import 'package:speaking_flashcards/helpers/placeholder_lang_combo.dart';
 import 'package:speaking_flashcards/helpers/placeholder_question.dart';
 import 'package:speaking_flashcards/helpers/get_cat_of_previous_session.dart';
 import 'package:speaking_flashcards/helpers/get_todays_date.dart';
+import 'package:speaking_flashcards/helpers/get_language_combo_string.dart';
 import 'package:speaking_flashcards/session_logic/synth.dart';
 import 'package:speaking_flashcards/session_logic/recog.dart';
 import 'package:speaking_flashcards/session_logic/get_unified_langs.dart';
@@ -250,14 +251,16 @@ class ProviderSessionLogic with ChangeNotifier {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     todaysDate = formatter.format(now);
 
-    Chron? todayChron = await DbChrons.getTodaysChron(todaysDate);
+    String languageCombo = getLanguageComboString(selectedLangCombo);
+    Chron? todayChron = await DbChrons.getChronByDate(todaysDate, languageCombo);
 
     return todayChron;
   }
 
   Future<void> startNewDay() async {
-    // print('new day!');
-    await DbChrons.newDay(todaysDate);
+    String languageCombo = getLanguageComboString(selectedLangCombo);
+
+    await DbChrons.newDay(todaysDate, languageCombo);
     secondsPassed = 0;
   }
 
@@ -321,7 +324,8 @@ class ProviderSessionLogic with ChangeNotifier {
 
     if (!userIsActive) return;
 
-    DbChrons.setToday(todaysDate, secondsPassed);
+    String languageCombo = getLanguageComboString(selectedLangCombo);
+    DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
 
     // congrats:
     if (secondsPassed > 0 && secondsPassed % (60 * 5) == 0) {
@@ -361,7 +365,7 @@ class ProviderSessionLogic with ChangeNotifier {
     var itterator = 0;
     for (var dayOfDays in pastSomeDays) {
       // pastSomeDays.forEach((dayOfDays) {
-      var studyChronIndex = studyChronList.indexWhere((studyChron) {
+      var studyChronIndex = studyChronList.indexWhere((Chron studyChron) {
         return studyChron.date == dayOfDays;
       });
 
@@ -382,7 +386,6 @@ class ProviderSessionLogic with ChangeNotifier {
       }
       itterator++;
     }
-    // });
 
     // make chronsAndValues into a List holding all the dates and values...
     for (var chron in studyChronList) {
@@ -419,7 +422,9 @@ class ProviderSessionLogic with ChangeNotifier {
 
   // INIT:
   void init(Function? showToast) async {
-    // print('initLangs being fired...');
+    allowAutoRecog = await _prefs.then((SharedPreferences prefs) {
+      return prefs.getBool('allowAutoRecog') ?? allowAutoRecog;
+    });
     await initLangs();
     await getUrgentQuestions();
     await initTimer();
@@ -486,6 +491,54 @@ class ProviderSessionLogic with ChangeNotifier {
   Question getCurrentQuestion() {
     updateCurrentQuestionIndex();
     return questionsList[currentQuestionIndex];
+  }
+
+  void addInputAsAnswer() async {
+    // make necessary addition to current list...
+    questionsList[currentQuestionIndex].a = '${getCurrentQuestion().a}/${answerController.text}';
+    // save to database...
+    await DbQuestions.updateQuestion(questionsList[currentQuestionIndex]);
+
+    notifyListeners();
+  }
+
+  void showPreviousGuessInfo() {
+    if (_showToast != null) {
+      Widget grandChild = const Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('No guesses yet'),
+        ],
+      );
+
+      if (prevQuestion != null) {
+        grandChild = Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Question:\n${prevQuestion!.q}'),
+            Text('Guess:\n$prevGuess'),
+            Text('nAnswer:\n${prevQuestion!.a}'),
+          ],
+        );
+      }
+
+      Widget child = Container(
+        constraints: const BoxConstraints(minHeight: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.greenAccent,
+        ),
+        child: grandChild,
+      );
+
+      print('attempting to show toast...');
+      _showToast!(child, 3);
+    }
+
+    notifyListeners();
   }
 
   void updateCurrentQuestionIndex() => currentQuestionIndex = questionsList.indexWhere((q) => q.order == 0);
@@ -742,7 +795,8 @@ class ProviderSessionLogic with ChangeNotifier {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     todaysDate = formatter.format(now);
 
-    Chron? todayChron = await DbChrons.getTodaysChron(todaysDate);
+    String languageCombo = getLanguageComboString(selectedLangCombo);
+    Chron? todayChron = await DbChrons.getChronByDate(todaysDate, languageCombo);
 
     return todayChron;
   }
@@ -989,6 +1043,7 @@ class ProviderSessionLogic with ChangeNotifier {
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('✔️'),
                   Text(prevQuestion!.a),
@@ -1112,6 +1167,7 @@ class ProviderSessionLogic with ChangeNotifier {
         // alignment: Alignment.center,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('✔️'),
             Text('Question:\n${hintInfo.q}\n\nAnswer:\n${hintInfo.a}\n\nHistory: ${hintInfo.history}'),
