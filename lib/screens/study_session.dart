@@ -32,6 +32,15 @@ class _StudySessionState extends State<StudySession> {
     providerSessionLogic.queueRecog();
   }
 
+  void handleSkip() {
+    if (providerSessionLogic.isRecoging) return;
+    // submitting the typed answer has same effect as skipping the question,
+    // so instead of making a new function for that, we're just submitting the typed answer:
+    providerSessionLogic.firstRecogGuessHintPlayed = false;
+    // providerSessionLogic.skipped = true;
+    providerSessionLogic.queueSubmitTyped();
+  }
+
   FToast fToast = FToast();
 
   void showToast(Widget child, int duration) {
@@ -199,6 +208,7 @@ class _StudySessionState extends State<StudySession> {
                     height: maxWidth / 4 - 20,
                     onTap: () {
                       providerSessionLogic.firstRecogGuessHintPlayed = false;
+                      handleSkip();
                     },
                     child: const FittedBox(
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
