@@ -7,7 +7,7 @@ import 'package:intl/intl.dart'; // has the DateFormat class
 import '../models/chron.dart';
 import '../helpers/placeholder_chron.dart';
 
-String dbName = 'echoprof_chrons_2023_03_30';
+String dbName = 'echoprof_chrons_2024_09_07_v01';
 
 class DbChrons {
   static Future<Database> database() async {
@@ -21,6 +21,7 @@ class DbChrons {
             CREATE TABLE $dbName (
               id INTEGER PRIMARY KEY AUTOINCREMENT, 
               date TEXT,
+              languageCombo TEXT,
               timeStudied INTEGER
             )
             ''');
@@ -43,9 +44,11 @@ class DbChrons {
     // not sure if this is the right syntax for accessing the
     // elements inside the forEach method... we'll see! 🤷‍♂️
     for (var rawChron in rawChronsList) {
+      // print('rawChron: $rawChron');
       chronsList.add(Chron(
         id: rawChron['id'] as int,
         date: rawChron['date'] as String,
+        languageCombo: rawChron['languageCombo'] as String,
         timeStudied: rawChron['timeStudied'] as int,
       ));
     }
@@ -65,37 +68,64 @@ class DbChrons {
     return totalHoursStudied;
   }
 
-  static Future<Chron?> getTodaysChron(String date) async {
+  static Future<Chron?> getChronByDate(String date, String? languageCombo) async {
     final db = await DbChrons.database();
     Chron chron;
 
     List<Map<String, dynamic>> rawChronsList;
-    rawChronsList = await db.query(dbName, where: 'date = ?', whereArgs: [date]);
 
+    if (languageCombo == null) {
+      rawChronsList = await db.query(
+        dbName,
+        where: 'date = ?',
+        whereArgs: [date],
+      );
+
+      // no lang combo was specified, so calc total time studied that day...
+      int totalTimeStudied = 0;
+      for (var chron in rawChronsList) {
+        totalTimeStudied += chron['timeStudied'] as int;
+      }
+
+      chron = Chron(
+        id: rawChronsList[0]['id'],
+        date: rawChronsList[0]['date'],
+        languageCombo: 'all',
+        timeStudied: totalTimeStudied,
+      );
+    } else {
+      rawChronsList = await db.query(
+        dbName,
+        where: 'date = ? AND languageCombo = ?',
+        whereArgs: [date, languageCombo],
+      );
+
+      chron = Chron(
+        id: rawChronsList[0]['id'],
+        date: rawChronsList[0]['date'],
+        languageCombo: rawChronsList[0]['languageCombo'],
+        timeStudied: rawChronsList[0]['timeStudied'],
+      );
+    }
     if (rawChronsList.isEmpty) {
       return null;
     }
 
-    chron = Chron(
-      id: rawChronsList[0]['id'],
-      date: rawChronsList[0]['date'],
-      timeStudied: rawChronsList[0]['timeStudied'],
-    );
-
     return chron;
   }
 
-  static Future<void> setToday(String date, int timeStudied) async {
+  static Future<void> setToday(String date, int timeStudied, String languageCombo) async {
     final db = await DbChrons.database();
 
     String query = """UPDATE $dbName
       SET
         timeStudied=?
       WHERE
-        date=?
+        date=? AND
+        languageCombo=?
     """;
 
-    await db.rawUpdate(query, [timeStudied, date]);
+    await db.rawUpdate(query, [timeStudied, date, languageCombo]);
   }
 
   static Future<int> deleteDay(String date) async {
@@ -108,10 +138,10 @@ class DbChrons {
     );
   }
 
-  static Future<void> newDay(String date) async {
+  static Future<void> newDay(String date, String languageCombo) async {
     final db = await DbChrons.database();
 
-    db.insert(dbName, {'date': date, 'timeStudied': 0});
+    db.insert(dbName, {'date': date, 'timeStudied': 0, 'languageCombo': languageCombo});
   }
 
   static Future<int> updateStreak() async {
@@ -139,7 +169,7 @@ class DbChrons {
       var dayBefore = date.subtract(const Duration(days: 1));
       var formattedDate = formatter.format(dayBefore);
 
-      Chron chronForDateStated = await getTodaysChron(formattedDate) ?? placeholderChron;
+      Chron chronForDateStated = await getChronByDate(formattedDate, null) ?? placeholderChron;
       // timeStudied is in seconds - so 5 minutes required to maintain streak
       if (chronForDateStated.timeStudied > 300) {
         // print(
