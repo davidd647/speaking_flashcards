@@ -389,7 +389,10 @@ class _MenuContainerState extends State<MenuContainer> {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
                 child: WideButton(
-                  onTap: () {},
+                  onTap: () {
+                    providerSessionLogic.addInputAsAnswer();
+                    Navigator.pop(context);
+                  },
                   child: const Row(
                     children: [
                       SizedBox(
@@ -404,7 +407,10 @@ class _MenuContainerState extends State<MenuContainer> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: WideButton(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                    providerSessionLogic.showPreviousGuessInfo();
+                  },
                   child: const Row(
                     children: [
                       SizedBox(
