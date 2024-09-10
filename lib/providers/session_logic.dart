@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // has the DateFormat class
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 // audio in/out
 import 'package:speaking_flashcards/models/lang.dart';
@@ -52,6 +53,7 @@ class ProviderSessionLogic with ChangeNotifier {
   bool isRecogingAnswer = false;
   LangCombo selectedLangCombo = placeholderLangCombo;
   int currentQuestionIndex = 0;
+  bool skipped = false;
   bool sfxPlaying = false;
   String sfxFeedbackBad = 'sounds/feedback-bad.mp3';
   String sfxFeedbackGood = 'sounds/feedback-good.mp3';
@@ -202,6 +204,9 @@ class ProviderSessionLogic with ChangeNotifier {
 
     // set initial due!
     await resetAmountsDue();
+
+    // get new time studied...
+    checkNewDaySequence();
 
     notifyListeners();
     return;
@@ -364,7 +369,6 @@ class ProviderSessionLogic with ChangeNotifier {
     // loop through the list
     var itterator = 0;
     for (var dayOfDays in pastSomeDays) {
-      // pastSomeDays.forEach((dayOfDays) {
       var studyChronIndex = studyChronList.indexWhere((Chron studyChron) {
         return studyChron.date == dayOfDays;
       });
@@ -379,7 +383,7 @@ class ProviderSessionLogic with ChangeNotifier {
         //  - if there's no record, then add ZERO minutes to the chartBars list
       } else {
         chartBars.add({
-          'y': 0.5,
+          'y': 0.0,
           'x': dayOfDays,
           'i': itterator,
         });
@@ -404,6 +408,58 @@ class ProviderSessionLogic with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<List<Map<String, dynamic>>> getMultibarHistory() async {
+    studyChronList = await DbChrons.getHistory(numOfDays);
+
+    List<Map<String, dynamic>> multiChartBars = [];
+
+    // generate a list of dates stretching from now, back 30 days
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    var pastSomeDays = [];
+    var today = DateTime.now();
+    for (var x = 0; x < numOfDays; x++) {
+      var newDate = DateTime(today.year, today.month, today.day - x);
+      // create yyyy-MM-dd for whatever day we've got...
+      pastSomeDays.add(formatter.format(newDate));
+    }
+
+    int itterator = 0;
+    for (var dayOfDays in pastSomeDays) {
+      // find all chrons with 'dayOfDays'
+      List<Chron> matchingChrons = studyChronList.where((Chron chron) => chron.date == dayOfDays).toList();
+
+      if (matchingChrons.isEmpty) {
+        multiChartBars.add({
+          'y': [BarChartRodData(toY: 0.5, width: 6)],
+          'x': dayOfDays,
+          'i': itterator,
+        });
+      } else {
+        List<BarChartRodData> rods = [];
+
+        for (Chron matchingChron in matchingChrons) {
+          // get all the rods...
+          rods.add(
+            BarChartRodData(
+              toY: (matchingChron.timeStudied.toDouble() / 60).toDouble(),
+              width: 6,
+            ),
+          );
+        }
+
+        multiChartBars.add({
+          'y': rods,
+          'x': dayOfDays,
+          'i': itterator,
+        });
+      }
+
+      itterator++;
+    }
+
+    return multiChartBars;
   }
 
   // TIMER:
@@ -489,7 +545,6 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   void queueSubmitTyped() {
-    // if (sfx.isPlaying) return;
     if (checkIsBusy()) return;
 
     // if there's already submitByText or recog queued, then exit this method
@@ -1138,6 +1193,72 @@ class ProviderSessionLogic with ChangeNotifier {
     );
   }
 
+  Future<void> updateWrongQuestionState() async {
+    Question currentQuestion = questionsList[currentQuestionIndex];
+
+    currentQuestion.history = 'x${currentQuestion.history}';
+
+    currentQuestion.spiritLevel = 0;
+    currentQuestion.level = 0;
+
+    await DbQuestions.updateQuestion(currentQuestion);
+  }
+
+  void runSubmitByText(SessionTask taskDetails) async {
+    delegationStack.removeAt(0);
+
+    List<SpokenWord> userInput = [SpokenWord(answerController.text, 1)];
+
+    prevQuestion = getCurrentQuestion();
+    prevGuess = answerController.text;
+
+    if (assessAnswer(userInput)) {
+      await userCorrect(taskDetails);
+    } else {
+      sessionTaskDelegator(
+        appendTask: SessionTask(taskName: TaskName.sfx, value: 'bad', language: ''),
+      );
+
+      // assign the level of current question to 0
+      updateWrongQuestionState();
+
+      // tell the user the answer
+      Question currentQ = getCurrentQuestion();
+      showHintInfo();
+      sessionTaskDelegator(
+          appendTask: SessionTask(taskName: TaskName.synth, value: currentQ.a, language: currentQ.saLang));
+
+      due = await DbQuestions.getQAmntDueInLangCombo(
+        selectedLangCombo.sqLang,
+        selectedLangCombo.rqLang,
+        selectedLangCombo.saLang,
+        selectedLangCombo.raLang,
+      );
+
+      notifyListeners();
+      increaseQuestionOrder();
+
+      Question newQ = getCurrentQuestion();
+      sessionTaskDelegator(
+          appendTask: SessionTask(
+        taskName: TaskName.synth,
+        value: newQ.q,
+        language: newQ.sqLang,
+      ));
+
+      if (skipped && allowAutoRecog) {
+        Question currentQ = getCurrentQuestion();
+        sessionTaskDelegator(
+            appendTask: SessionTask(
+          taskName: TaskName.recog,
+          value: '',
+          language: currentQ.raLang,
+        ));
+        skipped = false;
+      }
+    }
+  }
+
   void runSfx(currentTask) async {
     delegationStack.removeAt(0);
 
@@ -1253,6 +1374,10 @@ class ProviderSessionLogic with ChangeNotifier {
 
     if (currentTask.taskName == TaskName.synth && !checkIsBusy()) {
       runSynth(currentTask);
+    }
+
+    if (currentTask.taskName == TaskName.submitByText && !checkIsBusy()) {
+      runSubmitByText(currentTask);
     }
 
     if (currentTask.taskName == TaskName.giveHint && !checkIsBusy()) {
