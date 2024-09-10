@@ -37,7 +37,9 @@ class _StudySessionState extends State<StudySession> {
     // submitting the typed answer has same effect as skipping the question,
     // so instead of making a new function for that, we're just submitting the typed answer:
     providerSessionLogic.firstRecogGuessHintPlayed = false;
-    // providerSessionLogic.skipped = true;
+
+    // make sure to trigger ONE auto-recog after skipped:
+    providerSessionLogic.skipped = true;
     providerSessionLogic.queueSubmitTyped();
   }
 
@@ -295,8 +297,21 @@ class _StudySessionState extends State<StudySession> {
                         margin: const EdgeInsets.only(left: 0, right: 2),
                         padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
                         alignment: Alignment.centerLeft,
-                        child: TextField(
+                        child: TextFormField(
                           controller: providerSessionLogic.answerController,
+                          // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
+                          onEditingComplete: () {},
+                          onFieldSubmitted: (res) {
+                            print('res: $res');
+                            // don't do anything if user pressed 'submit' when the text field was empty:
+                            if (res == '') {
+                              FocusScope.of(context).unfocus();
+                              return;
+                            }
+
+                            // submit the typed answer:
+                            providerSessionLogic.queueSubmitTyped();
+                          },
                           style: const TextStyle(fontSize: 15),
                         ),
                       ),
