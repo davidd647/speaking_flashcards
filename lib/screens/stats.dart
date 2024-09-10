@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
-import 'package:speaking_flashcards/screens/stats/chart.dart';
+// import 'package:speaking_flashcards/screens/stats/chart.dart';
+import 'package:speaking_flashcards/screens/stats/alt_study_chart.dart';
 
 class Stats extends StatefulWidget {
   const Stats({super.key});
@@ -18,6 +19,7 @@ class _StatsState extends State<Stats> {
   @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
+    final fullWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +41,23 @@ class _StatsState extends State<Stats> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Column(
                     children: [
-                      const StudyChart(),
+                      // const StudyChart(),
+                      SizedBox(
+                        width: fullWidth,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8, top: 0, right: 24, bottom: 8),
+                          child: Text(
+                            'Minutes studied from ${providerSessionLogic.earliestDate.substring(5)} to ${providerSessionLogic.mostRecentDate.substring(5)}:',
+                            style: const TextStyle(color: Colors.blue),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      const AltStudyChart(),
+                      Text(
+                        'Total time studied: ~${(providerSessionLogic.totalHoursStudied).round()}hrs',
+                        style: const TextStyle(color: Colors.blue),
+                      ),
                       if (providerSessionLogic.batchHistoryList.isNotEmpty) const SizedBox(height: 12),
                       if (providerSessionLogic.batchHistoryList.isNotEmpty)
                         const Padding(
