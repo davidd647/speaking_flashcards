@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/models/lang.dart';
 
 class QuestionLangs extends StatefulWidget {
@@ -111,10 +112,23 @@ class _QuestionLangsState extends State<QuestionLangs> {
   @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
+    final providerSettings = Provider.of<ProviderSettings>(context);
+
+    Color containerColor = Colors.grey.shade200;
+    Color fgColor = Colors.black;
+
+    if (providerSettings.darkMode) {
+      containerColor = Colors.grey.shade600;
+      fgColor = Colors.white;
+    }
 
     return DropdownButtonFormField(
+      dropdownColor: containerColor,
       menuMaxHeight: (providerSessionLogic.screenMaxHeight / 4) * 3,
-      decoration: const InputDecoration(labelText: 'Question Language'),
+      decoration: InputDecoration(
+        labelText: 'Question Language',
+        labelStyle: TextStyle(color: fgColor),
+      ),
       value: providerSessionLogic.commonLangs.firstWhere(
           (lang) => lang.code == providerSessionLogic.selectedLangCombo.sqLang,
           orElse: () => providerSessionLogic.commonLangs[0]),
@@ -129,10 +143,12 @@ class _QuestionLangsState extends State<QuestionLangs> {
                 child: Text(
                   '${lang.flag} ${lang.name}',
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: fgColor),
                 ),
               ),
               Text(
                 lang.code,
+                style: TextStyle(color: fgColor),
               ),
             ],
           ),
