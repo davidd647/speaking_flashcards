@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
-import 'package:speaking_flashcards/widgets/grey_ink_well.dart';
+import 'package:speaking_flashcards/widgets/colored_inkwell_button.dart';
 import 'package:speaking_flashcards/widgets/custom_circular_progress_indicator.dart';
 import 'package:speaking_flashcards/widgets/wide_button.dart';
 import 'package:speaking_flashcards/screens/batch_add.dart';
@@ -76,7 +76,7 @@ class _MenuContainerState extends State<MenuContainer> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GreyInkWell(
+                    ColoredInkWellButton(
                       width: 64,
                       height: 64,
                       onTap: () {
