@@ -6,7 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
-import 'package:speaking_flashcards/widgets/grey_ink_well.dart';
+import 'package:speaking_flashcards/widgets/colored_inkwell_button.dart';
+import 'package:speaking_flashcards/widgets/colored_circular_inkwell_button.dart';
 import 'package:speaking_flashcards/widgets/flag_box.dart';
 import 'package:speaking_flashcards/widgets/custom_circular_progress_indicator.dart';
 import 'package:speaking_flashcards/widgets/queue_descending.dart';
@@ -51,18 +52,6 @@ class _StudySessionState extends State<StudySession> {
       gravity: ToastGravity.CENTER,
       toastDuration: Duration(seconds: duration),
     );
-
-    // Fluttertoast.showToast(
-    //   msg: message,
-    //   toastLength: Toast.LENGTH_LONG,
-    //   gravity: ToastGravity.CENTER,
-    //   timeInSecForIosWeb: 5,
-    //   backgroundColor: Colors.blueGrey.withOpacity(0.8),
-    //   textColor: Colors.black,
-    //   fontSize: 16.0,
-    //   webPosition: "center",
-    // );
-    // Fluttertoast.showToast(child: Text('hi'));
   }
 
   @override
@@ -81,7 +70,18 @@ class _StudySessionState extends State<StudySession> {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
     final providerSettings = Provider.of<ProviderSettings>(context);
 
+    Color fgColor = const Color.fromARGB(255, 44, 44, 44);
+    Color containerColor = const Color.fromARGB(255, 220, 220, 220);
+    Color bgColor = const Color.fromARGB(255, 249, 247, 247);
+
+    if (providerSettings.darkMode) {
+      fgColor = const Color.fromARGB(255, 225, 225, 225);
+      bgColor = const Color.fromARGB(255, 0, 0, 0);
+      containerColor = const Color.fromARGB(255, 100, 100, 100);
+    }
+
     return Scaffold(
+      backgroundColor: bgColor,
       endDrawer: const MenuContainer(),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -106,8 +106,8 @@ class _StudySessionState extends State<StudySession> {
                       1,
                     ],
                     colors: [
-                      Colors.white.withOpacity(1),
-                      Colors.white.withOpacity(0),
+                      bgColor.withOpacity(1),
+                      bgColor.withOpacity(0),
                     ],
                   ),
                 ),
@@ -128,7 +128,7 @@ class _StudySessionState extends State<StudySession> {
                         : 'Studied: ${providerSessionLogic.secondsPassed ~/ 60}m${providerSessionLogic.secondsPassed % 60 < 10 ? '0' : ''}${providerSessionLogic.secondsPassed % 60}s ${providerSessionLogic.secondsPassed > 60 * 5 ? '⭐️' : ''}',
                     style: TextStyle(
                       fontSize: 12.0,
-                      color: providerSessionLogic.userIsActive ? Colors.black : Colors.grey,
+                      color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
                     ),
                   ),
                   // if (providerSessionLogic.dailyStreak != 0)
@@ -136,7 +136,7 @@ class _StudySessionState extends State<StudySession> {
                     'Streak: ${providerSessionLogic.dailyStreak}',
                     style: TextStyle(
                       fontSize: 12.0,
-                      color: providerSessionLogic.dailyStreak != 0 ? Colors.black : Colors.grey,
+                      color: providerSessionLogic.dailyStreak != 0 ? fgColor : Colors.grey,
                     ),
                   ),
                 ],
@@ -164,60 +164,63 @@ class _StudySessionState extends State<StudySession> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GreyInkWell(
-                    primary: providerSessionLogic.questionsList.isEmpty ? true : false,
+                  ColoredInkWellButton(
+                    color: providerSessionLogic.questionsList.isEmpty ? Colors.lightBlue[100] : containerColor,
                     width: maxWidth / 4 - 12.5,
                     height: maxWidth / 4 - 20,
                     onTap: () {
                       // open menu
                       Scaffold.of(context).openEndDrawer();
                     },
-                    child: const Icon(Icons.add),
+                    child: Icon(Icons.add, color: fgColor),
                   ),
-                  GreyInkWell(
+                  ColoredInkWellButton(
+                    color: containerColor,
                     width: maxWidth / 4 - 12.5,
                     height: maxWidth / 4 - 20,
                     onTap: () {
                       providerSessionLogic.queueSynthQuestion();
                     },
-                    child: const FittedBox(
+                    child: FittedBox(
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        SizedBox(height: 15),
-                        Icon(Icons.play_arrow),
-                        Text('Question'),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
+                        Icon(Icons.play_arrow, color: fgColor),
+                        Text('Question', style: TextStyle(color: fgColor)),
+                        const SizedBox(height: 15),
                       ]),
                     ),
                   ),
-                  GreyInkWell(
+                  ColoredInkWellButton(
+                    color: containerColor,
                     width: maxWidth / 4 - 12.5,
                     height: maxWidth / 4 - 20,
                     onTap: () {
                       providerSessionLogic.queueSynthInput();
                     },
-                    child: const FittedBox(
+                    child: FittedBox(
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        SizedBox(height: 15),
-                        Icon(Icons.play_arrow),
-                        Text('Input'),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
+                        Icon(Icons.play_arrow, color: fgColor),
+                        Text('Input', style: TextStyle(color: fgColor)),
+                        const SizedBox(height: 15),
                       ]),
                     ),
                     // child: const Icon(Icons.bar_chart_sharp),
                   ),
-                  GreyInkWell(
+                  ColoredInkWellButton(
+                    color: containerColor,
                     width: maxWidth / 4 - 12.5,
                     height: maxWidth / 4 - 20,
                     onTap: () {
                       providerSessionLogic.firstRecogGuessHintPlayed = false;
                       handleSkip();
                     },
-                    child: const FittedBox(
+                    child: FittedBox(
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        SizedBox(height: 15),
-                        Icon(Icons.skip_next),
-                        Text('Skip'),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
+                        Icon(Icons.skip_next, color: fgColor),
+                        Text('Skip', style: TextStyle(color: fgColor)),
+                        const SizedBox(height: 15),
                       ]),
                     ),
                     // child: const Icon(Icons.bar_chart_sharp),
@@ -229,7 +232,7 @@ class _StudySessionState extends State<StudySession> {
             Positioned(
               left: (maxWidth / 2) - ((maxWidth / 4) / 2),
               top: maxHeight / 2 - ((maxWidth / 4) / 2),
-              child: CircularInkWell(
+              child: ColoredCircularInkWell(
                 width: maxWidth / 4,
                 onTap: () {
                   providerSessionLogic.queueRecog();
@@ -255,10 +258,14 @@ class _StudySessionState extends State<StudySession> {
               child: Container(
                 constraints: const BoxConstraints(minHeight: 42),
                 width: maxWidth - 20,
-                color: Colors.grey[300],
+                color: containerColor,
                 child: Row(
                   children: [
-                    FlagBox(flag: providerSessionLogic.qDisplayFlags, label: 'Q'),
+                    FlagBox(
+                      flag: providerSessionLogic.qDisplayFlags,
+                      label: 'Q',
+                      textColor: fgColor,
+                    ),
                     const SizedBox(width: 8),
                     Flexible(
                       fit: FlexFit.tight,
@@ -273,7 +280,7 @@ class _StudySessionState extends State<StudySession> {
                             : providerSessionLogic.questionsList.firstWhere((q) {
                                 return q.order == 0;
                               }).q,
-                        style: const TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 15, color: fgColor),
                       ),
                     ),
                   ],
@@ -285,10 +292,14 @@ class _StudySessionState extends State<StudySession> {
               left: 10,
               right: 10,
               child: Container(
-                color: Colors.grey[300],
+                color: containerColor,
                 child: Row(
                   children: [
-                    FlagBox(flag: providerSessionLogic.qDisplayFlags, label: 'A'),
+                    FlagBox(
+                      flag: providerSessionLogic.qDisplayFlags,
+                      label: 'A',
+                      textColor: fgColor,
+                    ),
                     const SizedBox(width: 8),
                     Flexible(
                       fit: FlexFit.tight,
@@ -312,7 +323,7 @@ class _StudySessionState extends State<StudySession> {
                             // submit the typed answer:
                             providerSessionLogic.queueSubmitTyped();
                           },
-                          style: const TextStyle(fontSize: 15),
+                          style: TextStyle(fontSize: 15, color: fgColor),
                         ),
                       ),
                     ),
@@ -324,7 +335,7 @@ class _StudySessionState extends State<StudySession> {
               Positioned(
                 right: 12,
                 bottom: 28,
-                child: CircularInkWell(
+                child: ColoredCircularInkWell(
                   width: 38,
                   color: Colors.grey.shade300,
                   onTap: () {
@@ -350,38 +361,6 @@ class _StudySessionState extends State<StudySession> {
               ),
           ]);
         },
-      ),
-    );
-  }
-}
-
-class CircularInkWell extends StatelessWidget {
-  const CircularInkWell({
-    super.key,
-    required this.width,
-    required this.color,
-    required this.onTap,
-    required this.child,
-  });
-
-  final double width;
-  final Color? color;
-  final Function onTap;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      borderRadius: BorderRadius.circular(width),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(width),
-        onTap: () => onTap(),
-        child: SizedBox(
-          width: width,
-          height: width,
-          child: child,
-        ),
       ),
     );
   }
