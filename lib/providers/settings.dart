@@ -22,9 +22,19 @@ class ProviderSettings with ChangeNotifier {
     notifyListeners();
   }
 
+  bool darkMode = false;
+  void toggledarkMode() async {
+    darkMode = await toggleBool('darkMode', darkMode);
+    notifyListeners();
+  }
+
   void init() async {
     showQueue = await _prefs.then((SharedPreferences prefs) {
       return prefs.getBool('showQueue') ?? showQueue;
+    });
+
+    darkMode = await _prefs.then((SharedPreferences prefs) {
+      return prefs.getBool('darkMode') ?? darkMode;
     });
 
     notifyListeners();
