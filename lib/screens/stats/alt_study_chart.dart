@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 
 class AltStudyChart extends StatefulWidget {
   const AltStudyChart({super.key});
@@ -34,9 +35,22 @@ class _AltStudyChartState extends State<AltStudyChart> {
 
   @override
   Widget build(BuildContext context) {
+    final providerSettings = Provider.of<ProviderSettings>(context);
+
+    // Color bgColor = Colors.white;
+    Color fgColor = Colors.black;
+    Color containerColor = Colors.grey.shade200;
+
+    if (providerSettings.darkMode) {
+      // bgColor = Colors.black;
+      fgColor = Colors.white;
+      containerColor = Colors.grey.shade600;
+    }
+
     return AspectRatio(
       aspectRatio: 1.70,
       child: Card(
+        color: containerColor,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         child: Padding(
@@ -50,10 +64,10 @@ class _AltStudyChartState extends State<AltStudyChart> {
                   BarChartData(
                     borderData: FlBorderData(
                       show: true,
-                      border: const Border.fromBorderSide(
+                      border: Border.fromBorderSide(
                         BorderSide(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          width: 0.5,
+                          color: containerColor,
+                          width: 3,
                         ),
                       ),
                     ),
@@ -70,8 +84,8 @@ class _AltStudyChartState extends State<AltStudyChart> {
                           getTitlesWidget: (double value, TitleMeta meta) {
                             return Text(
                               '${value.toInt()}min -',
-                              style: const TextStyle(
-                                color: Colors.lightBlue,
+                              style: TextStyle(
+                                color: fgColor,
                                 fontSize: 10,
                               ),
                             );
@@ -82,12 +96,15 @@ class _AltStudyChartState extends State<AltStudyChart> {
                     ),
                     maxY: providerSessionLogic.maxMins,
                     minY: 0,
+                    groupsSpace: 50,
+                    alignment: BarChartAlignment.center,
                     barGroups: multiChartBars.reversed
                         .map(
                           (chartBar) => BarChartGroupData(
                             x: chartBar['i'],
                             barRods: (chartBar['y'] as List<BarChartRodData>),
-                            groupVertically: true, // Add this line
+                            groupVertically: true,
+
                             // showingTooltipIndicators: [0], // Show tooltip for the first bar by default
                           ),
                         )
