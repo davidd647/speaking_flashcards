@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 
 class QuestionQueueDescending extends StatelessWidget {
   const QuestionQueueDescending({
@@ -17,6 +18,16 @@ class QuestionQueueDescending extends StatelessWidget {
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
     const double questionHeight = 18.0;
+
+    final providerSettings = Provider.of<ProviderSettings>(context);
+
+    Color containerColor = Colors.grey.shade200;
+    Color textColor = Colors.grey.shade400;
+
+    if (providerSettings.darkMode) {
+      containerColor = const Color.fromRGBO(69, 69, 69, 1);
+      textColor = const Color.fromRGBO(142, 142, 142, 1);
+    }
 
     return Stack(
       children: [
@@ -36,7 +47,7 @@ class QuestionQueueDescending extends StatelessWidget {
 
             child: Container(
               padding: const EdgeInsets.only(left: 6, right: 6),
-              color: Colors.grey.shade200,
+              color: containerColor,
               // child: Opacity(
               //   opacity: question.level > 3 ? 0.15 : 0.5,
               child: Row(
@@ -51,7 +62,7 @@ class QuestionQueueDescending extends StatelessWidget {
                         // '${question.level}/${question.spiritLevel} ${question.q} (${question.a})',
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
-                          color: Colors.grey.shade400, // Colors.grey.shade600,
+                          color: textColor, // Colors.grey.shade600,
                         ),
                       ),
                     ),
@@ -60,7 +71,7 @@ class QuestionQueueDescending extends StatelessWidget {
                     '${question.level}/${question.spiritLevel}',
                     style: TextStyle(
                       overflow: TextOverflow.ellipsis,
-                      color: Colors.grey.shade400,
+                      color: textColor,
                     ),
                   ),
                 ],
