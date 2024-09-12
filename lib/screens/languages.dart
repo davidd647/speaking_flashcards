@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/screens/languages/question_langs.dart';
 import 'package:speaking_flashcards/screens/languages/answer_langs.dart';
 import 'package:speaking_flashcards/models/lang_combo.dart';
@@ -25,10 +26,22 @@ class _LanguagesState extends State<Languages> {
   @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
+    final providerSettings = Provider.of<ProviderSettings>(context);
+
+    Color bgColor = Colors.white;
+    Color fgColor = Colors.black;
+
+    if (providerSettings.darkMode) {
+      bgColor = Colors.black;
+      fgColor = Colors.white;
+    }
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Languages'),
+        backgroundColor: bgColor,
+        title: Text('Languages', style: TextStyle(color: fgColor)),
+        iconTheme: IconThemeData(color: fgColor),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         final maxWidth = constraints.maxWidth;
@@ -101,9 +114,10 @@ class _LanguagesState extends State<Languages> {
               margin: const EdgeInsets.only(left: 12, right: 12),
             ),
             const SizedBox(height: 64),
-            const Text(
+            Text(
               'Languages Being Studied:',
               textAlign: TextAlign.center,
+              style: TextStyle(color: fgColor),
             ),
             if (providerSessionLogic.allLangCombosWithQuestions.isEmpty)
               Padding(
@@ -125,7 +139,11 @@ class _LanguagesState extends State<Languages> {
               return Container(
                 margin: const EdgeInsets.only(bottom: 12.0, left: 12, right: 12),
                 decoration: isSelectedlangCombo
-                    ? BoxDecoration(border: Border.all(color: Colors.lightBlue.shade900))
+                    ? BoxDecoration(
+                        border: Border.all(
+                        color: Colors.lightBlue.shade900,
+                        width: 5,
+                      ))
                     : BoxDecoration(border: Border.all(color: Colors.transparent)),
                 child: GestureDetector(
                   onTap: () async {
