@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class FlagBox extends StatelessWidget {
-  const FlagBox({super.key, required this.flag, required this.label});
+  const FlagBox({
+    super.key,
+    required this.flag,
+    required this.label,
+    required this.textColor,
+  });
 
   final String flag;
   final String label;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +28,7 @@ class FlagBox extends StatelessWidget {
               opacity: 0.55,
               child: Text(
                 flag,
-                style: const TextStyle(
-                  fontSize: 28,
-                  color: Colors.black,
-                ),
+                style: const TextStyle(fontSize: 28),
               ),
             ),
           ),
@@ -33,7 +36,10 @@ class FlagBox extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               label,
-              style: const TextStyle(fontSize: 24),
+              style: TextStyle(
+                fontSize: 24,
+                color: textColor,
+              ),
             ),
           ),
         ],
