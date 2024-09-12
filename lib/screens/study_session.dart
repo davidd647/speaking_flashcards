@@ -313,7 +313,7 @@ class _StudySessionState extends State<StudySession> {
                           // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
                           onEditingComplete: () {},
                           onFieldSubmitted: (res) {
-                            print('res: $res');
+                            // print('res: $res');
                             // don't do anything if user pressed 'submit' when the text field was empty:
                             if (res == '') {
                               FocusScope.of(context).unfocus();

@@ -44,7 +44,7 @@ class _StatsState extends State<Stats> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final maxWidth = constraints.maxWidth;
+          // final maxWidth = constraints.maxWidth;
           // final maxHeight = constraints.maxHeight;
 
           return (providerSessionLogic.commonLangs.isEmpty)
