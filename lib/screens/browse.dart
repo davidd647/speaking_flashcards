@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:speaking_flashcards/helpers/placeholder_question.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/widgets/wide_button.dart';
 import 'package:speaking_flashcards/models/question.dart';
 import 'package:speaking_flashcards/helpers/extract_first_after_slash.dart';
@@ -95,10 +96,22 @@ class _BrowseState extends State<Browse> {
   @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
+    final providerSettings = Provider.of<ProviderSettings>(context);
+
+    Color bgColor = Colors.white;
+    Color fgColor = Colors.black;
+
+    if (providerSettings.darkMode) {
+      bgColor = Colors.black;
+      fgColor = Colors.white;
+    }
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Browse'),
+        backgroundColor: bgColor,
+        title: Text('Browse', style: TextStyle(color: fgColor)),
+        iconTheme: IconThemeData(color: fgColor),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -174,7 +187,11 @@ class _BrowseState extends State<Browse> {
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
                                             controller: questionController,
-                                            decoration: const InputDecoration(labelText: 'Question'),
+                                            style: TextStyle(color: fgColor),
+                                            decoration: InputDecoration(
+                                              labelText: 'Question',
+                                              labelStyle: TextStyle(color: fgColor),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -194,7 +211,11 @@ class _BrowseState extends State<Browse> {
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
                                             controller: answerController,
-                                            decoration: const InputDecoration(labelText: 'Answer'),
+                                            style: TextStyle(color: fgColor),
+                                            decoration: InputDecoration(
+                                              labelText: 'Answer',
+                                              labelStyle: TextStyle(color: fgColor),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -214,9 +235,13 @@ class _BrowseState extends State<Browse> {
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
                                             controller: soundalikesController,
-                                            decoration: const InputDecoration(
-                                                labelText: 'Answer Soundalikes',
-                                                helperText: 'Separate soundalikes with a slash (/) character'),
+                                            style: TextStyle(color: fgColor),
+                                            decoration: InputDecoration(
+                                              labelText: 'Answer Soundalikes',
+                                              labelStyle: TextStyle(color: fgColor),
+                                              helperText: 'Separate soundalikes with a slash (/) character',
+                                              helperStyle: TextStyle(color: fgColor),
+                                            ),
                                           ),
                                         ),
                                       ),
