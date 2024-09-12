@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
+import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/widgets/wide_button.dart';
 
 class BatchAdd extends StatefulWidget {
@@ -54,10 +55,22 @@ class _BatchAddState extends State<BatchAdd> {
   @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
+    final providerSettings = Provider.of<ProviderSettings>(context);
+
+    Color bgColor = Colors.white;
+    Color fgColor = Colors.black;
+
+    if (providerSettings.darkMode) {
+      bgColor = Colors.black;
+      fgColor = Colors.white;
+    }
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Batch Add'),
+        backgroundColor: bgColor,
+        title: Text('Batch Add', style: TextStyle(color: fgColor)),
+        iconTheme: IconThemeData(color: fgColor),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -82,9 +95,10 @@ class _BatchAddState extends State<BatchAdd> {
                         // maxLines: null, // This makes it expandable to any number of lines
                         maxLines: 5,
                         minLines: 5, // Optional, but good to set a starting point
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: "Enter your batch here (in CSV format)",
-                          border: OutlineInputBorder(),
+                          hintStyle: TextStyle(color: fgColor),
+                          border: const OutlineInputBorder(),
                         ),
                         textInputAction: TextInputAction.newline, // For iOS to show a return key that makes a new line
                       ),
