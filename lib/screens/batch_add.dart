@@ -89,9 +89,13 @@ class _BatchAddState extends State<BatchAdd> {
                   child: Column(
                     children: [
                       const SizedBox(height: 24),
-                      TextField(
+                      TextFormField(
                         controller: batchAddController,
                         keyboardType: TextInputType.multiline,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: fgColor,
+                        ),
                         // maxLines: null, // This makes it expandable to any number of lines
                         maxLines: 5,
                         minLines: 5, // Optional, but good to set a starting point
