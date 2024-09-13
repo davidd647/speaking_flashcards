@@ -299,7 +299,6 @@ class _MenuContainerState extends State<MenuContainer> {
                       padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                       child: WideButton(
                         color: Colors.lightBlue.shade100,
-                        primary: true,
                         onTap: () async {
                           final providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
 
