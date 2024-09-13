@@ -100,11 +100,13 @@ class _BrowseState extends State<Browse> {
 
     Color bgColor = Colors.white;
     Color fgColor = Colors.black;
+    Color containerColor = const Color.fromARGB(255, 220, 220, 220);
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       bgColor = Colors.black;
       fgColor = Colors.white;
+      containerColor = const Color.fromARGB(255, 100, 100, 100);
     }
 
     return Scaffold(
@@ -136,23 +138,34 @@ class _BrowseState extends State<Browse> {
                               Flexible(
                                 fit: FlexFit.tight,
                                 child: WideButton(
+                                  color: containerColor,
                                   onTap: () {
                                     toggleEdit(q);
                                   },
                                   child: Row(
                                     children: [
-                                      const SizedBox(
+                                      SizedBox(
                                         width: 50,
-                                        child: Icon(Icons.edit_note, size: 32),
+                                        child: Icon(Icons.edit_note, size: 32, color: fgColor),
                                       ),
                                       Flexible(
-                                        fit: FlexFit.tight,
-                                        child: Text(q.q, style: const TextStyle(overflow: TextOverflow.ellipsis)),
-                                      ),
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            q.q,
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: fgColor,
+                                            ),
+                                          )),
                                       Flexible(
-                                        fit: FlexFit.tight,
-                                        child: Text(q.a, style: const TextStyle(overflow: TextOverflow.ellipsis)),
-                                      ),
+                                          fit: FlexFit.tight,
+                                          child: Text(
+                                            q.a,
+                                            style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              color: fgColor,
+                                            ),
+                                          )),
                                     ],
                                   ),
                                 ),
@@ -162,10 +175,11 @@ class _BrowseState extends State<Browse> {
                                 // height: 50,
                                 width: 50,
                                 child: WideButton(
+                                  color: containerColor,
                                   onTap: () {
                                     delete(q);
                                   },
-                                  child: const Icon(Icons.delete, size: 24),
+                                  child: Icon(Icons.delete, size: 24, color: fgColor),
                                 ),
                               ),
                               const SizedBox(width: 12.5),
@@ -257,15 +271,16 @@ class _BrowseState extends State<Browse> {
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: WideButton(
+                                        color: containerColor,
                                         onTap: () {
                                           delete(q);
                                         },
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.cancel, size: 24),
-                                            SizedBox(width: 12.5),
-                                            Text('Cancel'),
+                                            Icon(Icons.cancel, size: 24, color: fgColor),
+                                            const SizedBox(width: 12.5),
+                                            Text('Cancel', style: TextStyle(color: fgColor)),
                                           ],
                                         ),
                                       ),
@@ -274,15 +289,16 @@ class _BrowseState extends State<Browse> {
                                     Flexible(
                                       fit: FlexFit.tight,
                                       child: WideButton(
+                                        color: containerColor,
                                         onTap: () {
                                           save(q);
                                         },
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.save, size: 24),
-                                            SizedBox(width: 12.5),
-                                            Text('Save'),
+                                            Icon(Icons.save, size: 24, color: fgColor),
+                                            const SizedBox(width: 12.5),
+                                            Text('Save', style: TextStyle(color: fgColor)),
                                           ],
                                         ),
                                       ),
