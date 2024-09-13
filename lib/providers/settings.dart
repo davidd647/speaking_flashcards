@@ -4,6 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProviderSettings with ChangeNotifier {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
+  // darknessMatchesOS && systemIsInDarkMode
+  bool systemIsInDarkMode = true;
+  void updateSystemDarkModeState(bool newState) {
+    systemIsInDarkMode = newState;
+    notifyListeners();
+  }
+
   Future<bool> toggleBool(String toToggleName, bool defaultSetting) async {
     // get an up-to-date version of prefs...
     final SharedPreferences prefs = await _prefs;
@@ -28,6 +35,12 @@ class ProviderSettings with ChangeNotifier {
     notifyListeners();
   }
 
+  bool darknessMatchesOS = false;
+  void toggleDarknessMatchesOS() async {
+    darknessMatchesOS = await toggleBool('darknessMatchesOS', darknessMatchesOS);
+    notifyListeners();
+  }
+
   void init() async {
     showQueue = await _prefs.then((SharedPreferences prefs) {
       return prefs.getBool('showQueue') ?? showQueue;
@@ -35,6 +48,10 @@ class ProviderSettings with ChangeNotifier {
 
     darkMode = await _prefs.then((SharedPreferences prefs) {
       return prefs.getBool('darkMode') ?? darkMode;
+    });
+
+    darknessMatchesOS = await _prefs.then((SharedPreferences prefs) {
+      return prefs.getBool('darknessMatchesOS') ?? darknessMatchesOS;
     });
 
     notifyListeners();
