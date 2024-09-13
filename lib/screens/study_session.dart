@@ -150,18 +150,30 @@ class _StudySessionState extends State<StudySession> {
               ),
             ),
 
-            const Positioned(
+            Positioned(
               right: 10,
               top: 50,
-              child: Text('Today: 0/32'),
+              child: Text(
+                'Today: 0/32',
+                style: TextStyle(color: fgColor),
+              ),
+            ),
+            Positioned(
+              right: 20,
+              top: 75,
+              child: Container(
+                width: 70,
+                height: 10,
+                color: fgColor,
+              ),
             ),
             Positioned(
               right: 10,
               top: 75,
               child: Container(
-                width: 80,
+                width: 10,
                 height: 10,
-                color: Colors.grey[300],
+                color: containerColor,
               ),
             ),
             Positioned(
