@@ -6,8 +6,8 @@ class ProviderSettings with ChangeNotifier {
 
   // darknessMatchesOS && systemIsInDarkMode
   bool systemIsInDarkMode = true;
-  void updateSystemDarkModeState(bool newState) {
-    systemIsInDarkMode = newState;
+  void updateSystemDarkModeState(bool isInDarkMode) {
+    systemIsInDarkMode = isInDarkMode;
     notifyListeners();
   }
 
