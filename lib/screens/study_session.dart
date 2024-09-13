@@ -54,6 +54,7 @@ class _StudySessionState extends State<StudySession> {
     );
   }
 
+  var brightness = Brightness.dark;
   @override
   void initState() {
     super.initState();
@@ -64,8 +65,10 @@ class _StudySessionState extends State<StudySession> {
     providerSessionLogic.init(showToast);
     fToast.init(context);
 
-    var brightness = MediaQuery.of(context).platformBrightness;
-    providerSettings.updateSystemDarkModeState(brightness == Brightness.dark);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      brightness = MediaQuery.of(context).platformBrightness;
+      providerSettings.updateSystemDarkModeState(brightness == Brightness.dark);
+    });
   }
 
   @override
