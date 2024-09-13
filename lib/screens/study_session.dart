@@ -63,6 +63,9 @@ class _StudySessionState extends State<StudySession> {
     providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
     providerSessionLogic.init(showToast);
     fToast.init(context);
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    providerSettings.updateSystemDarkModeState(brightness == Brightness.dark);
   }
 
   @override
@@ -74,7 +77,7 @@ class _StudySessionState extends State<StudySession> {
     Color containerColor = const Color.fromARGB(255, 220, 220, 220);
     Color bgColor = const Color.fromARGB(255, 249, 247, 247);
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       fgColor = const Color.fromARGB(255, 225, 225, 225);
       bgColor = const Color.fromARGB(255, 0, 0, 0);
       containerColor = const Color.fromARGB(255, 100, 100, 100);
