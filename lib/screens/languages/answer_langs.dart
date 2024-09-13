@@ -90,7 +90,8 @@ class _AnswerLangsState extends State<AnswerLangs> {
     Color containerColor = Colors.grey.shade200;
     Color fgColor = Colors.black;
 
-    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
+    if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
+        (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       containerColor = Colors.grey.shade600;
       fgColor = Colors.white;
     }

@@ -24,7 +24,8 @@ class _SettingsState extends State<Settings> {
     // Color containerColor = Colors.grey.shade200;
     Color fgColor = Colors.black;
 
-    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
+    if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
+        (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       bgColor = Colors.black;
       // containerColor = Colors.grey.shade600;
       fgColor = Colors.white;
@@ -86,21 +87,7 @@ class _SettingsState extends State<Settings> {
                           providerSessionLogic.toggleallowAutoRecog();
                         },
                       ),
-                      SwitchListTile(
-                        activeColor: Colors.blue,
-                        title: Text(
-                          'Dark Mode',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        subtitle: Text(
-                          'A display mode better suited for studying in dark environments.',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        value: providerSettings.darkMode,
-                        onChanged: (val) {
-                          providerSettings.toggledarkMode();
-                        },
-                      ),
+
                       SwitchListTile(
                         activeColor: Colors.blue,
                         title: Text(
@@ -116,6 +103,22 @@ class _SettingsState extends State<Settings> {
                           providerSettings.toggleDarknessMatchesOS();
                         },
                       ),
+                      if (providerSettings.darknessMatchesOS == false)
+                        SwitchListTile(
+                          activeColor: Colors.blue,
+                          title: Text(
+                            'Dark Mode',
+                            style: TextStyle(color: fgColor),
+                          ),
+                          subtitle: Text(
+                            'A display mode better suited for studying in dark environments.',
+                            style: TextStyle(color: fgColor),
+                          ),
+                          value: providerSettings.darkMode,
+                          onChanged: (val) {
+                            providerSettings.toggledarkMode();
+                          },
+                        ),
                       // const SizedBox(height: 24),
                       // WideButton(
                       //   onTap: () {},
