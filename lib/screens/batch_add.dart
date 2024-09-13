@@ -59,11 +59,13 @@ class _BatchAddState extends State<BatchAdd> {
 
     Color bgColor = Colors.white;
     Color fgColor = Colors.black;
+    Color containerColor = const Color.fromARGB(255, 220, 220, 220);
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       bgColor = Colors.black;
       fgColor = Colors.white;
+      containerColor = const Color.fromARGB(255, 100, 100, 100);
     }
 
     return Scaffold(
@@ -109,7 +111,8 @@ class _BatchAddState extends State<BatchAdd> {
                       ),
                       const SizedBox(height: 10),
                       WideButton(
-                          disabled: invalidRow != '' ? true : false,
+                          color: invalidRow != '' ? Colors.grey.shade200 : containerColor,
+                          // disabled: invalidRow != '' ? true : false,
                           onTap: () {
                             if (invalidRow != '') return;
 
@@ -118,11 +121,11 @@ class _BatchAddState extends State<BatchAdd> {
                           child: Row(
                             children: [
                               const SizedBox(width: 10),
-                              Icon(Icons.add, color: (invalidRow != '') ? Colors.grey[300] : null),
+                              Icon(Icons.add, color: (invalidRow != '') ? Colors.grey[300] : fgColor),
                               const SizedBox(width: 10),
                               Text(
                                 'Add Batch',
-                                style: TextStyle(color: invalidRow != '' ? Colors.grey[400] : null),
+                                style: TextStyle(color: invalidRow != '' ? Colors.grey[400] : fgColor),
                               ),
                             ],
                           )),
@@ -130,6 +133,7 @@ class _BatchAddState extends State<BatchAdd> {
                       if (invalidRow != '') Text(invalidRow, style: const TextStyle(color: Colors.red)),
                       const SizedBox(height: 10),
                       WideButton(
+                        color: containerColor,
                         // disabled: true,
                         onTap: () async {
                           final Uri url = Uri.parse('https://speaking-flashcards-web.web.app/');
@@ -137,12 +141,12 @@ class _BatchAddState extends State<BatchAdd> {
                             throw Exception('Could not launch $url');
                           }
                         },
-                        child: const Row(
+                        child: Row(
                           children: [
-                            SizedBox(width: 10),
-                            Icon(Icons.exit_to_app_sharp),
-                            SizedBox(width: 10),
-                            Text('Open website to copy batch from'),
+                            const SizedBox(width: 10),
+                            Icon(Icons.exit_to_app_sharp, color: fgColor),
+                            const SizedBox(width: 10),
+                            Text('Open website to copy batch from', style: TextStyle(color: fgColor)),
                           ],
                         ),
                       ),
