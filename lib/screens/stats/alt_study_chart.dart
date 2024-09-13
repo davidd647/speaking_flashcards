@@ -41,7 +41,7 @@ class _AltStudyChartState extends State<AltStudyChart> {
     Color fgColor = Colors.black;
     Color containerColor = Colors.grey.shade200;
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       // bgColor = Colors.black;
       fgColor = Colors.white;
       containerColor = Colors.grey.shade600;

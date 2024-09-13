@@ -24,7 +24,7 @@ class QuestionQueueDescending extends StatelessWidget {
     Color containerColor = Colors.grey.shade200;
     Color textColor = Colors.grey.shade400;
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       containerColor = const Color.fromRGBO(69, 69, 69, 1);
       textColor = const Color.fromRGBO(142, 142, 142, 1);
     }

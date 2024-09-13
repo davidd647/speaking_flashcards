@@ -24,7 +24,7 @@ class _SettingsState extends State<Settings> {
     // Color containerColor = Colors.grey.shade200;
     Color fgColor = Colors.black;
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       bgColor = Colors.black;
       // containerColor = Colors.grey.shade600;
       fgColor = Colors.white;
@@ -99,6 +99,21 @@ class _SettingsState extends State<Settings> {
                         value: providerSettings.darkMode,
                         onChanged: (val) {
                           providerSettings.toggledarkMode();
+                        },
+                      ),
+                      SwitchListTile(
+                        activeColor: Colors.blue,
+                        title: Text(
+                          'Darkness Matches OS',
+                          style: TextStyle(color: fgColor),
+                        ),
+                        subtitle: Text(
+                          'Let display match OS lightness/darkness (overrides Dark Mode option)',
+                          style: TextStyle(color: fgColor),
+                        ),
+                        value: providerSettings.darknessMatchesOS,
+                        onChanged: (val) {
+                          providerSettings.toggleDarknessMatchesOS();
                         },
                       ),
                       // const SizedBox(height: 24),

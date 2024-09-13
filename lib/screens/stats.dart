@@ -26,7 +26,7 @@ class _StatsState extends State<Stats> {
     // Color containerColor = Colors.grey.shade200;
     Color fgColor = Colors.black;
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       bgColor = Colors.black;
       // containerColor = Colors.grey.shade600;
       fgColor = Colors.white;

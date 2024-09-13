@@ -31,7 +31,7 @@ class _LanguagesState extends State<Languages> {
     Color bgColor = Colors.white;
     Color fgColor = Colors.black;
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       bgColor = Colors.black;
       fgColor = Colors.white;
     }

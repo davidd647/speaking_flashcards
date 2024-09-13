@@ -101,7 +101,7 @@ class _BrowseState extends State<Browse> {
     Color bgColor = Colors.white;
     Color fgColor = Colors.black;
 
-    if (providerSettings.darkMode) {
+    if (providerSettings.darkMode && providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode) {
       bgColor = Colors.black;
       fgColor = Colors.white;
     }
