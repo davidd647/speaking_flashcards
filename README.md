@@ -1,5 +1,7 @@
 # speaking_flashcards
 
+# VocalCram (???)
+
 ## to-do:
 
 -fix the problem of having no audio-in/audio-out when coming back from other app
