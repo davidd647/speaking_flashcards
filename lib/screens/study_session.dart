@@ -154,26 +154,26 @@ class _StudySessionState extends State<StudySession> {
               right: 10,
               top: 50,
               child: Text(
-                'Today: 0/32',
+                'Today: ${providerSessionLogic.dueInitially - providerSessionLogic.due}/${providerSessionLogic.dueInitially}',
                 style: TextStyle(color: fgColor),
               ),
             ),
             Positioned(
-              right: 20,
               top: 75,
-              child: Container(
-                width: 70,
-                height: 10,
-                color: fgColor,
-              ),
-            ),
-            Positioned(
               right: 10,
-              top: 75,
-              child: Container(
-                width: 10,
+              child: SizedBox(
+                width: 75,
                 height: 10,
-                color: containerColor,
+                child: LinearProgressIndicator(
+                  // if there's no questions due, DON'T divide by zero!
+                  // otherwise, measure progress by remaining over initially due:
+                  value: providerSessionLogic.dueInitially != 0
+                      ? ((providerSessionLogic.dueInitially - providerSessionLogic.due) /
+                          providerSessionLogic.dueInitially)
+                      : 1,
+                  backgroundColor: containerColor,
+                  color: fgColor,
+                ),
               ),
             ),
             Positioned(
