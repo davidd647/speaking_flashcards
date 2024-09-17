@@ -41,6 +41,12 @@ class ProviderSettings with ChangeNotifier {
     notifyListeners();
   }
 
+  bool debugMode = false;
+  void toggleDebugMode() async {
+    debugMode = await toggleBool('debugMode', debugMode);
+    notifyListeners();
+  }
+
   void init() async {
     showQueue = await _prefs.then((SharedPreferences prefs) {
       return prefs.getBool('showQueue') ?? showQueue;
@@ -52,6 +58,10 @@ class ProviderSettings with ChangeNotifier {
 
     darknessMatchesOS = await _prefs.then((SharedPreferences prefs) {
       return prefs.getBool('darknessMatchesOS') ?? darknessMatchesOS;
+    });
+
+    debugMode = await _prefs.then((SharedPreferences prefs) {
+      return prefs.getBool('debugMode') ?? debugMode;
     });
 
     notifyListeners();
