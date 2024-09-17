@@ -1,6 +1,8 @@
 # speaking_flashcards
 
 # VocalCram (???)
+# TalkToStudy
+# SpeakToStudy
 
 ## to-do:
 
