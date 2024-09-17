@@ -87,6 +87,39 @@ class _StudySessionState extends State<StudySession> {
       containerColor = const Color.fromARGB(255, 100, 100, 100);
     }
 
+    String debuggingText = '';
+    String taskHistoryText = '';
+    if (providerSettings.debugMode) {
+      debuggingText = '${providerSettings.debugMode ? '🟩' : '🟥'} providerSettings.debugMode\n';
+      debuggingText +=
+          '${providerSessionLogic.recog.recogEnabled ? '🟩' : '🟥'} providerSessionLogic.recog.enabled: \n';
+      debuggingText += '${providerSessionLogic.isRecoging ? '🟩' : '🟥'} providerSessionLogic.isRecoging: \n';
+      debuggingText += '${providerSessionLogic.isSynthing ? '🟩' : '🟥'} providerSessionLogic.isSynthing: \n';
+      debuggingText += 'Queue: (length: ${providerSessionLogic.delegationStack.length})\n';
+      for (var x = 0; x < providerSessionLogic.delegationStack.length; x++) {
+        debuggingText += '${providerSessionLogic.delegationStack[x].taskName}';
+      }
+
+      taskHistoryText = '';
+      for (var x = providerSessionLogic.delegationHistory.length - 1; x >= 0; x--) {
+        taskHistoryText += '#$x ';
+        if (providerSessionLogic.delegationHistory[x].taskName.toString() == 'TaskName.recog') {
+          taskHistoryText += 'name: 🦻recog ';
+        } else if (providerSessionLogic.delegationHistory[x].taskName.toString() == 'TaskName.synth') {
+          taskHistoryText += 'name: 🗣️synth ';
+        } else if (providerSessionLogic.delegationHistory[x].taskName.toString() == 'TaskName.sfx') {
+          taskHistoryText += 'name: 🔈sfx                            ';
+        } else {
+          taskHistoryText += 'name: ${providerSessionLogic.delegationHistory[x].taskName.toString().substring(9)} ';
+        }
+        if (providerSessionLogic.delegationHistory[x].language != '') {
+          taskHistoryText += 'lang: ${providerSessionLogic.delegationHistory[x].language} ';
+        }
+        taskHistoryText += 'val: ${providerSessionLogic.delegationHistory[x].value} ';
+        taskHistoryText += '\n';
+      }
+    }
+
     return Scaffold(
       backgroundColor: bgColor,
       endDrawer: const MenuContainer(),
@@ -247,6 +280,12 @@ class _StudySessionState extends State<StudySession> {
                 ],
               ),
             ),
+            if (providerSettings.debugMode)
+              Positioned(
+                top: 200,
+                left: 10,
+                child: Text(debuggingText),
+              ),
             // middle
             Positioned(
               left: (maxWidth / 2) - ((maxWidth / 4) / 2),
@@ -270,6 +309,15 @@ class _StudySessionState extends State<StudySession> {
                 ),
               ),
             // middle (end)
+            if (providerSettings.debugMode)
+              Positioned(
+                bottom: 150,
+                left: 10,
+                height: 100,
+                child: SingleChildScrollView(
+                  child: Text(taskHistoryText),
+                ),
+              ),
             // bottom
             Positioned(
               bottom: 42 + 35,
