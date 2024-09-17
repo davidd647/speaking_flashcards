@@ -119,6 +119,22 @@ class _SettingsState extends State<Settings> {
                             providerSettings.toggledarkMode();
                           },
                         ),
+
+                      SwitchListTile(
+                        activeColor: Colors.blue,
+                        title: Text(
+                          'Debug Mode',
+                          style: TextStyle(color: fgColor),
+                        ),
+                        subtitle: Text(
+                          'Display system properties',
+                          style: TextStyle(color: fgColor),
+                        ),
+                        value: providerSettings.debugMode,
+                        onChanged: (val) {
+                          providerSettings.toggleDebugMode();
+                        },
+                      ),
                       // const SizedBox(height: 24),
                       // WideButton(
                       //   onTap: () {},
