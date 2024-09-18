@@ -115,6 +115,30 @@ class DbChrons {
     return chron;
   }
 
+  static Future<List<Chron>> getChronsByDate(String date) async {
+    final db = await DbChrons.database();
+    List<Chron> chrons = [];
+
+    List<Map<String, dynamic>> rawChronsList;
+
+    rawChronsList = await db.query(
+      dbName,
+      where: 'date = ?',
+      whereArgs: [date],
+    );
+
+    for (var x = 0; x < rawChronsList.length; x++) {
+      chrons.add(Chron(
+        id: rawChronsList[x]['id'],
+        date: rawChronsList[x]['date'],
+        languageCombo: rawChronsList[x]['languageCombo'],
+        timeStudied: rawChronsList[x]['timeStudied'],
+      ));
+    }
+
+    return chrons;
+  }
+
   static Future<void> setToday(String date, int timeStudied, String languageCombo) async {
     final db = await DbChrons.database();
 
