@@ -262,6 +262,17 @@ class ProviderSessionLogic with ChangeNotifier {
     return todayChron;
   }
 
+  List<Chron> todaysChrons = [];
+  Future<List<Chron>> getTodaysChrons() async {
+    var now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    todaysDate = formatter.format(now);
+
+    List<Chron> tmpTodaysChrons = await DbChrons.getChronsByDate(todaysDate);
+    todaysChrons = tmpTodaysChrons;
+    return tmpTodaysChrons;
+  }
+
   Future<void> startNewDay() async {
     String languageCombo = getLanguageComboString(selectedLangCombo);
 
@@ -333,8 +344,10 @@ class ProviderSessionLogic with ChangeNotifier {
     DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
 
     // congrats:
+    print('secondsPassed: $secondsPassed');
     if (secondsPassed > 0 && secondsPassed % (60 * 5) == 0) {
       runCongratsAsap = true;
+      print('runCongratsAsap: $runCongratsAsap');
       dailyStreak = await DbChrons.updateStreak();
       // since updateStreak only uses data from yesterday and back,
       // we should add one for today (because seconds passed > 60*5)
@@ -574,13 +587,49 @@ class ProviderSessionLogic with ChangeNotifier {
     return questionsList[currentQuestionIndex];
   }
 
-  void addInputAsAnswer() async {
+  addInputAsAnswer() async {
     // make necessary addition to current list...
     questionsList[currentQuestionIndex].a = '${getCurrentQuestion().a}/${answerController.text}';
+    String oldA = questionsList[currentQuestionIndex].a;
     // save to database...
-    await DbQuestions.updateQuestion(questionsList[currentQuestionIndex]);
+    int success = await DbQuestions.updateQuestion(questionsList[currentQuestionIndex]);
 
     notifyListeners();
+
+    if (_showToast != null && success != 0) {
+      Widget grandChild = Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Question Updated:'),
+          Text('Q: ${questionsList[currentQuestionIndex].q}'),
+          Text('Old A: $oldA'),
+          Text('New A: ${questionsList[currentQuestionIndex].a}'),
+        ],
+      );
+      Widget child = Container(
+        constraints: const BoxConstraints(minHeight: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.greenAccent,
+        ),
+        child: grandChild,
+      );
+      _showToast!(child, 3);
+    } else if (_showToast != null) {
+      Widget grandChild = const Text('Error: No rows updated');
+      Widget child = Container(
+        constraints: const BoxConstraints(minHeight: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.greenAccent,
+        ),
+        child: grandChild,
+      );
+      _showToast!(child, 3);
+    }
   }
 
   void showPreviousGuessInfo() {
