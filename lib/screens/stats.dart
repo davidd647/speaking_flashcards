@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/screens/stats/alt_study_chart.dart';
+import 'package:speaking_flashcards/models/chron.dart';
+import 'package:speaking_flashcards/helpers/code_to_flag.dart';
 
 class Stats extends StatefulWidget {
   const Stats({super.key});
@@ -15,6 +17,36 @@ class Stats extends StatefulWidget {
 
 class _StatsState extends State<Stats> {
   final answerInput = TextEditingController();
+  late ProviderSessionLogic providerSessionLogic;
+
+  // Map<String, List<Chron>>
+  Map<String, List<Chron>> groupedChrons = {};
+
+  Map<String, List<Chron>> groupChronsByDate(List<Chron> chrons) {
+    Map<String, List<Chron>> groupedChrons = {};
+
+    for (var chron in chrons) {
+      if (!groupedChrons.containsKey(chron.date)) {
+        groupedChrons[chron.date] = [];
+      }
+      groupedChrons[chron.date]!.add(chron);
+    }
+
+    return groupedChrons;
+  }
+
+  void getDataSplitIntoDates() {
+    groupedChrons = groupChronsByDate(providerSessionLogic.studyChronList);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
+    getDataSplitIntoDates();
+    // get data split into dates...
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +55,13 @@ class _StatsState extends State<Stats> {
     final providerSettings = Provider.of<ProviderSettings>(context);
 
     Color bgColor = Colors.white;
-    // Color containerColor = Colors.grey.shade200;
+    Color containerColor = Colors.grey.shade200;
     Color fgColor = Colors.black;
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       bgColor = Colors.black;
-      // containerColor = Colors.grey.shade600;
+      containerColor = Colors.grey.shade600;
       fgColor = Colors.white;
     }
 
@@ -77,6 +109,33 @@ class _StatsState extends State<Stats> {
                           'Total time studied: ~${(providerSessionLogic.totalHoursStudied).round()}hrs',
                           style: TextStyle(color: fgColor),
                         ),
+                        ...groupedChrons.entries.map((g) {
+                          return Container(
+                            color: containerColor,
+                            margin: const EdgeInsets.only(bottom: 16.0),
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              children: [
+                                ...g.value.map((Chron chron) {
+                                  String langCombo =
+                                      chron.languageCombo.split('/').map((lang) => codeToFlag(lang)).join();
+
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('d: ${chron.date.substring(5)}        l: $langCombo'),
+                                      Text(
+                                        chron.timeStudied < 120
+                                            ? '${chron.timeStudied}s'
+                                            : '${chron.timeStudied > 60 * 5 ? '⭐️' : ''} ${chron.timeStudied ~/ 60}m${chron.timeStudied % 60 < 10 ? '0' : ''}${chron.timeStudied % 60}s',
+                                      ),
+                                    ],
+                                  );
+                                })
+                              ],
+                            ),
+                          );
+                        }),
                         if (providerSessionLogic.batchHistoryList.isNotEmpty) const SizedBox(height: 12),
                         if (providerSessionLogic.batchHistoryList.isNotEmpty)
                           const Padding(
