@@ -6,6 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
+import 'package:speaking_flashcards/models/chron.dart';
+import 'package:speaking_flashcards/helpers/code_to_flag.dart';
 import 'package:speaking_flashcards/widgets/colored_inkwell_button.dart';
 import 'package:speaking_flashcards/widgets/colored_circular_inkwell_button.dart';
 import 'package:speaking_flashcards/widgets/flag_box.dart';
@@ -91,10 +93,27 @@ class _StudySessionState extends State<StudySession> {
     String taskHistoryText = '';
     if (providerSettings.debugMode) {
       debuggingText = '${providerSettings.debugMode ? '🟩' : '🟥'} providerSettings.debugMode\n';
+      debuggingText += '${providerSessionLogic.sfxPlaying ? '🟩' : '🟥'} providerSessionLogic.sfxPlaying: \n';
+      debuggingText += '${providerSessionLogic.isSynthing ? '🟩' : '🟥'} providerSessionLogic.isSynthing: \n';
+      debuggingText += '${providerSessionLogic.isRecoging ? '🟩' : '🟥'} providerSessionLogic.isRecoging: \n';
       debuggingText +=
           '${providerSessionLogic.recog.recogEnabled ? '🟩' : '🟥'} providerSessionLogic.recog.enabled: \n';
-      debuggingText += '${providerSessionLogic.isRecoging ? '🟩' : '🟥'} providerSessionLogic.isRecoging: \n';
-      debuggingText += '${providerSessionLogic.isSynthing ? '🟩' : '🟥'} providerSessionLogic.isSynthing: \n';
+
+      // display all times recorded for today:
+      providerSessionLogic.getTodaysChrons();
+
+      for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
+        Chron tmpChron = providerSessionLogic.todaysChrons[x];
+        debuggingText += '${tmpChron.date}        ';
+        debuggingText += '${tmpChron.languageCombo.split('/').map((lang) => codeToFlag(lang)).join()}        ';
+        debuggingText += tmpChron.timeStudied < 120
+            ? '${tmpChron.timeStudied}s'
+            : '${tmpChron.timeStudied > 60 * 5 ? '⭐️' : ''} ${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s';
+        debuggingText += '\n';
+      }
+
+      debuggingText += '\n\n';
+
       debuggingText += 'Queue: (length: ${providerSessionLogic.delegationStack.length})\n';
       for (var x = 0; x < providerSessionLogic.delegationStack.length; x++) {
         debuggingText += '${providerSessionLogic.delegationStack[x].taskName}';
