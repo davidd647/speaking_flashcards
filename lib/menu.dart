@@ -58,6 +58,7 @@ class _MenuContainerState extends State<MenuContainer> {
     Color fgColor = const Color.fromARGB(255, 44, 44, 44);
     Color containerColor = const Color.fromARGB(255, 220, 220, 220);
     Color bgColor = const Color.fromARGB(255, 249, 247, 247);
+    Color disabledTextColor = const ui.Color.fromARGB(255, 150, 150, 150); // doesn't change for dark mode...
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
@@ -428,6 +429,7 @@ class _MenuContainerState extends State<MenuContainer> {
                 child: WideButton(
                   color: containerColor,
                   onTap: () {
+                    if (providerSessionLogic.answerController.text == '') return;
                     providerSessionLogic.addInputAsAnswer();
                     Navigator.pop(context);
                   },
@@ -435,9 +437,33 @@ class _MenuContainerState extends State<MenuContainer> {
                     children: [
                       SizedBox(
                         width: 50,
-                        child: Icon(Icons.check, size: 24, color: fgColor),
+                        child: Icon(
+                          Icons.check,
+                          size: 24,
+                          color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
+                        ),
                       ),
-                      Text('Add Input as Acceptable Soundalike', style: TextStyle(color: fgColor)),
+                      Text(
+                        'Add Input as Soundalike ',
+                        style: TextStyle(
+                          color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
+                        ),
+                      ),
+                      if (providerSessionLogic.answerController.text != '')
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: Text(
+                              '(${providerSessionLogic.answerController.text})',
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: fgColor,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
