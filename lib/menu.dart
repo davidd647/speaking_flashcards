@@ -449,6 +449,17 @@ class _MenuContainerState extends State<MenuContainer> {
                           color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
                         ),
                       ),
+                      if (providerSessionLogic.answerController.text == '')
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              '(Empty)',
+                              style: TextStyle(color: fgColor),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
                       if (providerSessionLogic.answerController.text != '')
                         Expanded(
                           child: Padding(
@@ -487,9 +498,9 @@ class _MenuContainerState extends State<MenuContainer> {
                   ),
                 ),
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 50),
               Center(child: Text('version: 1.0.11+12', style: TextStyle(color: fgColor))),
-              const SizedBox(height: 100),
+              const SizedBox(height: 70),
             ],
           ),
         ),
