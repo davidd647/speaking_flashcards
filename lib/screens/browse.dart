@@ -196,13 +196,19 @@ class _BrowseState extends State<Browse> {
                                       Flexible(
                                         fit: FlexFit.tight,
                                         child: Container(
-                                          height: 50,
+                                          // height: 64,
                                           margin: const EdgeInsets.only(left: 2, right: 2),
-                                          padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
+                                          padding: const EdgeInsets.only(left: 0, right: 2),
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
+                                            onChanged: (edit) {
+                                              save(q);
+                                            },
                                             controller: questionController,
-                                            style: TextStyle(color: fgColor),
+                                            style: TextStyle(
+                                              color: fgColor,
+                                              height: 1.2,
+                                            ),
                                             decoration: InputDecoration(
                                               labelText: 'Question',
                                               labelStyle: TextStyle(color: fgColor),
@@ -220,13 +226,19 @@ class _BrowseState extends State<Browse> {
                                       Flexible(
                                         fit: FlexFit.tight,
                                         child: Container(
-                                          height: 50,
+                                          // height: 64,
                                           margin: const EdgeInsets.only(left: 2, right: 2),
-                                          padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
+                                          padding: const EdgeInsets.only(left: 0, right: 2),
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
+                                            onChanged: (edit) {
+                                              save(q);
+                                            },
                                             controller: answerController,
-                                            style: TextStyle(color: fgColor),
+                                            style: TextStyle(
+                                              color: fgColor,
+                                              height: 1.2,
+                                            ),
                                             decoration: InputDecoration(
                                               labelText: 'Answer',
                                               labelStyle: TextStyle(color: fgColor),
@@ -244,13 +256,19 @@ class _BrowseState extends State<Browse> {
                                       Flexible(
                                         fit: FlexFit.tight,
                                         child: Container(
-                                          height: 75,
+                                          // height: 75,
                                           margin: const EdgeInsets.only(left: 2, right: 2),
-                                          padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
+                                          padding: const EdgeInsets.only(left: 0, right: 2),
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
+                                            onChanged: (edit) {
+                                              save(q);
+                                            },
                                             controller: soundalikesController,
-                                            style: TextStyle(color: fgColor),
+                                            style: TextStyle(
+                                              color: fgColor,
+                                              height: 1.2,
+                                            ),
                                             decoration: InputDecoration(
                                               labelText: 'Answer Soundalikes',
                                               labelStyle: TextStyle(color: fgColor),
@@ -264,49 +282,6 @@ class _BrowseState extends State<Browse> {
                                   ),
                                 ),
                                 const SizedBox(height: 42),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(width: 12.5),
-                                    Flexible(
-                                      fit: FlexFit.tight,
-                                      child: WideButton(
-                                        color: containerColor,
-                                        onTap: () {
-                                          delete(q);
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.cancel, size: 24, color: fgColor),
-                                            const SizedBox(width: 12.5),
-                                            Text('Cancel', style: TextStyle(color: fgColor)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12.5),
-                                    Flexible(
-                                      fit: FlexFit.tight,
-                                      child: WideButton(
-                                        color: containerColor,
-                                        onTap: () {
-                                          save(q);
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.save, size: 24, color: fgColor),
-                                            const SizedBox(width: 12.5),
-                                            Text('Save', style: TextStyle(color: fgColor)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12.5),
-                                  ],
-                                ),
-                                const SizedBox(height: 75),
                               ],
                             ),
                         ],
