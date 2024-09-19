@@ -320,11 +320,14 @@ class _StudySessionState extends State<StudySession> {
               ),
             ),
             if (providerSessionLogic.isRecoging)
-              const Center(
+              Center(
                 child: SizedBox(
                   width: 124,
                   height: 124,
-                  child: CustomCircularProgressIndicator(),
+                  child: CustomCircularProgressIndicator(
+                    color1: bgColor,
+                    color2: Colors.greenAccent,
+                  ),
                 ),
               ),
             // middle (end)
