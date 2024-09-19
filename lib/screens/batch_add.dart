@@ -32,6 +32,21 @@ class _BatchAddState extends State<BatchAdd> {
     setState(() {});
   }
 
+  String numOfQuestions = '0';
+  void checkNumOfQuestions() {
+    List<String> lines = batchAddController.text.split('\n');
+    int numOfLines = 0;
+    for (int x = 0; x < lines.length; x++) {
+      List<String> fields = lines[x].split(',');
+      if (fields.length == 2) {
+        numOfLines++;
+      }
+    }
+
+    // return numOfLines;
+    numOfQuestions = numOfLines.toString();
+  }
+
   void addFromCSV() async {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
     List<String> lines = batchAddController.text.split('\n');
@@ -39,8 +54,11 @@ class _BatchAddState extends State<BatchAdd> {
       List<String> fields = lines[x].split(',');
       await providerSessionLogic.addQuestion(fields[0], fields[1]);
     }
-    batchAddController.text = '';
-    invalidRow = '${lines.length} flashcards added! :)';
+
+    setState(() {
+      batchAddController.text = '';
+      invalidRow = '${lines.length} flashcards added! :)';
+    });
   }
 
   @override
@@ -94,6 +112,9 @@ class _BatchAddState extends State<BatchAdd> {
                       const SizedBox(height: 24),
                       TextFormField(
                         controller: batchAddController,
+                        onChanged: (content) {
+                          checkNumOfQuestions();
+                        },
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
                           fontSize: 15,
@@ -109,23 +130,34 @@ class _BatchAddState extends State<BatchAdd> {
                         ),
                         textInputAction: TextInputAction.newline, // For iOS to show a return key that makes a new line
                       ),
+                      if (numOfQuestions != '0') const SizedBox(height: 10),
+                      if (numOfQuestions != '0') Text('Number of Questions: $numOfQuestions'),
                       const SizedBox(height: 10),
                       WideButton(
-                          color: invalidRow != '' ? Colors.grey.shade200 : containerColor,
+                          color: (invalidRow != '' || batchAddController.text.trim() == '')
+                              ? Colors.grey.shade200
+                              : containerColor,
                           // disabled: invalidRow != '' ? true : false,
                           onTap: () {
                             if (invalidRow != '') return;
+                            if (batchAddController.text.trim() == '') return;
 
                             addFromCSV();
                           },
                           child: Row(
                             children: [
                               const SizedBox(width: 10),
-                              Icon(Icons.add, color: (invalidRow != '') ? Colors.grey[300] : fgColor),
+                              Icon(Icons.add,
+                                  color: (invalidRow != '' || batchAddController.text.trim() == '')
+                                      ? Colors.grey[300]
+                                      : fgColor),
                               const SizedBox(width: 10),
                               Text(
                                 'Add Batch',
-                                style: TextStyle(color: invalidRow != '' ? Colors.grey[400] : fgColor),
+                                style: TextStyle(
+                                    color: invalidRow != '' || batchAddController.text.trim() == ''
+                                        ? Colors.grey[400]
+                                        : fgColor),
                               ),
                             ],
                           )),
