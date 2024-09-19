@@ -303,7 +303,7 @@ class _StudySessionState extends State<StudySession> {
               Positioned(
                 top: 200,
                 left: 10,
-                child: Text(debuggingText),
+                child: Text(debuggingText, style: TextStyle(color: fgColor)),
               ),
             // middle
             Positioned(
@@ -334,7 +334,7 @@ class _StudySessionState extends State<StudySession> {
                 left: 10,
                 height: 100,
                 child: SingleChildScrollView(
-                  child: Text(taskHistoryText),
+                  child: Text(taskHistoryText, style: TextStyle(color: fgColor)),
                 ),
               ),
             // bottom
