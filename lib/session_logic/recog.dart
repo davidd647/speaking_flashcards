@@ -12,6 +12,8 @@ class Recog {
   Function? _finalResCallback;
   Function? _intermittentResCallback;
 
+  String status = '👍';
+
   Future<void> init(setIsRecoging) async {
     if (recogEnabled) return;
     recogEnabled = await stt.initialize(
@@ -23,6 +25,7 @@ class Recog {
         }
       },
       onError: (SpeechRecognitionError err) {
+        status = 'Error: $err';
         if (err.errorMsg == 'error_no_match' && _finalResCallback != null) {
           List<SpokenWord> res = [];
           _finalResCallback!(res);
@@ -45,11 +48,16 @@ class Recog {
       return; //catherine
     }
 
-    await stt.listen(
-      onResult: _onRecogResult,
-      listenFor: Duration(milliseconds: recogDuration),
-      localeId: localeId,
-    );
+    try {
+      await stt.listen(
+        onResult: _onRecogResult,
+        listenFor: Duration(milliseconds: recogDuration),
+        localeId: localeId,
+      );
+    } catch (e) {
+      status = 'Error with stt.listen: $e';
+      throw 'Error with stt.listen: $e';
+    }
   }
 
   void _onRecogResult(result) {
