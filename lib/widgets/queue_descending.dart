@@ -54,12 +54,14 @@ class QuestionQueueDescending extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text('${question.order + 1} ', style: TextStyle(color: textColor)),
+                  if (question.level >= 3) Icon(Icons.check, color: textColor, size: 12),
                   Flexible(
                     fit: FlexFit.tight,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 6),
                       child: Text(
-                        '${question.order + 1} ${question.level >= 3 ? '✔️' : ''} ${question.q}',
+                        question.q,
                         // '${question.level}/${question.spiritLevel} ${question.q} (${question.a})',
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
