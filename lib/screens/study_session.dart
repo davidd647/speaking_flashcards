@@ -330,6 +330,9 @@ class _StudySessionState extends State<StudySession> {
               child: ColoredCircularInkWell(
                 width: maxWidth / 4,
                 onTap: () {
+                  // stop focusing on the keyboard if the keyboard is focused:
+                  FocusScope.of(context).unfocus();
+
                   providerSessionLogic.queueRecog();
                 },
                 // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
