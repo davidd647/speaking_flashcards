@@ -60,6 +60,9 @@ class ProviderSessionLogic with ChangeNotifier {
   String sfxFeedbackGreat = 'sounds/feedback-great.mp3';
   int recogDuration = 5000;
   List<SpokenWord> recogRes = [];
+  String recogStatus = '👍';
+  String synthStatus = '👍';
+  String sfxStatus = '👍';
 
   // questions / databases
   int dueInitially = 0;
@@ -558,6 +561,9 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   void queueSubmitTyped() {
+    recogStatus = recog.status;
+    notifyListeners();
+
     if (checkIsBusy()) return;
 
     // if there's already submitByText or recog queued, then exit this method
@@ -1345,12 +1351,17 @@ class ProviderSessionLogic with ChangeNotifier {
       player.play(AssetSource(sfxFeedbackBad));
     }
 
-    if (currentTask.value == 'good') {
-      if (due != 0) {
-        player.play(AssetSource(sfxFeedbackGood));
-      } else {
-        player.play(AssetSource(sfxFeedbackGreat));
+    try {
+      if (currentTask.value == 'good') {
+        if (due != 0) {
+          player.play(AssetSource(sfxFeedbackGood));
+        } else {
+          player.play(AssetSource(sfxFeedbackGreat));
+        }
       }
+    } catch (e) {
+      sfxStatus = 'Error playing sfx: $e';
+      throw 'Error playing sfx: $e';
     }
 
     await Future.delayed(const Duration(milliseconds: 800), () {});
@@ -1362,6 +1373,7 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   void runSynth(SessionTask taskDetails) {
+    synthStatus = synth.status;
     // synth.isSpeaking SHOULD be handled by the flutterTts library... we'll see...
     // synth doesn't start up quickly enough to halt the next task, so we need to set 'isSpeaking' to true
     // ASAP:
