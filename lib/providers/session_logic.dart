@@ -1224,6 +1224,17 @@ class ProviderSessionLogic with ChangeNotifier {
         }
 
         isRecoging = false;
+
+        if (runCongratsAsap) {
+          sessionTaskDelegator(
+            appendTask: SessionTask(
+                taskName: TaskName.congrats,
+                language: 'en-US',
+                value: 'You\'ve studied ${secondsPassed ~/ 60} minutes, congrats!'),
+          );
+          runCongratsAsap = false;
+        }
+
         notifyListeners();
         sessionTaskDelegator(appendTask: null);
       },
