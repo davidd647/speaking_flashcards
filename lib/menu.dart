@@ -160,7 +160,10 @@ class _MenuContainerState extends State<MenuContainer> {
                                           alignment: Alignment.center,
                                           width: 47,
                                           height: 47,
-                                          child: const CustomCircularProgressIndicator(),
+                                          child: CustomCircularProgressIndicator(
+                                            color1: bgColor,
+                                            color2: Colors.greenAccent,
+                                          ),
                                         ),
                                     ],
                                   ),
@@ -245,7 +248,10 @@ class _MenuContainerState extends State<MenuContainer> {
                                           alignment: Alignment.center,
                                           width: 47,
                                           height: 47,
-                                          child: const CustomCircularProgressIndicator(),
+                                          child: CustomCircularProgressIndicator(
+                                            color1: bgColor,
+                                            color2: Colors.greenAccent,
+                                          ),
                                         ),
                                     ],
                                   ),
