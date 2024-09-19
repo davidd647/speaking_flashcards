@@ -278,24 +278,43 @@ class _StudySessionState extends State<StudySession> {
                     ),
                     // child: const Icon(Icons.bar_chart_sharp),
                   ),
-                  ColoredInkWellButton(
-                    color: containerColor,
-                    width: maxWidth / 4 - 12.5,
-                    height: maxWidth / 4 - 20,
-                    onTap: () {
-                      providerSessionLogic.firstRecogGuessHintPlayed = false;
-                      handleSkip();
-                    },
-                    child: FittedBox(
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        const SizedBox(height: 15),
-                        Icon(Icons.skip_next, color: fgColor),
-                        Text('Skip', style: TextStyle(color: fgColor)),
-                        const SizedBox(height: 15),
-                      ]),
+                  if (providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].level == 0)
+                    ColoredInkWellButton(
+                      color: containerColor,
+                      width: maxWidth / 4 - 12.5,
+                      height: maxWidth / 4 - 20,
+                      onTap: () {
+                        providerSessionLogic.queueGetHint();
+                      },
+                      child: FittedBox(
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          const SizedBox(height: 15),
+                          Icon(Icons.question_mark, color: fgColor),
+                          Text('Hint', style: TextStyle(color: fgColor)),
+                          const SizedBox(height: 15),
+                        ]),
+                      ),
+                      // child: const Icon(Icons.bar_chart_sharp),
                     ),
-                    // child: const Icon(Icons.bar_chart_sharp),
-                  ),
+                  if (providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].level != 0)
+                    ColoredInkWellButton(
+                      color: containerColor,
+                      width: maxWidth / 4 - 12.5,
+                      height: maxWidth / 4 - 20,
+                      onTap: () {
+                        providerSessionLogic.firstRecogGuessHintPlayed = false;
+                        handleSkip();
+                      },
+                      child: FittedBox(
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          const SizedBox(height: 15),
+                          Icon(Icons.skip_next, color: fgColor),
+                          Text('Skip', style: TextStyle(color: fgColor)),
+                          const SizedBox(height: 15),
+                        ]),
+                      ),
+                      // child: const Icon(Icons.bar_chart_sharp),
+                    ),
                 ],
               ),
             ),
