@@ -93,11 +93,10 @@ class _StudySessionState extends State<StudySession> {
     String taskHistoryText = '';
     if (providerSettings.debugMode) {
       debuggingText = '${providerSettings.debugMode ? '🟩' : '🟥'} providerSettings.debugMode\n';
-      debuggingText += '${providerSessionLogic.sfxPlaying ? '🟩' : '🟥'} providerSessionLogic.sfxPlaying: \n';
-      debuggingText += '${providerSessionLogic.isSynthing ? '🟩' : '🟥'} providerSessionLogic.isSynthing: \n';
-      debuggingText += '${providerSessionLogic.isRecoging ? '🟩' : '🟥'} providerSessionLogic.isRecoging: \n';
-      debuggingText +=
-          '${providerSessionLogic.recog.recogEnabled ? '🟩' : '🟥'} providerSessionLogic.recog.enabled: \n';
+      debuggingText += '${providerSessionLogic.sfxPlaying ? '🟩' : '🟥'} providerSessionLogic.sfxPlaying\n';
+      debuggingText += '${providerSessionLogic.isSynthing ? '🟩' : '🟥'} providerSessionLogic.isSynthing\n';
+      debuggingText += '${providerSessionLogic.isRecoging ? '🟩' : '🟥'} providerSessionLogic.isRecoging\n';
+      debuggingText += '${providerSessionLogic.recog.recogEnabled ? '🟩' : '🟥'} providerSessionLogic.recog.enabled\n';
 
       // display all times recorded for today:
       providerSessionLogic.getTodaysChrons();
