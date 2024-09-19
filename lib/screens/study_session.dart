@@ -112,6 +112,10 @@ class _StudySessionState extends State<StudySession> {
       }
 
       debuggingText += '\n\n';
+      debuggingText += '${providerSessionLogic.recogStatus} Recog status';
+      debuggingText += '${providerSessionLogic.synthStatus} Synth status';
+      debuggingText += '${providerSessionLogic.sfxStatus} Sfx status';
+      debuggingText += '\n\n';
 
       debuggingText += 'Queue: (length: ${providerSessionLogic.delegationStack.length})\n';
       for (var x = 0; x < providerSessionLogic.delegationStack.length; x++) {
