@@ -146,6 +146,9 @@ class _MenuContainerState extends State<MenuContainer> {
                               WideButton(
                                 color: bgColor,
                                 onTap: () {
+                                  // stop focusing on the keyboard if the keyboard is focused:
+                                  FocusScope.of(context).unfocus();
+
                                   handleRecordQuestion();
                                 },
                                 child: Container(
@@ -234,6 +237,9 @@ class _MenuContainerState extends State<MenuContainer> {
                               WideButton(
                                 color: bgColor,
                                 onTap: () {
+                                  // stop focusing on the keyboard if the keyboard is focused:
+                                  FocusScope.of(context).unfocus();
+
                                   // queue a recording...
                                   handleRecordAnswer();
                                 },
