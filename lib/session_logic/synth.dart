@@ -9,6 +9,8 @@ class Synth {
   Function? _setIsSynthing;
   Function? _callback;
 
+  String status = '👍';
+
   Future<void> init(setIsSynthing) async {
     _setIsSynthing = setIsSynthing;
     languagesTtsFormat = await flutterTts.getLanguages;
@@ -62,12 +64,14 @@ class Synth {
     try {
       await flutterTts.setLanguage(language);
     } catch (e) {
+      status = 'Error setting language: $e';
       throw 'Error setting language: $e';
     }
 
     try {
       await flutterTts.speak(msg);
     } catch (e) {
+      status = 'Error during speech synthesis: $e';
       throw 'Error during speech synthesis: $e';
     }
   }
