@@ -582,6 +582,20 @@ class ProviderSessionLogic with ChangeNotifier {
     }
   }
 
+  void queueGetHint() {
+    if (checkIsBusy()) return;
+
+    Question currentQ = getCurrentQuestion();
+
+    sessionTaskDelegator(
+      appendTask: SessionTask(
+        taskName: TaskName.giveHint,
+        value: currentQ.a,
+        language: currentQ.saLang,
+      ),
+    );
+  }
+
   Question getCurrentQuestion() {
     updateCurrentQuestionIndex();
     return questionsList[currentQuestionIndex];
