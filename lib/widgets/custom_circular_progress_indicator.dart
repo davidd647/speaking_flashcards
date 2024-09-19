@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomCircularProgressIndicator extends StatefulWidget {
-  const CustomCircularProgressIndicator({super.key});
+  const CustomCircularProgressIndicator({
+    super.key,
+    required this.color1,
+    required this.color2,
+  });
+
+  final Color color1;
+  final Color color2;
 
   @override
   CustomCircularProgressIndicatorState createState() => CustomCircularProgressIndicatorState();
@@ -23,18 +30,15 @@ class CustomCircularProgressIndicatorState extends State<CustomCircularProgressI
 
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
-    const green = Color.fromARGB(255, 19, 213, 29);
-    const black = Color.fromARGB(255, 59, 59, 59);
-
     _colorAnimation = TweenSequence<Color?>(
       [
         TweenSequenceItem(
           weight: 1.0,
-          tween: ColorTween(begin: black, end: green) as Animatable<Color?>,
+          tween: ColorTween(begin: widget.color1, end: widget.color2) as Animatable<Color?>,
         ),
         TweenSequenceItem(
           weight: 1.0,
-          tween: ColorTween(begin: green, end: black) as Animatable<Color?>,
+          tween: ColorTween(begin: widget.color2, end: widget.color1) as Animatable<Color?>,
         ),
       ],
     ).animate(_controller);
