@@ -488,6 +488,8 @@ class _MenuContainerState extends State<MenuContainer> {
                 ),
               ),
               const SizedBox(height: 100),
+              Center(child: Text('version: 1.0.11+12', style: TextStyle(color: fgColor))),
+              const SizedBox(height: 100),
             ],
           ),
         ),
