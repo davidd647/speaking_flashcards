@@ -112,9 +112,9 @@ class _StudySessionState extends State<StudySession> {
       }
 
       debuggingText += '\n\n';
-      debuggingText += '${providerSessionLogic.recogStatus} Recog status';
-      debuggingText += '${providerSessionLogic.synthStatus} Synth status';
-      debuggingText += '${providerSessionLogic.sfxStatus} Sfx status';
+      debuggingText += '${providerSessionLogic.recogStatus} <- Recog status\n';
+      debuggingText += '${providerSessionLogic.synthStatus} <- Synth status\n';
+      debuggingText += '${providerSessionLogic.sfxStatus} <- Sfx status\n';
       debuggingText += '\n\n';
 
       debuggingText += 'Queue: (length: ${providerSessionLogic.delegationStack.length})\n';
@@ -327,6 +327,7 @@ class _StudySessionState extends State<StudySession> {
               Positioned(
                 top: 200,
                 left: 10,
+                right: 10,
                 child: Text(debuggingText, style: TextStyle(color: fgColor)),
               ),
             // middle
