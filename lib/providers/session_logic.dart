@@ -608,9 +608,9 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   addInputAsAnswer() async {
+    String oldA = questionsList[currentQuestionIndex].a;
     // make necessary addition to current list...
     questionsList[currentQuestionIndex].a = '${getCurrentQuestion().a}/${answerController.text}';
-    String oldA = questionsList[currentQuestionIndex].a;
     // save to database...
     int success = await DbQuestions.updateQuestion(questionsList[currentQuestionIndex]);
 
@@ -622,7 +622,7 @@ class ProviderSessionLogic with ChangeNotifier {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('Question Updated:'),
-          Text('Q: ${questionsList[currentQuestionIndex].q}'),
+          Text('Q: ${questionsList[currentQuestionIndex].q}\n'),
           Text('Old A: $oldA'),
           Text('New A: ${questionsList[currentQuestionIndex].a}'),
         ],
