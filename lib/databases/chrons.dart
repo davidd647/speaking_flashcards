@@ -139,7 +139,7 @@ class DbChrons {
     return chrons;
   }
 
-  static Future<void> setToday(String date, int timeStudied, String languageCombo) async {
+  static Future<int> setToday(String date, int timeStudied, String languageCombo) async {
     final db = await DbChrons.database();
 
     String query = """UPDATE $dbName
@@ -150,7 +150,9 @@ class DbChrons {
         languageCombo=?
     """;
 
-    await db.rawUpdate(query, [timeStudied, date, languageCombo]);
+    int amntUpdated = await db.rawUpdate(query, [timeStudied, date, languageCombo]);
+
+    return amntUpdated;
   }
 
   static Future<int> deleteDay(String date) async {
