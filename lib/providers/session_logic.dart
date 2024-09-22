@@ -103,6 +103,7 @@ class ProviderSessionLogic with ChangeNotifier {
   double minMins = 999;
   double maxMins = 0;
   int numOfDays = 30;
+  int debuggingTodaySetUpdated = 0;
 
   void setIsSynthing(bool synthingState) {
     isSynthing = synthingState;
@@ -332,7 +333,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
   void incrementTimer() async {
     // if the user is active, count the seconds studied
-    var tmpUserIsActive = isUserActive(
+    bool tmpUserIsActive = isUserActive(
       secondsPassed,
       whenUserLastActed,
       20,
@@ -344,13 +345,11 @@ class ProviderSessionLogic with ChangeNotifier {
     if (!userIsActive) return;
 
     String languageCombo = getLanguageComboString(selectedLangCombo);
-    DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
+    debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
 
     // congrats:
-    print('secondsPassed: $secondsPassed');
     if (secondsPassed > 0 && secondsPassed % (60 * 5) == 0) {
       runCongratsAsap = true;
-      print('runCongratsAsap: $runCongratsAsap');
       dailyStreak = await DbChrons.updateStreak();
       // since updateStreak only uses data from yesterday and back,
       // we should add one for today (because seconds passed > 60*5)
