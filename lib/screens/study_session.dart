@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,7 @@ class _StudySessionState extends State<StudySession> {
     Color fgColor = const Color.fromARGB(255, 44, 44, 44);
     Color containerColor = const Color.fromARGB(255, 220, 220, 220);
     Color bgColor = const Color.fromARGB(255, 249, 247, 247);
+    Color disabledColor = const ui.Color.fromARGB(255, 150, 150, 150); // doesn't change for dark mode...
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
@@ -261,8 +263,9 @@ class _StudySessionState extends State<StudySession> {
                     child: FittedBox(
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                         const SizedBox(height: 15),
-                        Icon(Icons.play_arrow, color: fgColor),
-                        Text('Question', style: TextStyle(color: fgColor)),
+                        Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                        Text('Question',
+                            style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
                         const SizedBox(height: 15),
                       ]),
                     ),
@@ -277,8 +280,8 @@ class _StudySessionState extends State<StudySession> {
                     child: FittedBox(
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                         const SizedBox(height: 15),
-                        Icon(Icons.play_arrow, color: fgColor),
-                        Text('Input', style: TextStyle(color: fgColor)),
+                        Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                        Text('Input', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
                         const SizedBox(height: 15),
                       ]),
                     ),
@@ -296,8 +299,8 @@ class _StudySessionState extends State<StudySession> {
                       child: FittedBox(
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                           const SizedBox(height: 15),
-                          Icon(Icons.question_mark, color: fgColor),
-                          Text('Hint', style: TextStyle(color: fgColor)),
+                          Icon(Icons.question_mark, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                          Text('Hint', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
                           const SizedBox(height: 15),
                         ]),
                       ),
@@ -316,8 +319,8 @@ class _StudySessionState extends State<StudySession> {
                       child: FittedBox(
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                           const SizedBox(height: 15),
-                          Icon(Icons.skip_next, color: fgColor),
-                          Text('Skip', style: TextStyle(color: fgColor)),
+                          Icon(Icons.skip_next, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                          Text('Skip', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
                           const SizedBox(height: 15),
                         ]),
                       ),
@@ -347,7 +350,7 @@ class _StudySessionState extends State<StudySession> {
                 },
                 // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
                 color: providerSessionLogic.questionsList.isEmpty ? Colors.grey[300] : Colors.lightBlue[100],
-                child: const Icon(Icons.mic),
+                child: Icon(Icons.mic, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
               ),
             ),
             if (providerSessionLogic.isRecoging)
