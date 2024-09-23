@@ -112,6 +112,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
   void setIsRecoging(bool recogingState) {
     isRecoging = recogingState;
+    isBusy = recogingState;
     notifyListeners();
   }
 
@@ -560,9 +561,6 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   void queueSubmitTyped() {
-    recogStatus = recog.status;
-    notifyListeners();
-
     if (checkIsBusy()) return;
 
     // if there's already submitByText or recog queued, then exit this method
@@ -1107,11 +1105,13 @@ class ProviderSessionLogic with ChangeNotifier {
 
     // keep track of what's recording (to show little spinner)
     isRecoging = true; // make sure logic is maintained
+    isBusy = true;
     // keep track for individual spinners:
     if (taskDetails.value == 'question') {
       isRecogingQuestion = true;
     } else if (taskDetails.value == 'answer') {
       isRecogingAnswer = true;
+      isBusy = true;
     }
     notifyListeners();
 
@@ -1132,6 +1132,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
         // keep track of what's recording (to show little spinner)
         isRecoging = false; // make sure logic is maintained
+        isBusy = false;
         // keep track for individual spinners:
         if (taskDetails.value == 'question') {
           isRecogingQuestion = false;
@@ -1173,6 +1174,7 @@ class ProviderSessionLogic with ChangeNotifier {
     delegationStack.removeAt(0);
 
     isRecoging = true;
+    isBusy = true;
     notifyListeners();
 
     recog.startListening(
@@ -1342,6 +1344,7 @@ class ProviderSessionLogic with ChangeNotifier {
     delegationStack.removeAt(0);
 
     sfxPlaying = true;
+    isBusy = true;
     notifyListeners();
     await Future.delayed(const Duration(milliseconds: 300), () {});
     final player = AudioPlayer();
@@ -1377,6 +1380,7 @@ class ProviderSessionLogic with ChangeNotifier {
     // synth doesn't start up quickly enough to halt the next task, so we need to set 'isSpeaking' to true
     // ASAP:
     isSynthing = true;
+    isBusy = true;
 
     delegationStack.removeAt(0);
 
@@ -1389,6 +1393,7 @@ class ProviderSessionLogic with ChangeNotifier {
       language: taskDetails.language,
       callback: () {
         isSynthing = false;
+        checkIsBusy();
         sessionTaskDelegator(appendTask: null);
       },
     ); // play question/answer/hint/congrats
@@ -1423,6 +1428,9 @@ class ProviderSessionLogic with ChangeNotifier {
 
   // TASK DELEGATOR:
   void sessionTaskDelegator({SessionTask? appendTask}) async {
+    recogStatus = recog.status; // always update the recogStatus, bc it often has errors...
+    notifyListeners();
+
     if (appendTask != null) {
       // print('attempting to run task: ${appendTask.taskName}');
     }
