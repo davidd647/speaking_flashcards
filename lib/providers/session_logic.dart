@@ -1249,6 +1249,7 @@ class ProviderSessionLogic with ChangeNotifier {
         }
 
         isRecoging = false;
+        isBusy = false;
 
         if (runCongratsAsap) {
           sessionTaskDelegator(
