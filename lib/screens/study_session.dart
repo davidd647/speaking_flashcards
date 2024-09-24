@@ -483,12 +483,27 @@ class _StudySessionState extends State<StudySession> {
                 ),
               ),
 
-            if (providerSessionLogic.recogStatus != '👍')
-              const Center(
-                  child: Text(
-                'Recognition error\nYou may want to restart the app.',
-                style: TextStyle(color: Colors.red),
-                textAlign: TextAlign.center,
+            if (providerSessionLogic.recogStatus != '👍' &&
+                !providerSessionLogic.recogStatus.contains('error_no_match'))
+              Center(
+                  child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Recognition error\nYou may want to restart the app.',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SelectableText(
+                    providerSessionLogic.recogStatus,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               )),
           ]);
         },
