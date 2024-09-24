@@ -1439,6 +1439,7 @@ class ProviderSessionLogic with ChangeNotifier {
     if (appendTask != null) {
       delegationStack.add(appendTask);
       delegationHistory.add(appendTask);
+      notifyListeners();
     }
 
     if (delegationStack.isEmpty || checkIsBusy()) return;
