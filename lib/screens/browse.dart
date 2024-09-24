@@ -281,6 +281,18 @@ class _BrowseState extends State<Browse> {
                                     ],
                                   ),
                                 ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 12, right: 12, top: 8.0),
+                                      child: Text(
+                                        'Order: ${q.order}\nLevel: ${q.level}\nSpiritLevel: ${q.spiritLevel}\nDateCreated: ${q.dateCreated}\nCategory: ${q.cat}\nHistory: ${q.history}',
+                                        style: const TextStyle(fontSize: 11),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(height: 42),
                               ],
                             ),
