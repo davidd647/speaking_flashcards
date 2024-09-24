@@ -52,7 +52,9 @@ class _BatchAddState extends State<BatchAdd> {
     List<String> lines = batchAddController.text.split('\n');
     for (int x = 0; x < lines.length; x++) {
       List<String> fields = lines[x].split(',');
-      await providerSessionLogic.addQuestion(fields[0], fields[1]);
+      if (fields.length > 1) {
+        await providerSessionLogic.addQuestion(fields[0], fields[1]);
+      }
     }
 
     setState(() {
@@ -124,7 +126,7 @@ class _BatchAddState extends State<BatchAdd> {
                         maxLines: 5,
                         minLines: 5, // Optional, but good to set a starting point
                         decoration: InputDecoration(
-                          hintText: "Enter your batch here (in CSV format)",
+                          hintText: "Enter your batch here (in CSV format)\nE.g. \"question,answer\"",
                           hintStyle: TextStyle(color: fgColor),
                           border: const OutlineInputBorder(),
                         ),
@@ -134,33 +136,34 @@ class _BatchAddState extends State<BatchAdd> {
                       if (numOfQuestions != '0') Text('Number of Questions: $numOfQuestions'),
                       const SizedBox(height: 10),
                       WideButton(
-                          color: (invalidRow != '' || batchAddController.text.trim() == '')
-                              ? Colors.grey.shade200
-                              : containerColor,
-                          // disabled: invalidRow != '' ? true : false,
-                          onTap: () {
-                            if (invalidRow != '') return;
-                            if (batchAddController.text.trim() == '') return;
+                        color: (invalidRow != '' || batchAddController.text.trim() == '')
+                            ? Colors.grey.shade200
+                            : containerColor,
+                        // disabled: invalidRow != '' ? true : false,
+                        onTap: () {
+                          if (invalidRow != '') return;
+                          if (batchAddController.text.trim() == '') return;
 
-                            addFromCSV();
-                          },
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              Icon(Icons.add,
-                                  color: (invalidRow != '' || batchAddController.text.trim() == '')
-                                      ? Colors.grey[300]
+                          addFromCSV();
+                        },
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            Icon(Icons.add,
+                                color: (invalidRow != '' || batchAddController.text.trim() == '')
+                                    ? Colors.grey[300]
+                                    : fgColor),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Add Batch',
+                              style: TextStyle(
+                                  color: invalidRow != '' || batchAddController.text.trim() == ''
+                                      ? Colors.grey[400]
                                       : fgColor),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Add Batch',
-                                style: TextStyle(
-                                    color: invalidRow != '' || batchAddController.text.trim() == ''
-                                        ? Colors.grey[400]
-                                        : fgColor),
-                              ),
-                            ],
-                          )),
+                            ),
+                          ],
+                        ),
+                      ),
                       if (invalidRow != '') const SizedBox(height: 10),
                       if (invalidRow != '') Text(invalidRow, style: const TextStyle(color: Colors.red)),
                       const SizedBox(height: 10),
