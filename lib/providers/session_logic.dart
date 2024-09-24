@@ -719,9 +719,9 @@ class ProviderSessionLogic with ChangeNotifier {
     }
 
     print('maybe we should remove all sub-spiritLevel-3 questions that are in questionsList, but have an "oder"');
-    print(' value > 5');
-    print('and make sure when they are added back into questionsList, that they have an "order" value incrementing');
-    print(' from > 5');
+    print(' value > 5 and make sure when they are added back into questionsList, ');
+    print('that they have an "order" value incrementing from > 5');
+
     // remove all questions from fresh that are already in questions (reduce workload)
     for (var q in questionsList) {
       freshlyQueriedQuestions.removeWhere((freshQ) => freshQ.id == q.id);
