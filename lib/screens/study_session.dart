@@ -482,6 +482,14 @@ class _StudySessionState extends State<StudySession> {
                   child: const Icon(Icons.more_vert),
                 ),
               ),
+
+            if (providerSessionLogic.recogStatus != '👍')
+              const Center(
+                  child: Text(
+                'Recognition error\nYou may want to restart the app.',
+                style: TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              )),
           ]);
         },
       ),
