@@ -49,6 +49,9 @@ class _BrowseState extends State<Browse> {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
     // - delete from database
     providerSessionLogic.delete(q.id);
+
+    // gotta update how many questions are in each language now...
+    providerSessionLogic.getAllLangCombosWithQuestions();
   }
 
   void save(Question q) {
