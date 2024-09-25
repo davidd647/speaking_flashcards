@@ -85,6 +85,12 @@ class _StudySessionState extends State<StudySession> {
     Color disabledColor = const ui.Color.fromARGB(255, 150, 150, 150); // doesn't change for dark mode...
     bool showDarkKeyboard = false;
     String studiedTime = '';
+    providerSessionLogic.getTodaysChrons();
+    for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
+      Chron tmpChron = providerSessionLogic.todaysChrons[x];
+      studiedTime +=
+          '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s ${tmpChron.timeStudied > 60 * 5 ? '⭐️' : ''} ';
+    }
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
@@ -104,7 +110,7 @@ class _StudySessionState extends State<StudySession> {
       debuggingText += '${providerSessionLogic.recog.recogEnabled ? '🟩' : '🟥'} providerSessionLogic.recog.enabled\n';
 
       // display all times recorded for today:
-      providerSessionLogic.getTodaysChrons();
+      // providerSessionLogic.getTodaysChrons();
 
       for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
         Chron tmpChron = providerSessionLogic.todaysChrons[x];
@@ -114,12 +120,6 @@ class _StudySessionState extends State<StudySession> {
             ? '${tmpChron.timeStudied}s'
             : '${tmpChron.timeStudied > 60 * 5 ? '⭐️' : ''} ${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s';
         debuggingText += '\n';
-      }
-
-      for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
-        Chron tmpChron = providerSessionLogic.todaysChrons[x];
-        studiedTime +=
-            '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s  ';
       }
 
       debuggingText += '\n\n';
