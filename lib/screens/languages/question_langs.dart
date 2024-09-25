@@ -38,6 +38,9 @@ class _QuestionLangsState extends State<QuestionLangs> {
       // set initial due!
       await providerSessionLogic.resetAmountsDue();
 
+      // get new time studied...
+      providerSessionLogic.checkNewDaySequence();
+
       return;
     }
 
@@ -71,6 +74,9 @@ class _QuestionLangsState extends State<QuestionLangs> {
 
     // set initial due!
     await providerSessionLogic.resetAmountsDue();
+
+    // get new time studied...
+    providerSessionLogic.checkNewDaySequence();
   }
 
   void updateSynthQuestions(newVal) {

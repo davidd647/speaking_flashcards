@@ -15,7 +15,7 @@ class AnswerLangs extends StatefulWidget {
 }
 
 class _AnswerLangsState extends State<AnswerLangs> {
-  void updateAnswerLanguages(newVal) {
+  void updateAnswerLanguages(newVal) async {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
 
     // SPECIAL CODE FOR MANDARIN
@@ -35,7 +35,10 @@ class _AnswerLangsState extends State<AnswerLangs> {
       providerSessionLogic.getUrgentQuestions();
 
       // set initial due!
-      providerSessionLogic.resetAmountsDue();
+      await providerSessionLogic.resetAmountsDue();
+
+      // get new time studied...
+      providerSessionLogic.checkNewDaySequence();
 
       return;
     }
@@ -70,6 +73,9 @@ class _AnswerLangsState extends State<AnswerLangs> {
 
     // set initial due!
     providerSessionLogic.resetAmountsDue();
+
+    // get new time studied...
+    providerSessionLogic.checkNewDaySequence();
   }
 
   void updateSynthAnswers(newVal) {
