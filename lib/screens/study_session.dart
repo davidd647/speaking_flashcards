@@ -84,6 +84,7 @@ class _StudySessionState extends State<StudySession> {
     Color bgColor = const Color.fromARGB(255, 249, 247, 247);
     Color disabledColor = const ui.Color.fromARGB(255, 150, 150, 150); // doesn't change for dark mode...
     bool showDarkKeyboard = false;
+    String studiedTime = '';
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
@@ -113,6 +114,12 @@ class _StudySessionState extends State<StudySession> {
             ? '${tmpChron.timeStudied}s'
             : '${tmpChron.timeStudied > 60 * 5 ? '⭐️' : ''} ${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s';
         debuggingText += '\n';
+      }
+
+      for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
+        Chron tmpChron = providerSessionLogic.todaysChrons[x];
+        studiedTime +=
+            '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s  ';
       }
 
       debuggingText += '\n\n';
@@ -185,19 +192,28 @@ class _StudySessionState extends State<StudySession> {
             Positioned(
               left: 10,
               top: 50,
+              right: 100,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Text(
+                  //   // display time in the format ~m~~s (for brevity):
+                  //   providerSessionLogic.secondsPassed < 120
+                  //       ? 'Studied: ${providerSessionLogic.secondsPassed}s'
+                  //       : 'Studied: ${providerSessionLogic.secondsPassed ~/ 60}m${providerSessionLogic.secondsPassed % 60 < 10 ? '0' : ''}${providerSessionLogic.secondsPassed % 60}s ${providerSessionLogic.secondsPassed > 60 * 5 ? '⭐️' : ''}',
+                  //   style: TextStyle(
+                  //     fontSize: 12.0,
+                  //     color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
+                  //   ),
+                  // ),
                   Text(
-                    // display time in the format ~m~~s (for brevity):
-                    providerSessionLogic.secondsPassed < 120
-                        ? 'Studied: ${providerSessionLogic.secondsPassed}s'
-                        : 'Studied: ${providerSessionLogic.secondsPassed ~/ 60}m${providerSessionLogic.secondsPassed % 60 < 10 ? '0' : ''}${providerSessionLogic.secondsPassed % 60}s ${providerSessionLogic.secondsPassed > 60 * 5 ? '⭐️' : ''}',
+                    'Studied: $studiedTime',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   // if (providerSessionLogic.dailyStreak != 0)
