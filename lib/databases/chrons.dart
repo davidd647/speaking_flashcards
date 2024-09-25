@@ -152,6 +152,10 @@ class DbChrons {
 
     int amntUpdated = await db.rawUpdate(query, [timeStudied, date, languageCombo]);
 
+    if (amntUpdated == 0) {
+      newDay(date, languageCombo);
+    }
+
     return amntUpdated;
   }
 
