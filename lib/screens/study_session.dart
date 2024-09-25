@@ -251,7 +251,10 @@ class _StudySessionState extends State<StudySession> {
                       // open menu
                       Scaffold.of(context).openEndDrawer();
                     },
-                    child: Icon(Icons.add, color: fgColor),
+                    child: Icon(Icons.add,
+                        color: providerSessionLogic.questionsList.isEmpty
+                            ? const Color.fromARGB(255, 44, 44, 44)
+                            : fgColor),
                   ),
                   ColoredInkWellButton(
                     color: containerColor,
@@ -346,11 +349,16 @@ class _StudySessionState extends State<StudySession> {
                   // stop focusing on the keyboard if the keyboard is focused:
                   FocusScope.of(context).unfocus();
 
-                  providerSessionLogic.queueRecog();
+                  if (providerSessionLogic.questionsList.isNotEmpty) {
+                    providerSessionLogic.queueRecog();
+                  }
                 },
                 // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
-                color: providerSessionLogic.questionsList.isEmpty ? Colors.grey[300] : Colors.lightBlue[100],
-                child: Icon(Icons.mic, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
+                child: Icon(
+                  Icons.mic,
+                  color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
+                ),
               ),
             ),
             if (providerSessionLogic.isRecoging)
@@ -484,7 +492,8 @@ class _StudySessionState extends State<StudySession> {
               ),
 
             if (providerSessionLogic.recogStatus != '👍' &&
-                !providerSessionLogic.recogStatus.contains('error_no_match'))
+                !providerSessionLogic.recogStatus.contains('error_no_match') &&
+                !providerSessionLogic.recogStatus.contains('error_retry'))
               Center(
                   child: Column(
                 mainAxisSize: MainAxisSize.min,
