@@ -286,7 +286,7 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   Future<void> reduceAllLevels() async {
-    var completeQsCollection = await DbQuestions.getAllQuestions();
+    List<Question> completeQsCollection = await DbQuestions.getAllQuestions();
 
     for (Question question in completeQsCollection) {
       if (question.level >= 1) question.level--;
@@ -306,7 +306,10 @@ class ProviderSessionLogic with ChangeNotifier {
       debugPrint('todaysDate: $todaysDate');
       await startNewDay();
       secondsPassed = 0;
-      await reduceAllLevels();
+      // if there's more than one language, then levels have already been reduced for today
+      if (todaysChrons.length < 2) {
+        await reduceAllLevels();
+      }
 
       // update levels of all questions (lvl>0) in the currently visible questionsList...
       for (var x = 0; x < questionsList.length; x++) {
