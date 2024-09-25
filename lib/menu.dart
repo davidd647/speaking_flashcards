@@ -59,12 +59,14 @@ class _MenuContainerState extends State<MenuContainer> {
     Color containerColor = const Color.fromARGB(255, 220, 220, 220);
     Color bgColor = const Color.fromARGB(255, 249, 247, 247);
     Color disabledTextColor = const ui.Color.fromARGB(255, 150, 150, 150); // doesn't change for dark mode...
+    bool showDarkKeyboard = false;
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       fgColor = const Color.fromARGB(255, 225, 225, 225);
       containerColor = const Color.fromARGB(255, 100, 100, 100);
       bgColor = const Color.fromARGB(255, 0, 0, 0);
+      showDarkKeyboard = true;
     }
 
     return Drawer(
@@ -209,6 +211,7 @@ class _MenuContainerState extends State<MenuContainer> {
                               padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
                               alignment: Alignment.centerLeft,
                               child: TextField(
+                                keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                                 controller: providerSessionLogic.questionController,
                                 style: TextStyle(color: fgColor),
                               ),
@@ -300,6 +303,7 @@ class _MenuContainerState extends State<MenuContainer> {
                               padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
                               alignment: Alignment.centerLeft,
                               child: TextField(
+                                keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                                 controller: providerSessionLogic.answerController,
                                 style: TextStyle(color: fgColor),
                               ),
