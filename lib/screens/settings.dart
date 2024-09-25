@@ -103,8 +103,10 @@ class _SettingsState extends State<Settings> {
                           providerSettings.toggleDarknessMatchesOS();
                         },
                       ),
-                      if (providerSettings.darknessMatchesOS == false)
-                        SwitchListTile(
+
+                      Opacity(
+                        opacity: providerSettings.darknessMatchesOS ? 0.5 : 1,
+                        child: SwitchListTile(
                           activeColor: Colors.blue,
                           title: Text(
                             'Dark Mode',
@@ -119,6 +121,7 @@ class _SettingsState extends State<Settings> {
                             providerSettings.toggledarkMode();
                           },
                         ),
+                      ),
 
                       SwitchListTile(
                         activeColor: Colors.blue,
