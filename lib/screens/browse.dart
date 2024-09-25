@@ -104,12 +104,14 @@ class _BrowseState extends State<Browse> {
     Color bgColor = Colors.white;
     Color fgColor = Colors.black;
     Color containerColor = const Color.fromARGB(255, 220, 220, 220);
+    bool showDarkKeyboard = false;
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       bgColor = Colors.black;
       fgColor = Colors.white;
       containerColor = const Color.fromARGB(255, 100, 100, 100);
+      showDarkKeyboard = true;
     }
 
     return Scaffold(
@@ -204,6 +206,7 @@ class _BrowseState extends State<Browse> {
                                           padding: const EdgeInsets.only(left: 0, right: 2),
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
+                                            keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                                             onChanged: (edit) {
                                               save(q);
                                             },
@@ -234,6 +237,7 @@ class _BrowseState extends State<Browse> {
                                           padding: const EdgeInsets.only(left: 0, right: 2),
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
+                                            keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                                             onChanged: (edit) {
                                               save(q);
                                             },
@@ -264,6 +268,7 @@ class _BrowseState extends State<Browse> {
                                           padding: const EdgeInsets.only(left: 0, right: 2),
                                           alignment: Alignment.centerLeft,
                                           child: TextField(
+                                            keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                                             onChanged: (edit) {
                                               save(q);
                                             },
