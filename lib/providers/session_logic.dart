@@ -609,6 +609,7 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   addInputAsAnswer() async {
+    getCurrentQuestion();
     String oldA = questionsList[currentQuestionIndex].a;
     // make necessary addition to current list...
     questionsList[currentQuestionIndex].a = '${getCurrentQuestion().a}/${answerController.text}';
