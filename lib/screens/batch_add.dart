@@ -80,12 +80,14 @@ class _BatchAddState extends State<BatchAdd> {
     Color bgColor = Colors.white;
     Color fgColor = Colors.black;
     Color containerColor = const Color.fromARGB(255, 220, 220, 220);
+    bool showDarkKeyboard = false;
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       bgColor = Colors.black;
       fgColor = Colors.white;
       containerColor = const Color.fromARGB(255, 100, 100, 100);
+      showDarkKeyboard = true;
     }
 
     return Scaffold(
@@ -113,6 +115,7 @@ class _BatchAddState extends State<BatchAdd> {
                     children: [
                       const SizedBox(height: 24),
                       TextFormField(
+                        keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                         controller: batchAddController,
                         onChanged: (content) {
                           checkNumOfQuestions();
