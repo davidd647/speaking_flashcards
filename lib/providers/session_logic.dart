@@ -346,12 +346,16 @@ class ProviderSessionLogic with ChangeNotifier {
     if (!userIsActive) return;
 
     String languageCombo = getLanguageComboString(selectedLangCombo);
-    debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
+    if (questionsList.isNotEmpty) {
+      debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
+    }
 
     // congrats:
     if (secondsPassed > 0 && secondsPassed % (60 * 5) == 0) {
       runCongratsAsap = true;
-      dailyStreak = await DbChrons.updateStreak();
+      if (questionsList.isNotEmpty) {
+        dailyStreak = await DbChrons.updateStreak();
+      }
       // since updateStreak only uses data from yesterday and back,
       // we should add one for today (because seconds passed > 60*5)
       dailyStreak++;
