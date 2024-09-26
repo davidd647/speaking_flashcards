@@ -350,7 +350,12 @@ class ProviderSessionLogic with ChangeNotifier {
 
     String languageCombo = getLanguageComboString(selectedLangCombo);
     if (questionsList.isNotEmpty) {
-      debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, secondsPassed, languageCombo);
+      // get secondsPassed from database (so we don't override it by making some sort of coding mistake...)
+      Chron? tmpTodayChron = await DbChrons.getChronByDate(todaysDate, languageCombo);
+      if (tmpTodayChron != null) {
+        debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, tmpTodayChron.timeStudied + 1, languageCombo);
+        secondsPassed = tmpTodayChron.timeStudied;
+      }
     }
 
     // congrats:
@@ -364,7 +369,7 @@ class ProviderSessionLogic with ChangeNotifier {
       dailyStreak++;
     }
 
-    secondsPassed++;
+    // secondsPassed++;
     notifyListeners();
   }
 
