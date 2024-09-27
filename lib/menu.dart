@@ -517,7 +517,7 @@ class _MenuContainerState extends State<MenuContainer> {
               const SizedBox(height: 50),
               Center(
                 child: Text(
-                  'version: 1.0.20+21',
+                  'version: 1.0.21+22',
                   style: TextStyle(color: bgColor),
                 ),
               ),
