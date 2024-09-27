@@ -60,6 +60,7 @@ class _BatchAddState extends State<BatchAdd> {
     setState(() {
       batchAddController.text = '';
       invalidRow = '${lines.length} flashcards added! :)';
+      numOfQuestions = '0';
     });
   }
 
@@ -136,7 +137,8 @@ class _BatchAddState extends State<BatchAdd> {
                         textInputAction: TextInputAction.newline, // For iOS to show a return key that makes a new line
                       ),
                       if (numOfQuestions != '0') const SizedBox(height: 10),
-                      if (numOfQuestions != '0') Text('Number of Questions: $numOfQuestions'),
+                      if (numOfQuestions != '0')
+                        Text('Number of Questions: $numOfQuestions', style: TextStyle(color: fgColor)),
                       const SizedBox(height: 10),
                       WideButton(
                         color: (invalidRow != '' || batchAddController.text.trim() == '')
