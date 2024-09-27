@@ -295,7 +295,10 @@ class _BrowseState extends State<Browse> {
                                       padding: const EdgeInsets.only(left: 12, right: 12, top: 8.0),
                                       child: Text(
                                         'Order: ${q.order}\nLevel: ${q.level}\nSpiritLevel: ${q.spiritLevel}\nDateCreated: ${q.dateCreated}\nCategory: ${q.cat}\nHistory: ${q.history}',
-                                        style: const TextStyle(fontSize: 11),
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: fgColor,
+                                        ),
                                         textAlign: TextAlign.left,
                                       ),
                                     ),
