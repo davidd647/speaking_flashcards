@@ -1378,8 +1378,6 @@ class ProviderSessionLogic with ChangeNotifier {
         } else {
           player.play(AssetSource(sfxFeedbackGreat));
         }
-
-        player.dispose();
       }
     } catch (e) {
       sfxStatus = 'Error playing sfx: $e';
@@ -1389,6 +1387,7 @@ class ProviderSessionLogic with ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 800), () {});
     sfxPlaying = false;
     isBusy = false;
+    player.dispose();
     // print('finished sfxing...');
     notifyListeners();
 
