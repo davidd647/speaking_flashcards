@@ -515,10 +515,11 @@ class _MenuContainerState extends State<MenuContainer> {
                 ),
               ),
               const SizedBox(height: 50),
-              Center(
+              const Center(
                 child: Text(
-                  'version: 1.0.21+22',
-                  style: TextStyle(color: bgColor),
+                  'version: 1.0.22+23',
+                  // make it white because the drawer is always a black or dark shade
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               const SizedBox(height: 70),
