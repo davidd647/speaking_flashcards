@@ -213,7 +213,7 @@ class _StudySessionState extends State<StudySession> {
                     style: TextStyle(
                       fontSize: 12.0,
                       color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
-                      overflow: TextOverflow.ellipsis,
+                      // overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   // if (providerSessionLogic.dailyStreak != 0)
