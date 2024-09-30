@@ -19,4 +19,5 @@ enum TaskName {
   congrats,
   giveHint,
   sayAnswer,
+  debug,
 }
