@@ -311,6 +311,7 @@ class ProviderSessionLogic with ChangeNotifier {
       await startNewDay();
       secondsPassed = 0;
       // if there's more than one language, then levels have already been reduced for today
+      await getTodaysChrons();
       if (todaysChrons.length < 2) {
         await reduceAllLevels();
       }
@@ -357,12 +358,15 @@ class ProviderSessionLogic with ChangeNotifier {
       // get secondsPassed from database (so we don't override it by making some sort of coding mistake...)
       Chron? tmpTodayChron = await DbChrons.getChronByDate(todaysDate, languageCombo);
       //tmpTodayChron
-      delegationHistory.add(SessionTask(
-          taskName: TaskName.debug, value: 'increment timer if tmpTodayChron is not null...', language: ''));
+      // delegationHistory.add(SessionTask(
+      //     taskName: TaskName.debug, value: 'increment timer if tmpTodayChron is not null...', language: ''));
 
       if (tmpTodayChron != null) {
-        delegationHistory.add(SessionTask(
-            taskName: TaskName.debug, value: 'tmpTodayChron: ${tmpTodayChron.languageCombo}', language: ''));
+        // delegationHistory.add(SessionTask(
+        //   taskName: TaskName.debug,
+        //   value: 'tmpTodayChron: ${tmpTodayChron.languageCombo}',
+        //   language: '',
+        // ));
 
         debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, tmpTodayChron.timeStudied + 1, languageCombo);
         secondsPassed = tmpTodayChron.timeStudied;
