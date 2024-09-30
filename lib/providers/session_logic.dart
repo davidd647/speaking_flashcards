@@ -279,6 +279,7 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   Future<void> startNewDay() async {
+    delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'startNewDay called', language: ''));
     String languageCombo = getLanguageComboString(selectedLangCombo);
 
     await DbChrons.newDay(todaysDate, languageCombo);
@@ -286,6 +287,7 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   Future<void> reduceAllLevels() async {
+    delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'reduceAllLevels called', language: ''));
     List<Question> completeQsCollection = await DbQuestions.getAllQuestions();
 
     for (Question question in completeQsCollection) {
@@ -299,6 +301,8 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   Future<void> checkNewDaySequence() async {
+    print('checkNewDaySequence');
+    delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'checkNewDaySequence called', language: ''));
     Chron? todayChron = await getTodaysChron();
 
     if (todayChron == null) {
@@ -352,7 +356,14 @@ class ProviderSessionLogic with ChangeNotifier {
     if (questionsList.isNotEmpty) {
       // get secondsPassed from database (so we don't override it by making some sort of coding mistake...)
       Chron? tmpTodayChron = await DbChrons.getChronByDate(todaysDate, languageCombo);
+      //tmpTodayChron
+      delegationHistory.add(SessionTask(
+          taskName: TaskName.debug, value: 'increment timer if tmpTodayChron is not null...', language: ''));
+
       if (tmpTodayChron != null) {
+        delegationHistory.add(SessionTask(
+            taskName: TaskName.debug, value: 'tmpTodayChron: ${tmpTodayChron.languageCombo}', language: ''));
+
         debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, tmpTodayChron.timeStudied + 1, languageCombo);
         secondsPassed = tmpTodayChron.timeStudied;
       }
@@ -495,6 +506,8 @@ class ProviderSessionLogic with ChangeNotifier {
     await checkNewDaySequence();
 
     if (timerIsInitialized) return;
+
+    delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'timer initialized', language: ''));
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       incrementTimer();
