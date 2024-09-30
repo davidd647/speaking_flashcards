@@ -114,7 +114,14 @@ class _BatchAddState extends State<BatchAdd> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: Column(
                     children: [
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 12),
+                      // show languages here...
+                      Text(
+                        '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
+                        style: const TextStyle(fontSize: 25),
+                      ),
+                      const SizedBox(height: 12),
+
                       TextFormField(
                         keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                         controller: batchAddController,
