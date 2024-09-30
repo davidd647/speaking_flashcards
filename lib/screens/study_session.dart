@@ -309,6 +309,7 @@ class _StudySessionState extends State<StudySession> {
                     // child: const Icon(Icons.bar_chart_sharp),
                   ),
                   if (providerSessionLogic.questionsList.isNotEmpty &&
+                      providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
                       providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel == 0)
                     ColoredInkWellButton(
                       color: containerColor,
@@ -328,6 +329,7 @@ class _StudySessionState extends State<StudySession> {
                       // child: const Icon(Icons.bar_chart_sharp),
                     ),
                   if (providerSessionLogic.questionsList.isNotEmpty &&
+                      providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
                       providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel != 0)
                     ColoredInkWellButton(
                       color: containerColor,
