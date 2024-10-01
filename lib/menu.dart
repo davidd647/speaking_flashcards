@@ -177,7 +177,10 @@ class _MenuContainerState extends State<MenuContainer> {
                               const SizedBox(width: 10),
                               WideButton(
                                 color: bgColor,
-                                onTap: () {},
+                                onTap: () {
+                                  // play the question input...
+                                  providerSessionLogic.queueSynthInputForQuestion();
+                                },
                                 child: Container(
                                   alignment: Alignment.center,
                                   width: 47,
@@ -187,7 +190,10 @@ class _MenuContainerState extends State<MenuContainer> {
                               const SizedBox(width: 10),
                               WideButton(
                                 color: bgColor,
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).pushNamed(Languages.routeName);
+                                },
                                 child: Container(
                                   alignment: Alignment.center,
                                   width: 47,
@@ -269,7 +275,10 @@ class _MenuContainerState extends State<MenuContainer> {
                               const SizedBox(width: 10),
                               WideButton(
                                 color: bgColor,
-                                onTap: () {},
+                                onTap: () {
+                                  // play the answer input
+                                  providerSessionLogic.queueSynthInput();
+                                },
                                 child: Container(
                                   alignment: Alignment.center,
                                   width: 47,
@@ -279,7 +288,10 @@ class _MenuContainerState extends State<MenuContainer> {
                               const SizedBox(width: 10),
                               WideButton(
                                 color: bgColor,
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.of(context).pushNamed(Languages.routeName);
+                                },
                                 child: Container(
                                   alignment: Alignment.center,
                                   width: 47,
@@ -345,6 +357,130 @@ class _MenuContainerState extends State<MenuContainer> {
               ),
               const SizedBox(height: 40),
               Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: WideButton(
+                  color: containerColor,
+                  onTap: () {
+                    if (providerSessionLogic.answerController.text == '') return;
+                    providerSessionLogic.addInputAsAnswer();
+                    Navigator.pop(context);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Icon(
+                          Icons.check,
+                          size: 24,
+                          color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  'Add Input as Soundalike ',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: (providerSessionLogic.answerController.text != '')
+                                        ? fgColor
+                                        : disabledTextColor,
+                                  ),
+                                ),
+                                Text(
+                                  '(for current Q)',
+                                  style: TextStyle(
+                                    color: (providerSessionLogic.answerController.text != '')
+                                        ? fgColor
+                                        : disabledTextColor,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (providerSessionLogic.answerController.text == '')
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
+                                child: Text(
+                                  '(Empty)',
+                                  style: TextStyle(
+                                    color: (providerSessionLogic.answerController.text != '')
+                                        ? fgColor
+                                        : disabledTextColor,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            if (providerSessionLogic.answerController.text != '')
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
+                                child: Text(
+                                  '(${providerSessionLogic.answerController.text})',
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    color: fgColor,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                child: WideButton(
+                  color: containerColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(Languages.routeName);
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Icon(Icons.language, size: 24, color: fgColor),
+                      ),
+                      Text('Languages', style: TextStyle(color: fgColor)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: WideButton(
+                  color: containerColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    providerSessionLogic.showPreviousGuessInfo();
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Icon(Icons.repeat, size: 24, color: fgColor),
+                      ),
+                      Text('Show Previous Guess', style: TextStyle(color: fgColor)),
+                    ],
+                  ),
+                ),
+              ),
+
+              Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: WideButton(
                   color: containerColor,
@@ -363,25 +499,7 @@ class _MenuContainerState extends State<MenuContainer> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: WideButton(
-                  color: containerColor,
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).pushNamed(Languages.routeName);
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: Icon(Icons.language, size: 24, color: fgColor),
-                      ),
-                      Text('Languages', style: TextStyle(color: fgColor)),
-                    ],
-                  ),
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: WideButton(
@@ -439,81 +557,7 @@ class _MenuContainerState extends State<MenuContainer> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: WideButton(
-                  color: containerColor,
-                  onTap: () {
-                    if (providerSessionLogic.answerController.text == '') return;
-                    providerSessionLogic.addInputAsAnswer();
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: Icon(
-                          Icons.check,
-                          size: 24,
-                          color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
-                        ),
-                      ),
-                      Text(
-                        'Add Input as Soundalike ',
-                        style: TextStyle(
-                          color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
-                        ),
-                      ),
-                      if (providerSessionLogic.answerController.text == '')
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              '(Empty)',
-                              style: TextStyle(color: fgColor),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                        ),
-                      if (providerSessionLogic.answerController.text != '')
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 16.0),
-                            child: Text(
-                              '(${providerSessionLogic.answerController.text})',
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: fgColor,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: WideButton(
-                  color: containerColor,
-                  onTap: () {
-                    Navigator.pop(context);
-                    providerSessionLogic.showPreviousGuessInfo();
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: Icon(Icons.repeat, size: 24, color: fgColor),
-                      ),
-                      Text('Show Previous Guess', style: TextStyle(color: fgColor)),
-                    ],
-                  ),
-                ),
-              ),
+              // const SizedBox(height: 40),
               const SizedBox(height: 50),
               const Center(
                 child: Text(
