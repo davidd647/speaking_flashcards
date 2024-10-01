@@ -340,6 +340,7 @@ class _MenuContainerState extends State<MenuContainer> {
                             providerSessionLogic.questionController.text = '';
                             providerSessionLogic.answerController.text = '';
                           }
+                          providerSessionLogic.getCurrentQuestion();
                         },
                         child: const Row(
                           children: [
