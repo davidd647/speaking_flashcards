@@ -551,6 +551,18 @@ class ProviderSessionLogic with ChangeNotifier {
     );
   }
 
+  void queueSynthInputForQuestion() {
+    if (questionsList.isEmpty || isSynthing || isRecoging) return;
+
+    final userInput = questionController.text;
+    if (userInput == '') return;
+    Question currentQ = getCurrentQuestion();
+
+    sessionTaskDelegator(
+      appendTask: SessionTask(taskName: TaskName.synth, value: userInput, language: currentQ.sqLang),
+    );
+  }
+
   void queueSynthInput() {
     if (questionsList.isEmpty || isSynthing || isRecoging) return;
 
@@ -1452,7 +1464,7 @@ class ProviderSessionLogic with ChangeNotifier {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('✔️'),
+            // const Text('✔️'),
             Text('Question:\n${hintInfo.q}\n\nAnswer:\n${hintInfo.a}\n\nHistory: ${hintInfo.history}'),
           ],
         ),
