@@ -62,6 +62,7 @@ class _BatchAddState extends State<BatchAdd> {
       invalidRow = '${lines.length} flashcards added! :)';
       numOfQuestions = '0';
     });
+    providerSessionLogic.getCurrentQuestion();
   }
 
   @override
