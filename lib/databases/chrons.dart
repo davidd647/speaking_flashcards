@@ -200,9 +200,8 @@ class DbChrons {
       var dayBefore = date.subtract(const Duration(days: 1));
       var formattedDate = formatter.format(dayBefore);
 
-      Chron chronForDateStated = await getChronByDate(formattedDate, null) ?? placeholderChron;
-      // timeStudied is in seconds - so 5 minutes required to maintain streak
-      if (chronForDateStated.timeStudied > 300) {
+      List<Chron> chronForDateStated = await getChronsByDate(formattedDate);
+      if (chronForDateStated.fold(0, (sum, chron) => sum + chron.timeStudied) > 60 * 5) {
         // print(
         //     'studied for >600s on $formattedDate, so dailyStreak: $dailyStreak');
         // yes? add to streak number, recurse
