@@ -382,30 +382,12 @@ class _MenuContainerState extends State<MenuContainer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  'Add Input as Soundalike ',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: (providerSessionLogic.answerController.text != '')
-                                        ? fgColor
-                                        : disabledTextColor,
-                                  ),
-                                ),
-                                Text(
-                                  '(for current Q)',
-                                  style: TextStyle(
-                                    color: (providerSessionLogic.answerController.text != '')
-                                        ? fgColor
-                                        : disabledTextColor,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              'Add Input as Soundalike ',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
+                              ),
                             ),
                             if (providerSessionLogic.answerController.text == '')
                               Padding(
@@ -424,7 +406,7 @@ class _MenuContainerState extends State<MenuContainer> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
                                 child: Text(
-                                  '(${providerSessionLogic.answerController.text})',
+                                  '(E.g. ${providerSessionLogic.answerController.text}/${providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].a})',
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
@@ -460,25 +442,6 @@ class _MenuContainerState extends State<MenuContainer> {
                 ),
               ),
               const SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: WideButton(
-                  color: containerColor,
-                  onTap: () {
-                    Navigator.pop(context);
-                    providerSessionLogic.showPreviousGuessInfo();
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: Icon(Icons.repeat, size: 24, color: fgColor),
-                      ),
-                      Text('Show Previous Guess', style: TextStyle(color: fgColor)),
-                    ],
-                  ),
-                ),
-              ),
 
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -515,6 +478,25 @@ class _MenuContainerState extends State<MenuContainer> {
                         child: Icon(Icons.edit, size: 24, color: fgColor),
                       ),
                       Text('Browse / Edit', style: TextStyle(color: fgColor)),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: WideButton(
+                  color: containerColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    providerSessionLogic.showPreviousGuessInfo();
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Icon(Icons.repeat, size: 24, color: fgColor),
+                      ),
+                      Text('Show Previous Guess', style: TextStyle(color: fgColor)),
                     ],
                   ),
                 ),
