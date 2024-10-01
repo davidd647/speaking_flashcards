@@ -52,6 +52,7 @@ class _BrowseState extends State<Browse> {
 
     // gotta update how many questions are in each language now...
     providerSessionLogic.getAllLangCombosWithQuestions();
+    providerSessionLogic.getCurrentQuestion();
   }
 
   void save(Question q) {
@@ -86,6 +87,7 @@ class _BrowseState extends State<Browse> {
 
     // - update the database
     providerSessionLogic.updateEditedQuestion(updatedQuestion);
+    providerSessionLogic.getCurrentQuestion();
   }
 
   @override
