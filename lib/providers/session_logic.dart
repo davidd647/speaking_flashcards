@@ -883,7 +883,7 @@ class ProviderSessionLogic with ChangeNotifier {
         appendTask: SessionTask(
             taskName: TaskName.congrats,
             language: 'en-US',
-            value: 'All questions are at the top level for today. Add more via the menu!'),
+            value: 'All questions are at the top level for today. Add more with the plus button on the top left!'),
       );
     }
 
