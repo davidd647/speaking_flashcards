@@ -89,7 +89,7 @@ class _StudySessionState extends State<StudySession> {
     for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
       Chron tmpChron = providerSessionLogic.todaysChrons[x];
       studiedTime +=
-          '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s ${tmpChron.timeStudied > 60 * 5 ? '⭐️' : ''} ';
+          '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s ';
     }
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
@@ -218,7 +218,7 @@ class _StudySessionState extends State<StudySession> {
                   ),
                   // if (providerSessionLogic.dailyStreak != 0)
                   Text(
-                    'Streak: ${providerSessionLogic.dailyStreak}',
+                    'Streak: ${providerSessionLogic.dailyStreak}  ${providerSessionLogic.todaysChrons.fold(0, (sum, chron) => sum + chron.timeStudied) > 60 * 5 ? '⭐️' : ''}',
                     style: TextStyle(
                       fontSize: 12.0,
                       color: providerSessionLogic.dailyStreak != 0 ? fgColor : Colors.grey,
