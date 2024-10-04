@@ -287,13 +287,22 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   Future<void> reduceAllLevels() async {
-    delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'reduceAllLevels called', language: ''));
     List<Question> completeQsCollection = await DbQuestions.getAllQuestions();
 
     for (Question question in completeQsCollection) {
       if (question.level >= 1) question.level--;
       await DbQuestions.updateQuestion(question);
     }
+
+    int qTotal = await DbQuestions.getAmountOfQuestions();
+
+    delegationHistory.add(
+      SessionTask(
+        taskName: TaskName.debug,
+        value: '‼️‼️‼️reduceAllLevels‼️‼️‼️ called, (${completeQsCollection.length} assessed/updated of $qTotal)',
+        language: '',
+      ),
+    );
 
     await resetAmountsDue();
 
@@ -615,7 +624,7 @@ class ProviderSessionLogic with ChangeNotifier {
       appendTask: SessionTask(taskName: TaskName.submitByText, value: userInput, language: ''),
     );
 
-    if (runCongratsAsap) {
+    if (runCongratsAsap && secondsPassed ~/ 60 != 0) {
       sessionTaskDelegator(
         appendTask: SessionTask(
             taskName: TaskName.congrats,
