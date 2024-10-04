@@ -88,8 +88,10 @@ class _StudySessionState extends State<StudySession> {
     providerSessionLogic.getTodaysChrons();
     for (var x = 0; x < providerSessionLogic.todaysChrons.length; x++) {
       Chron tmpChron = providerSessionLogic.todaysChrons[x];
-      studiedTime +=
-          '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s ';
+      if (tmpChron.timeStudied > 0) {
+        studiedTime +=
+            '${codeToFlag(tmpChron.languageCombo.split('/')[3])}${tmpChron.timeStudied ~/ 60}m${tmpChron.timeStudied % 60 < 10 ? '0' : ''}${tmpChron.timeStudied % 60}s ';
+      }
     }
 
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
