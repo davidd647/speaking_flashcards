@@ -341,6 +341,8 @@ class _MenuContainerState extends State<MenuContainer> {
                             providerSessionLogic.answerController.text = '';
                           }
                           providerSessionLogic.getCurrentQuestion();
+                          providerSessionLogic.questionForHint =
+                              providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex];
                         },
                         child: const Row(
                           children: [
