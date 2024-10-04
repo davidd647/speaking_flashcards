@@ -386,7 +386,7 @@ class _MenuContainerState extends State<MenuContainer> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Add Input as Soundalike ',
+                              'Add Input as Soundalike',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: (providerSessionLogic.answerController.text != '') ? fgColor : disabledTextColor,
@@ -405,7 +405,8 @@ class _MenuContainerState extends State<MenuContainer> {
                                   textAlign: TextAlign.right,
                                 ),
                               ),
-                            if (providerSessionLogic.answerController.text != '')
+                            if (providerSessionLogic.answerController.text != '' &&
+                                providerSessionLogic.questionsList.isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
                                 child: Text(
@@ -426,7 +427,26 @@ class _MenuContainerState extends State<MenuContainer> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                padding: const EdgeInsets.all(10),
+                child: WideButton(
+                  color: containerColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pushNamed(Browse.routeName);
+                  },
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        child: Icon(Icons.edit, size: 24, color: fgColor),
+                      ),
+                      Text('Browse / Edit', style: TextStyle(color: fgColor)),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                 child: WideButton(
                   color: containerColor,
                   onTap: () {
@@ -466,25 +486,6 @@ class _MenuContainerState extends State<MenuContainer> {
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                child: WideButton(
-                  color: containerColor,
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.of(context).pushNamed(Browse.routeName);
-                  },
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: Icon(Icons.edit, size: 24, color: fgColor),
-                      ),
-                      Text('Browse / Edit', style: TextStyle(color: fgColor)),
-                    ],
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: WideButton(
