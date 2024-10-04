@@ -63,6 +63,8 @@ class _BatchAddState extends State<BatchAdd> {
       numOfQuestions = '0';
     });
     providerSessionLogic.getCurrentQuestion();
+    providerSessionLogic.questionForHint =
+        providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex];
   }
 
   @override
