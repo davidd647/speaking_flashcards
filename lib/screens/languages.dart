@@ -24,6 +24,13 @@ class _LanguagesState extends State<Languages> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    Provider.of<ProviderSessionLogic>(context, listen: false).getAllLangCombosWithQuestions();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
     final providerSettings = Provider.of<ProviderSettings>(context);
