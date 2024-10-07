@@ -261,95 +261,124 @@ class _StudySessionState extends State<StudySession> {
               right: 10,
               top: 100,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: maxWidth > 1000 ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
                 children: [
-                  ColoredInkWellButton(
-                    color: providerSessionLogic.questionsList.isEmpty ? Colors.lightBlue[100] : containerColor,
-                    width: maxWidth / 4 - 12.5,
-                    height: maxWidth / 4 - 20,
-                    onTap: () {
-                      // open menu
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                    child: Icon(Icons.add,
-                        color: providerSessionLogic.questionsList.isEmpty
-                            ? const Color.fromARGB(255, 44, 44, 44)
-                            : fgColor),
-                  ),
-                  ColoredInkWellButton(
-                    color: containerColor,
-                    width: maxWidth / 4 - 12.5,
-                    height: maxWidth / 4 - 20,
-                    onTap: () {
-                      providerSessionLogic.queueSynthQuestion();
-                    },
-                    child: FittedBox(
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        const SizedBox(height: 15),
-                        Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                        Text('Question',
-                            style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                        const SizedBox(height: 15),
-                      ]),
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                    child: ColoredInkWellButton(
+                      color: providerSessionLogic.questionsList.isEmpty ? Colors.lightBlue[100] : containerColor,
+                      width: maxWidth / 4 - 12.5,
+                      height: maxWidth / 4 - 20,
+                      onTap: () {
+                        // open menu
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                      child: FittedBox(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 15),
+                            Icon(Icons.add,
+                                color: providerSessionLogic.questionsList.isEmpty
+                                    ? const Color.fromARGB(255, 44, 44, 44)
+                                    : fgColor),
+                            // Text('', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                            const SizedBox(height: 15),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  ColoredInkWellButton(
-                    color: containerColor,
-                    width: maxWidth / 4 - 12.5,
-                    height: maxWidth / 4 - 20,
-                    onTap: () {
-                      providerSessionLogic.queueSynthInput();
-                    },
-                    child: FittedBox(
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        const SizedBox(height: 15),
-                        Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                        Text('Input', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                        const SizedBox(height: 15),
-                      ]),
-                    ),
-                    // child: const Icon(Icons.bar_chart_sharp),
-                  ),
-                  if (providerSessionLogic.questionsList.isNotEmpty &&
-                      providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
-                      providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel == 0)
-                    ColoredInkWellButton(
+                  if (maxWidth > 1000) const SizedBox(width: 20),
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                    child: ColoredInkWellButton(
                       color: containerColor,
                       width: maxWidth / 4 - 12.5,
                       height: maxWidth / 4 - 20,
                       onTap: () {
-                        providerSessionLogic.queueGetHint();
+                        providerSessionLogic.queueSynthQuestion();
                       },
                       child: FittedBox(
                         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                           const SizedBox(height: 15),
-                          Icon(Icons.question_mark, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                          Text('Hint', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                          Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                          Text('Question',
+                              style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                          const SizedBox(height: 15),
+                        ]),
+                      ),
+                    ),
+                  ),
+                  if (maxWidth > 1000) const SizedBox(width: 20),
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                    child: ColoredInkWellButton(
+                      color: containerColor,
+                      width: maxWidth / 4 - 12.5,
+                      height: maxWidth / 4 - 20,
+                      onTap: () {
+                        providerSessionLogic.queueSynthInput();
+                      },
+                      child: FittedBox(
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          const SizedBox(height: 15),
+                          Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                          Text('Input', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
                           const SizedBox(height: 15),
                         ]),
                       ),
                       // child: const Icon(Icons.bar_chart_sharp),
+                    ),
+                  ),
+                  if (maxWidth > 1000) const SizedBox(width: 20),
+                  if (providerSessionLogic.questionsList.isNotEmpty &&
+                      providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
+                      providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel == 0)
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                      child: ColoredInkWellButton(
+                        color: containerColor,
+                        width: maxWidth / 4 - 12.5,
+                        height: maxWidth / 4 - 20,
+                        onTap: () {
+                          providerSessionLogic.queueGetHint();
+                        },
+                        child: FittedBox(
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                            const SizedBox(height: 15),
+                            Icon(Icons.question_mark, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                            Text('Hint',
+                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                            const SizedBox(height: 15),
+                          ]),
+                        ),
+                        // child: const Icon(Icons.bar_chart_sharp),
+                      ),
                     ),
                   if (providerSessionLogic.questionsList.isNotEmpty &&
                       providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
                       providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel != 0)
-                    ColoredInkWellButton(
-                      color: containerColor,
-                      width: maxWidth / 4 - 12.5,
-                      height: maxWidth / 4 - 20,
-                      onTap: () {
-                        providerSessionLogic.firstRecogGuessHintPlayed = false;
-                        handleSkip();
-                      },
-                      child: FittedBox(
-                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          const SizedBox(height: 15),
-                          Icon(Icons.skip_next, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                          Text('Skip', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                          const SizedBox(height: 15),
-                        ]),
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                      child: ColoredInkWellButton(
+                        color: containerColor,
+                        width: maxWidth / 4 - 12.5,
+                        height: maxWidth / 4 - 20,
+                        onTap: () {
+                          providerSessionLogic.firstRecogGuessHintPlayed = false;
+                          handleSkip();
+                        },
+                        child: FittedBox(
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                            const SizedBox(height: 15),
+                            Icon(Icons.skip_next, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                            Text('Skip',
+                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                            const SizedBox(height: 15),
+                          ]),
+                        ),
+                        // child: const Icon(Icons.bar_chart_sharp),
                       ),
-                      // child: const Icon(Icons.bar_chart_sharp),
                     ),
                 ],
               ),
