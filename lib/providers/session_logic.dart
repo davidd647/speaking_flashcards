@@ -296,13 +296,16 @@ class ProviderSessionLogic with ChangeNotifier {
 
     int qTotal = await DbQuestions.getAmountOfQuestions();
 
-    delegationHistory.add(
-      SessionTask(
-        taskName: TaskName.debug,
-        value: '‼️‼️‼️reduceAllLevels‼️‼️‼️ called, (${completeQsCollection.length} assessed/updated of $qTotal)',
-        language: '',
-      ),
-    );
+    delegationHistory.add(SessionTask(
+      taskName: TaskName.debug,
+      value: '‼️‼️‼️reduceAllLevels‼️‼️‼️ called',
+      language: '',
+    ));
+    delegationHistory.add(SessionTask(
+      taskName: TaskName.debug,
+      value: '(${completeQsCollection.length} assessed/updated of $qTotal)...',
+      language: '',
+    ));
 
     await resetAmountsDue();
 
