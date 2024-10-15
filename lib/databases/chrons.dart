@@ -5,7 +5,6 @@ import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart'; // has the DateFormat class
 
 import '../models/chron.dart';
-import '../helpers/placeholder_chron.dart';
 
 String dbName = 'echoprof_chrons_2024_09_07_v01';
 
