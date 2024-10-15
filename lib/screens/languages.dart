@@ -61,7 +61,7 @@ class _LanguagesState extends State<Languages> {
               const SizedBox(height: 24),
               if (providerSessionLogic.commonLangs.isEmpty)
                 const Text(
-                  'Err: providerSessionLogic.commonLangs is empty',
+                  'LOADING LANGUAGES...',
                   style: TextStyle(color: Colors.red),
                 ),
               if (providerSessionLogic.commonLangs.isNotEmpty)
