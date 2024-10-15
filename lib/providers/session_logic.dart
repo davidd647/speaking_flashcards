@@ -1228,7 +1228,7 @@ class ProviderSessionLogic with ChangeNotifier {
     );
   }
 
-  List<SpokenWord> collectedIntermittentRes = [];
+  List<SpokenWord> collectedRes = [];
 
   void runRecogSubmitAnswer(SessionTask taskDetails) async {
     delegationStack.removeAt(0);
@@ -1236,7 +1236,7 @@ class ProviderSessionLogic with ChangeNotifier {
     isRecoging = true;
     isBusy = true;
     notifyListeners();
-    collectedIntermittentRes = [];
+    collectedRes = [];
 
     recog.startListening(
       recogDuration: recogDuration,
@@ -1250,20 +1250,38 @@ class ProviderSessionLogic with ChangeNotifier {
               SessionTask(taskName: TaskName.debug, value: 'finalResCallback[0].words: ${res[0].words}', language: ''));
         }
 
-        if (collectedIntermittentRes.isEmpty) {
-          collectedIntermittentRes = [SpokenWord('No speech heard...', 1)];
+        // for debugging finalResCallback stuff:
+        // print('finalResCallback:');
+        // for (SpokenWord spokenWord in res) {
+        //   print('${(spokenWord.confidence * 100)} ${spokenWord.words} ');
+        // }
+
+        // print('collectedRes:');
+        // for (SpokenWord spokenWord in collectedRes) {
+        //   print('${(spokenWord.confidence * 100)} ${spokenWord.words} ');
+        // }
+
+        // add any non-blank responses to the collected responses
+        for (var spokenWord in res) {
+          if (spokenWord.words != '') collectedRes.add(spokenWord);
         }
 
-        recogRes =
-            collectedIntermittentRes; // keep record of recog for displaying all possible interpretations of input
-        answerController.text = collectedIntermittentRes[collectedIntermittentRes.length - 1]
-            .words; // put a result into the ansewr text field
+        if (collectedRes.isEmpty) {
+          collectedRes = [SpokenWord('No speech heard...', 1)];
+        }
+
+        recogRes = collectedRes; // keep record of recog for displaying all possible interpretations of input
+
+        // get whichever answer is the longest, and put that into the answerController.text
+        SpokenWord longestResult = collectedRes.reduce((a, b) => a.words.length > b.words.length ? a : b);
+
+        answerController.text = longestResult.words; // put a result into the ansewr text field
 
         prevQuestion = getCurrentQuestion();
         prevGuess = answerController.text;
 
         // IF VOICE SUBMISSION IS CORRECT:
-        if (assessAnswer(collectedIntermittentRes)) {
+        if (assessAnswer(collectedRes)) {
           if (_showToast != null && prevQuestion != null) {
             Widget child = Container(
               constraints: const BoxConstraints(minHeight: 150),
@@ -1336,7 +1354,7 @@ class ProviderSessionLogic with ChangeNotifier {
         if (res.isEmpty) return;
 
         for (var resThing in res) {
-          collectedIntermittentRes.add(resThing);
+          collectedRes.add(resThing);
         }
 
         recogRes = res; // keep record for display if requested...
