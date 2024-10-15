@@ -1228,29 +1228,34 @@ class ProviderSessionLogic with ChangeNotifier {
     );
   }
 
+  List<SpokenWord> collectedIntermittentRes = [];
+
   void runRecogSubmitAnswer(SessionTask taskDetails) async {
     delegationStack.removeAt(0);
 
     isRecoging = true;
     isBusy = true;
     notifyListeners();
+    collectedIntermittentRes = [];
 
     recog.startListening(
       recogDuration: recogDuration,
       localeId: taskDetails.language,
       finalResCallback: (List<SpokenWord> res) async {
-        if (res.isEmpty) {
-          res = [SpokenWord('No speech heard...', 1)];
+        if (collectedIntermittentRes.isEmpty) {
+          collectedIntermittentRes = [SpokenWord('No speech heard...', 1)];
         }
 
-        recogRes = res; // keep record of recog for displaying all possible interpretations of input
-        answerController.text = res[0].words; // put a result into the ansewr text field
+        recogRes =
+            collectedIntermittentRes; // keep record of recog for displaying all possible interpretations of input
+        answerController.text = collectedIntermittentRes[collectedIntermittentRes.length - 1]
+            .words; // put a result into the ansewr text field
 
         prevQuestion = getCurrentQuestion();
         prevGuess = answerController.text;
 
         // IF VOICE SUBMISSION IS CORRECT:
-        if (assessAnswer(res)) {
+        if (assessAnswer(collectedIntermittentRes)) {
           if (_showToast != null && prevQuestion != null) {
             Widget child = Container(
               constraints: const BoxConstraints(minHeight: 150),
@@ -1273,8 +1278,9 @@ class ProviderSessionLogic with ChangeNotifier {
           }
 
           firstRecogGuessHintPlayed = false;
-          answerController.text = '';
+
           await userCorrect(taskDetails);
+          answerController.text = '';
         } else {
           // IF VOICE SUBMISSION IS WRONG:
           // print('user was wrong, sending sfx task...');
@@ -1320,6 +1326,10 @@ class ProviderSessionLogic with ChangeNotifier {
       },
       intermittentResCallback: (List<SpokenWord> res) {
         if (res.isEmpty) return;
+
+        for (var resThing in res) {
+          collectedIntermittentRes.add(resThing);
+        }
 
         recogRes = res; // keep record for display if requested...
 
