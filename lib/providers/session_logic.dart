@@ -1242,6 +1242,14 @@ class ProviderSessionLogic with ChangeNotifier {
       recogDuration: recogDuration,
       localeId: taskDetails.language,
       finalResCallback: (List<SpokenWord> res) async {
+        // checking for finalResCallback response having a non-empty string (just for debugging logging)
+        delegationHistory.add(SessionTask(
+            taskName: TaskName.debug, value: 'finalResCallback results length: ${res.length}', language: ''));
+        if (res.isNotEmpty) {
+          delegationHistory.add(
+              SessionTask(taskName: TaskName.debug, value: 'finalResCallback[0].words: ${res[0].words}', language: ''));
+        }
+
         if (collectedIntermittentRes.isEmpty) {
           collectedIntermittentRes = [SpokenWord('No speech heard...', 1)];
         }
