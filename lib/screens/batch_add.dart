@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/widgets/wide_button.dart';
+import 'package:speaking_flashcards/screens/languages.dart';
 
 class BatchAdd extends StatefulWidget {
   const BatchAdd({super.key});
@@ -120,10 +121,36 @@ class _BatchAddState extends State<BatchAdd> {
                       children: [
                         const SizedBox(height: 12),
                         // show languages here...
-                        Text(
-                          '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
-                          style: const TextStyle(fontSize: 25),
+                        WideButton(
+                          color: containerColor,
+                          onTap: () {
+                            // Navigator.pop(context);
+                            Navigator.of(context).pushNamed(Languages.routeName);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            // width: 47,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Change Languages',
+                                  style: TextStyle(color: fgColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
+                        // Text(
+                        //   '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
+                        //   style: const TextStyle(fontSize: 25),
+                        // ),
                         const SizedBox(height: 12),
 
                         TextFormField(
