@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:speaking_flashcards/helpers/code_to_flag.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
@@ -215,7 +216,20 @@ class _BatchAddState extends State<BatchAdd> {
                           color: containerColor,
                           // disabled: true,
                           onTap: () async {
-                            final Uri url = Uri.parse('https://speaking-flashcards-web.web.app/');
+                            // if the target language is one of the selected languages, incorporate it in the URL...
+                            String targetLangFlag = codeToFlag(providerSessionLogic.selectedLangCombo.saLang);
+                            String urlAddendum = '';
+                            if (targetLangFlag == '🇨🇳') {
+                              urlAddendum = '/?lang=Mandarin';
+                            } else if (targetLangFlag == '🇯🇵') {
+                              urlAddendum = '/?lang=Japanese';
+                            } else if (targetLangFlag == '🇰🇷') {
+                              urlAddendum = '/?lang=Korean';
+                            } else if (targetLangFlag == '🇺🇸' || targetLangFlag == '🇨🇦') {
+                              urlAddendum = '/?lang=English';
+                            }
+
+                            final Uri url = Uri.parse('https://speaking-flashcards-web.web.app$urlAddendum');
                             if (!await launchUrl(url)) {
                               throw Exception('Could not launch $url');
                             }
@@ -225,7 +239,8 @@ class _BatchAddState extends State<BatchAdd> {
                               const SizedBox(width: 10),
                               Icon(Icons.exit_to_app_sharp, color: fgColor),
                               const SizedBox(width: 10),
-                              Text('Open website to copy batch from', style: TextStyle(color: fgColor)),
+                              Text('Open website to copy batch from ${providerSessionLogic.aDisplayFlags}',
+                                  style: TextStyle(color: fgColor)),
                             ],
                           ),
                         ),
