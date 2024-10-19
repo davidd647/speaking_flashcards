@@ -275,14 +275,25 @@ class ProviderSessionLogic with ChangeNotifier {
 
     List<Chron> tmpTodaysChrons = await DbChrons.getChronsByDate(todaysDate);
     todaysChrons = tmpTodaysChrons;
+
+    // ensure that there's at least one chron for today - and if there's not, start a new day
+    if (todaysChrons.isEmpty) startNewDay();
+
     return tmpTodaysChrons;
   }
 
   Future<void> startNewDay() async {
     delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'startNewDay called', language: ''));
-    String languageCombo = getLanguageComboString(selectedLangCombo);
 
-    await DbChrons.newDay(todaysDate, languageCombo);
+    //don't make records of a new day unless languages are set...
+    if (selectedLangCombo.raLang != '' &&
+        selectedLangCombo.rqLang != '' &&
+        selectedLangCombo.sqLang != '' &&
+        selectedLangCombo.saLang != '') {
+      String languageCombo = getLanguageComboString(selectedLangCombo);
+
+      await DbChrons.newDay(todaysDate, languageCombo);
+    }
     secondsPassed = 0;
   }
 
