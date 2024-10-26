@@ -394,23 +394,36 @@ class _StudySessionState extends State<StudySession> {
             Positioned(
               left: (maxWidth / 2) - ((maxWidth / 4) / 2),
               top: maxHeight / 2 - ((maxWidth / 4) / 2),
-              child: ColoredCircularInkWell(
-                width: maxWidth / 4,
-                onTap: () {
-                  // stop focusing on the keyboard if the keyboard is focused:
-                  FocusScope.of(context).unfocus();
+              child: providerSessionLogic.allLangs.isNotEmpty
+                  ? ColoredCircularInkWell(
+                      width: maxWidth / 4,
+                      onTap: () {
+                        // stop focusing on the keyboard if the keyboard is focused:
+                        FocusScope.of(context).unfocus();
 
-                  if (providerSessionLogic.questionsList.isNotEmpty) {
-                    providerSessionLogic.queueRecog();
-                  }
-                },
-                // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
-                color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
-                child: Icon(
-                  Icons.mic,
-                  color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
-                ),
-              ),
+                        if (providerSessionLogic.questionsList.isNotEmpty) {
+                          providerSessionLogic.queueRecog();
+                        }
+                      },
+                      // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
+                      color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
+                      child: Icon(
+                        Icons.mic,
+                        color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
+                      ),
+                    )
+                  : Container(
+                      width: maxWidth / 4,
+                      height: maxWidth / 4,
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Loading Languages...',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
             ),
             if (providerSessionLogic.isRecoging)
               Center(
