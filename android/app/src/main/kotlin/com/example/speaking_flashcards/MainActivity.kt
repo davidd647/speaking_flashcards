@@ -1,4 +1,4 @@
-package com.example.speaking_flashcards
+package com.speaking_flashcards.abc
 
 import io.flutter.embedding.android.FlutterActivity
 
