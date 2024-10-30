@@ -1,7 +1,7 @@
 import 'package:speaking_flashcards/models/lang.dart';
 import 'package:speaking_flashcards/helpers/code_to_flag.dart';
 
-List<Lang> getUnifiedLangs(recogLangs, synthLangs) {
+Future<List<Lang>> getUnifiedLangs(recogLangs, synthLangs) async {
   List<Lang> localLangs = [];
   // recog typically has languages names WITH the codes, so we can start with them...
   for (var recogLang in recogLangs) {
