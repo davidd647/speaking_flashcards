@@ -123,7 +123,7 @@ class ProviderSessionLogic with ChangeNotifier {
     recogLangs = recog.getLangs();
     synthLangs = synth.getLangs();
 
-    allLangs = getUnifiedLangs(recogLangs, synthLangs);
+    allLangs = await getUnifiedLangs(recogLangs, synthLangs);
 
     // sort all langauges alphabetically by code...
     allLangs.sort((a, b) => '${a.name}${a.code}'.compareTo('${b.name}${b.code}'));
