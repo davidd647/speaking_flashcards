@@ -289,47 +289,50 @@ class _StudySessionState extends State<StudySession> {
                     ),
                   ),
                   if (maxWidth > 1000) const SizedBox(width: 20),
-                  Container(
-                    constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                    child: ColoredInkWellButton(
-                      color: containerColor,
-                      width: maxWidth / 4 - 12.5,
-                      height: maxWidth / 4 - 20,
-                      onTap: () {
-                        providerSessionLogic.queueSynthQuestion();
-                      },
-                      child: FittedBox(
-                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          const SizedBox(height: 15),
-                          Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                          Text('Question',
-                              style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                          const SizedBox(height: 15),
-                        ]),
+                  if (providerSessionLogic.questionsList.isNotEmpty)
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                      child: ColoredInkWellButton(
+                        color: containerColor,
+                        width: maxWidth / 4 - 12.5,
+                        height: maxWidth / 4 - 20,
+                        onTap: () {
+                          providerSessionLogic.queueSynthQuestion();
+                        },
+                        child: FittedBox(
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                            const SizedBox(height: 15),
+                            Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                            Text('Question',
+                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                            const SizedBox(height: 15),
+                          ]),
+                        ),
                       ),
                     ),
-                  ),
                   if (maxWidth > 1000) const SizedBox(width: 20),
-                  Container(
-                    constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                    child: ColoredInkWellButton(
-                      color: containerColor,
-                      width: maxWidth / 4 - 12.5,
-                      height: maxWidth / 4 - 20,
-                      onTap: () {
-                        providerSessionLogic.queueSynthInput();
-                      },
-                      child: FittedBox(
-                        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          const SizedBox(height: 15),
-                          Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                          Text('Input', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                          const SizedBox(height: 15),
-                        ]),
+                  if (providerSessionLogic.questionsList.isNotEmpty)
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                      child: ColoredInkWellButton(
+                        color: containerColor,
+                        width: maxWidth / 4 - 12.5,
+                        height: maxWidth / 4 - 20,
+                        onTap: () {
+                          providerSessionLogic.queueSynthInput();
+                        },
+                        child: FittedBox(
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                            const SizedBox(height: 15),
+                            Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                            Text('Input',
+                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                            const SizedBox(height: 15),
+                          ]),
+                        ),
+                        // child: const Icon(Icons.bar_chart_sharp),
                       ),
-                      // child: const Icon(Icons.bar_chart_sharp),
                     ),
-                  ),
                   if (maxWidth > 1000) const SizedBox(width: 20),
                   if (providerSessionLogic.questionsList.isNotEmpty &&
                       providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
@@ -391,40 +394,59 @@ class _StudySessionState extends State<StudySession> {
                 child: Text(debuggingText, style: TextStyle(color: fgColor)),
               ),
             // middle
-            Positioned(
-              left: (maxWidth / 2) - ((maxWidth / 4) / 2),
-              top: maxHeight / 2 - ((maxWidth / 4) / 2),
-              child: providerSessionLogic.allLangs.isNotEmpty
-                  ? ColoredCircularInkWell(
-                      width: maxWidth / 4,
-                      onTap: () {
-                        // stop focusing on the keyboard if the keyboard is focused:
-                        FocusScope.of(context).unfocus();
 
-                        if (providerSessionLogic.questionsList.isNotEmpty) {
-                          providerSessionLogic.queueRecog();
-                        }
-                      },
-                      // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
-                      color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
-                      child: Icon(
-                        Icons.mic,
-                        color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
-                      ),
-                    )
-                  : Container(
-                      width: maxWidth / 4,
-                      height: maxWidth / 4,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'Loading Languages...',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+            if (providerSessionLogic.questionsList.isEmpty)
+              Positioned(
+                left: (maxWidth / 2) - ((maxWidth / 4) / 2),
+                top: maxHeight / 2 - ((maxWidth / 4) / 2),
+                child: Container(
+                  width: maxWidth / 4,
+                  height: maxWidth / 4,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    '↖️\nAdd flashcards to start',
+                    style: TextStyle(
+                      color: Colors.red,
                     ),
-            ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            if (providerSessionLogic.questionsList.isNotEmpty)
+              Positioned(
+                left: (maxWidth / 2) - ((maxWidth / 4) / 2),
+                top: maxHeight / 2 - ((maxWidth / 4) / 2),
+                child: providerSessionLogic.allLangs.isNotEmpty
+                    ? ColoredCircularInkWell(
+                        width: maxWidth / 4,
+                        onTap: () {
+                          // stop focusing on the keyboard if the keyboard is focused:
+                          FocusScope.of(context).unfocus();
+
+                          if (providerSessionLogic.questionsList.isNotEmpty) {
+                            providerSessionLogic.queueRecog();
+                          }
+                        },
+                        // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
+                        color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
+                        child: Icon(
+                          Icons.mic,
+                          color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
+                        ),
+                      )
+                    : Container(
+                        width: maxWidth / 4,
+                        height: maxWidth / 4,
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Loading Languages...',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+              ),
             if (providerSessionLogic.isRecoging)
               Center(
                 child: SizedBox(
@@ -447,86 +469,87 @@ class _StudySessionState extends State<StudySession> {
                 ),
               ),
             // bottom
-            Positioned(
-              bottom: 42 + 35,
-              left: 10,
-              child: Container(
-                constraints: const BoxConstraints(minHeight: 42),
-                width: maxWidth - 20,
-                color: containerColor,
-                child: Row(
-                  children: [
-                    FlagBox(
-                      flag: providerSessionLogic.qDisplayFlags,
-                      label: 'Q',
-                      textColor: fgColor,
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: Text(
-                        providerSessionLogic.questionsList.isEmpty ||
-                                // also need to check that there's a question with an order of zero:
-                                (providerSessionLogic.questionsList.firstWhereOrNull((q) {
-                                      return q.order == 0;
-                                    }) ==
-                                    null)
-                            ? '(No flashcards yet)'
-                            : providerSessionLogic.questionsList.firstWhere((q) {
-                                return q.order == 0;
-                              }).q,
-                        style: TextStyle(fontSize: 15, color: fgColor),
+            if (providerSessionLogic.questionsList.isNotEmpty)
+              Positioned(
+                bottom: 42 + 35,
+                left: 10,
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 42),
+                  width: maxWidth - 20,
+                  color: containerColor,
+                  child: Row(
+                    children: [
+                      FlagBox(
+                        flag: providerSessionLogic.qDisplayFlags,
+                        label: 'Q',
+                        textColor: fgColor,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 21,
-              left: 10,
-              right: 10,
-              child: Container(
-                color: containerColor,
-                child: Row(
-                  children: [
-                    FlagBox(
-                      flag: providerSessionLogic.qDisplayFlags,
-                      label: 'A',
-                      textColor: fgColor,
-                    ),
-                    const SizedBox(width: 8),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: Container(
-                        height: 42,
-                        margin: const EdgeInsets.only(left: 0, right: 2),
-                        padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
-                        alignment: Alignment.centerLeft,
-                        child: TextFormField(
-                          keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
-                          controller: providerSessionLogic.answerController,
-                          // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
-                          onEditingComplete: () {},
-                          onFieldSubmitted: (res) {
-                            // print('res: $res');
-                            // don't do anything if user pressed 'submit' when the text field was empty:
-                            if (res == '') {
-                              FocusScope.of(context).unfocus();
-                              return;
-                            }
-
-                            // submit the typed answer:
-                            providerSessionLogic.queueSubmitTyped();
-                          },
+                      const SizedBox(width: 8),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: Text(
+                          // also need to check that there's a question with an order of zero:
+                          (providerSessionLogic.questionsList.firstWhereOrNull((q) {
+                                    return q.order == 0;
+                                  }) ==
+                                  null)
+                              ? '(No flashcards yet)'
+                              : providerSessionLogic.questionsList.firstWhere((q) {
+                                  return q.order == 0;
+                                }).q,
                           style: TextStyle(fontSize: 15, color: fgColor),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+            if (providerSessionLogic.questionsList.isNotEmpty)
+              Positioned(
+                bottom: 21,
+                left: 10,
+                right: 10,
+                child: Container(
+                  color: containerColor,
+                  child: Row(
+                    children: [
+                      FlagBox(
+                        flag: providerSessionLogic.qDisplayFlags,
+                        label: 'A',
+                        textColor: fgColor,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: Container(
+                          height: 42,
+                          margin: const EdgeInsets.only(left: 0, right: 2),
+                          padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
+                          alignment: Alignment.centerLeft,
+                          child: TextFormField(
+                            keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
+                            controller: providerSessionLogic.answerController,
+                            // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
+                            onEditingComplete: () {},
+                            onFieldSubmitted: (res) {
+                              // print('res: $res');
+                              // don't do anything if user pressed 'submit' when the text field was empty:
+                              if (res == '') {
+                                FocusScope.of(context).unfocus();
+                                return;
+                              }
+
+                              // submit the typed answer:
+                              providerSessionLogic.queueSubmitTyped();
+                            },
+                            style: TextStyle(fontSize: 15, color: fgColor),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             if (providerSessionLogic.recogRes.length > 1)
               Positioned(
                 right: 12,
