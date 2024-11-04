@@ -212,38 +212,38 @@ class _BatchAddState extends State<BatchAdd> {
                         if (invalidRow != '') const SizedBox(height: 10),
                         if (invalidRow != '') Text(invalidRow, style: const TextStyle(color: Colors.red)),
                         const SizedBox(height: 10),
-                        WideButton(
-                          color: containerColor,
-                          // disabled: true,
-                          onTap: () async {
-                            // if the target language is one of the selected languages, incorporate it in the URL...
-                            String targetLangFlag = codeToFlag(providerSessionLogic.selectedLangCombo.saLang);
-                            String urlAddendum = '';
-                            if (targetLangFlag == '🇨🇳') {
-                              urlAddendum = '/?lang=Mandarin';
-                            } else if (targetLangFlag == '🇯🇵') {
-                              urlAddendum = '/?lang=Japanese';
-                            } else if (targetLangFlag == '🇰🇷') {
-                              urlAddendum = '/?lang=Korean';
-                            } else if (targetLangFlag == '🇺🇸' || targetLangFlag == '🇨🇦') {
-                              urlAddendum = '/?lang=English';
-                            }
+                        // WideButton(
+                        //   color: containerColor,
+                        //   // disabled: true,
+                        //   onTap: () async {
+                        //     // if the target language is one of the selected languages, incorporate it in the URL...
+                        //     String targetLangFlag = codeToFlag(providerSessionLogic.selectedLangCombo.saLang);
+                        //     String urlAddendum = '';
+                        //     if (targetLangFlag == '🇨🇳') {
+                        //       urlAddendum = '/?lang=Mandarin';
+                        //     } else if (targetLangFlag == '🇯🇵') {
+                        //       urlAddendum = '/?lang=Japanese';
+                        //     } else if (targetLangFlag == '🇰🇷') {
+                        //       urlAddendum = '/?lang=Korean';
+                        //     } else if (targetLangFlag == '🇺🇸' || targetLangFlag == '🇨🇦') {
+                        //       urlAddendum = '/?lang=English';
+                        //     }
 
-                            final Uri url = Uri.parse('https://speaking-flashcards-web.web.app$urlAddendum');
-                            if (!await launchUrl(url)) {
-                              throw Exception('Could not launch $url');
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              Icon(Icons.exit_to_app_sharp, color: fgColor),
-                              const SizedBox(width: 10),
-                              Text('Open website to copy batch from ${providerSessionLogic.aDisplayFlags}',
-                                  style: TextStyle(color: fgColor)),
-                            ],
-                          ),
-                        ),
+                        //     final Uri url = Uri.parse('https://speaking-flashcards-web.web.app$urlAddendum');
+                        //     if (!await launchUrl(url)) {
+                        //       throw Exception('Could not launch $url');
+                        //     }
+                        //   },
+                        //   child: Row(
+                        //     children: [
+                        //       const SizedBox(width: 10),
+                        //       Icon(Icons.exit_to_app_sharp, color: fgColor),
+                        //       const SizedBox(width: 10),
+                        //       Text('Open website to copy batch from ${providerSessionLogic.aDisplayFlags}',
+                        //           style: TextStyle(color: fgColor)),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
