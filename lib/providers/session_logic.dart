@@ -1188,15 +1188,23 @@ class ProviderSessionLogic with ChangeNotifier {
       recogDuration: recogDuration,
       localeId: taskDetails.language,
       finalResCallback: (List<SpokenWord> res) async {
-        if (res.isEmpty) {
-          res = [SpokenWord('No speech heard...', 1)];
+        for (var spokenWord in res) {
+          if (spokenWord.words != '') collectedRes.add(spokenWord);
         }
 
-        recogRes = res;
+        if (collectedRes.isEmpty) {
+          collectedRes = [SpokenWord('No speech heard...', 1)];
+        }
+
+        recogRes = collectedRes; // keep record of recog for displaying all possible interpretations of input
+
+        // get whichever answer is the longest, and put that into the answerController.text
+        SpokenWord longestResult = collectedRes.reduce((a, b) => a.words.length > b.words.length ? a : b);
+
         if (taskDetails.value == 'question') {
-          questionController.text = res[0].words;
+          questionController.text = longestResult.words;
         } else if (taskDetails.value == 'answer') {
-          answerController.text = res[0].words;
+          answerController.text = longestResult.words;
         }
 
         // keep track of what's recording (to show little spinner)
@@ -1224,6 +1232,10 @@ class ProviderSessionLogic with ChangeNotifier {
       },
       intermittentResCallback: (List<SpokenWord> res) {
         if (res.isEmpty) return;
+
+        for (var resThing in res) {
+          collectedRes.add(resThing);
+        }
 
         recogRes = res; // keep record of recog for displaying all possible interpretations of input
         if (res[0].words != '') {
