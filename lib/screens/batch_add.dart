@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:speaking_flashcards/helpers/code_to_flag.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
