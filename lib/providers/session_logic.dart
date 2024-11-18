@@ -39,6 +39,7 @@ class ProviderSessionLogic with ChangeNotifier {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Function? _showToast;
   int totalUnderThresh = 1;
+  String dateLastOpenedAppDefault = '';
 
   // audio in/out
   Synth synth = Synth();
@@ -323,21 +324,37 @@ class ProviderSessionLogic with ChangeNotifier {
     return;
   }
 
+  String todaysDateString() {
+    var now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    todaysDate = formatter.format(now);
+    return todaysDate;
+  }
+
   Future<void> checkNewDaySequence() async {
-    print('checkNewDaySequence');
     delegationHistory.add(SessionTask(taskName: TaskName.debug, value: 'checkNewDaySequence called', language: ''));
     Chron? todayChron = await getTodaysChron();
 
-    if (todayChron == null) {
+    String dateLastOpenedApp = '';
+    dateLastOpenedApp = await _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('dateLastOpenedApp') ?? sqLangDefault;
+    });
+
+    String dateStringToday = todaysDateString();
+    debugPrint('dateStringToday: $dateStringToday, dateLastOpenedApp: $dateLastOpenedApp');
+
+    // if (todayChron == null) {
+    if (dateLastOpenedApp != dateStringToday) {
+      await saveString('dateLastOpenedApp', dateStringToday, dateLastOpenedAppDefault);
       debugPrint('IS A NEW DAY');
       debugPrint('todaysDate: $todaysDate');
       await startNewDay();
       secondsPassed = 0;
       // if there's more than one language, then levels have already been reduced for today
       await getTodaysChrons();
-      if (todaysChrons.length < 2) {
-        await reduceAllLevels();
-      }
+      // if (todaysChrons.length < 2) {
+      await reduceAllLevels();
+      // }
 
       // update levels of all questions (lvl>0) in the currently visible questionsList...
       for (var x = 0; x < questionsList.length; x++) {
@@ -346,7 +363,9 @@ class ProviderSessionLogic with ChangeNotifier {
       notifyListeners();
     } else {
       debugPrint('IS NOT A NEW DAY');
-      secondsPassed = todayChron.timeStudied;
+      if (todayChron != null) {
+        secondsPassed = todayChron.timeStudied;
+      }
     }
 
     // update streak from history...
@@ -530,6 +549,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
   // TIMER:
   Future<void> initTimer() async {
+    print('initTimer');
     await checkNewDaySequence();
 
     if (timerIsInitialized) return;
