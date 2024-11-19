@@ -412,6 +412,10 @@ class ProviderSessionLogic with ChangeNotifier {
 
         debuggingTodaySetUpdated = await DbChrons.setToday(todaysDate, tmpTodayChron.timeStudied + 1, languageCombo);
         secondsPassed = tmpTodayChron.timeStudied;
+      } else {
+        // (we have questions, but we don't have a chron for today...)
+        // create a chron for today...
+        startNewDay();
       }
     }
 
