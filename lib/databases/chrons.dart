@@ -171,6 +171,11 @@ class DbChrons {
   static Future<void> newDay(String date, String languageCombo) async {
     final db = await DbChrons.database();
 
+    // look for chrons that already have this date and language combo
+    Chron? chron = await getChronByDate(date, languageCombo);
+    // if there's already a chron there, don't insert another one (leave the function)
+    if (chron != null) return;
+
     db.insert(dbName, {'date': date, 'timeStudied': 0, 'languageCombo': languageCombo});
   }
 
