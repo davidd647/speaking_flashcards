@@ -93,22 +93,23 @@ class _StatsState extends State<Stats> {
                     child: Column(
                       children: [
                         // const StudyChart(),
-                        SizedBox(
-                          width: fullWidth,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8, top: 0, right: 24, bottom: 8),
-                            child: Text(
-                              'Minutes studied from ${providerSessionLogic.earliestDate.substring(5)} to ${providerSessionLogic.mostRecentDate.substring(5)}:',
-                              style: TextStyle(color: fgColor),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                        ),
-                        const AltStudyChart(),
+                        // SizedBox(
+                        //   width: fullWidth,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.only(left: 8, top: 0, right: 24, bottom: 8),
+                        //     child: Text(
+                        //       'Minutes studied from ${providerSessionLogic.earliestDate.substring(5)} to ${providerSessionLogic.mostRecentDate.substring(5)}:',
+                        //       style: TextStyle(color: fgColor),
+                        //       textAlign: TextAlign.end,
+                        //     ),
+                        //   ),
+                        // ),
+                        // const AltStudyChart(),
                         Text(
                           'Total time studied: ~${(providerSessionLogic.totalHoursStudied).round()}hrs',
                           style: TextStyle(color: fgColor),
                         ),
+                        const SizedBox(height: 16.0),
                         ...groupedChrons.entries.map((g) {
                           return Container(
                             color: containerColor,
