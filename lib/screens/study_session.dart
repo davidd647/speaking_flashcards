@@ -581,7 +581,10 @@ class _StudySessionState extends State<StudySession> {
 
             if (providerSessionLogic.recogStatus != '👍' &&
                 !providerSessionLogic.recogStatus.contains('error_no_match') &&
-                !providerSessionLogic.recogStatus.contains('error_retry'))
+                !providerSessionLogic.recogStatus.contains('error_retry') &&
+                !providerSessionLogic.recogStatus.contains('error_speech_timeout')) // error_speech_timeout seems to
+              // be activated on Android every time you don't answer within the
+              // allotted time (at time of writing this, 5 seconds), and TBH showing the error is just irritating...
               Center(
                   child: Column(
                 mainAxisSize: MainAxisSize.min,
