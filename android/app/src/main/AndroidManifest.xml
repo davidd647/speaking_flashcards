@@ -10,7 +10,7 @@
         </intent>
     </queries>
     <application
-        android:label="speaking_flashcards"
+        android:label="Speaking Flashcards"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
