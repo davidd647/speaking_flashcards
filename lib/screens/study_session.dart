@@ -439,7 +439,7 @@ class _StudySessionState extends State<StudySession> {
                         height: maxWidth / 4,
                         alignment: Alignment.center,
                         child: const Text(
-                          'Loading Languages...',
+                          'INITIALIZING LANGUAGES...\n\nThis may take 30 minutes...',
                           style: TextStyle(
                             color: Colors.red,
                           ),
