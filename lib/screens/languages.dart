@@ -61,7 +61,8 @@ class _LanguagesState extends State<Languages> {
               const SizedBox(height: 24),
               if (providerSessionLogic.commonLangs.isEmpty)
                 const Text(
-                  'LOADING LANGUAGES...',
+                  'INITIALIZING LANGUAGES...\nThis may take up to thirty minutes...',
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.red),
                 ),
               if (providerSessionLogic.commonLangs.isNotEmpty)
