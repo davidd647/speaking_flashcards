@@ -585,26 +585,30 @@ class _StudySessionState extends State<StudySession> {
                 !providerSessionLogic.recogStatus.contains('error_speech_timeout')) // error_speech_timeout seems to
               // be activated on Android every time you don't answer within the
               // allotted time (at time of writing this, 5 seconds), and TBH showing the error is just irritating...
-              Center(
-                  child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Recognition error\nYou may want to restart the app.',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+              Positioned(
+                left: 12,
+                bottom: 125,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Recognition error\nYou may want to restart the app.',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                      // textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SelectableText(
-                    providerSessionLogic.recogStatus,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              )),
+                    SelectableText(
+                      providerSessionLogic.recogStatus,
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
           ]);
         },
       ),
