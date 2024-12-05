@@ -876,9 +876,9 @@ class ProviderSessionLogic with ChangeNotifier {
     if (currentQuestion.spiritLevel == 0) newOrderVal = 3;
     if (currentQuestion.spiritLevel == 1) newOrderVal = 5;
     if (currentQuestion.spiritLevel == 2) newOrderVal = 7;
-    if (currentQuestion.spiritLevel == 3) newOrderVal = 42;
-    if (currentQuestion.spiritLevel == 4) newOrderVal = 42;
-    if (currentQuestion.spiritLevel == 5) newOrderVal = 42;
+    if (currentQuestion.spiritLevel == 3) newOrderVal = 50;
+    if (currentQuestion.spiritLevel == 4) newOrderVal = 50;
+    if (currentQuestion.spiritLevel == 5) newOrderVal = 50;
 
     if (currentQuestion.spiritLevel > 5) {
       newOrderVal = currentQuestion.spiritLevel * currentQuestion.spiritLevel;
@@ -978,6 +978,14 @@ class ProviderSessionLogic with ChangeNotifier {
     if (spokenWords.isEmpty) return false;
 
     List<String> splitAnswerTerms = getCurrentQuestion().a.toLowerCase().replaceAll('?', '').split('/');
+
+    // remove each answer that has no content (because if there's a "" answer, it'll accept any answer at all!)
+    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
 
     // for each of the words spoken (or inputted)
     for (SpokenWord spokenWord in spokenWords) {
