@@ -145,36 +145,36 @@ class _MenuContainerState extends State<MenuContainer> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              WideButton(
-                                color: bgColor,
-                                onTap: () {
-                                  // stop focusing on the keyboard if the keyboard is focused:
-                                  FocusScope.of(context).unfocus();
+                              // WideButton(
+                              //   color: bgColor,
+                              //   onTap: () {
+                              //     // stop focusing on the keyboard if the keyboard is focused:
+                              //     FocusScope.of(context).unfocus();
 
-                                  handleRecordQuestion();
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 47,
-                                  height: 47,
-                                  child: Stack(
-                                    children: [
-                                      Center(child: Icon(Icons.mic, color: fgColor)),
-                                      if (providerSessionLogic.isRecogingQuestion)
-                                        Container(
-                                          alignment: Alignment.center,
-                                          width: 47,
-                                          height: 47,
-                                          child: CustomCircularProgressIndicator(
-                                            color1: bgColor,
-                                            color2: Colors.greenAccent,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
+                              //     handleRecordQuestion();
+                              //   },
+                              //   child: Container(
+                              //     alignment: Alignment.center,
+                              //     width: 47,
+                              //     height: 47,
+                              //     child: Stack(
+                              //       children: [
+                              //         Center(child: Icon(Icons.mic, color: fgColor)),
+                              //         if (providerSessionLogic.isRecogingQuestion)
+                              //           Container(
+                              //             alignment: Alignment.center,
+                              //             width: 47,
+                              //             height: 47,
+                              //             child: CustomCircularProgressIndicator(
+                              //               color1: bgColor,
+                              //               color2: Colors.greenAccent,
+                              //             ),
+                              //           ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              // const SizedBox(width: 10),
                               WideButton(
                                 color: bgColor,
                                 onTap: () {
@@ -243,36 +243,36 @@ class _MenuContainerState extends State<MenuContainer> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              WideButton(
-                                color: bgColor,
-                                onTap: () {
-                                  // stop focusing on the keyboard if the keyboard is focused:
-                                  FocusScope.of(context).unfocus();
+                              // WideButton(
+                              //   color: bgColor,
+                              //   onTap: () {
+                              //     // stop focusing on the keyboard if the keyboard is focused:
+                              //     FocusScope.of(context).unfocus();
 
-                                  // queue a recording...
-                                  handleRecordAnswer();
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 47,
-                                  child: Stack(
-                                    children: [
-                                      Center(child: Icon(Icons.mic, color: fgColor)),
-                                      if (providerSessionLogic.isRecogingAnswer)
-                                        Container(
-                                          alignment: Alignment.center,
-                                          width: 47,
-                                          height: 47,
-                                          child: CustomCircularProgressIndicator(
-                                            color1: bgColor,
-                                            color2: Colors.greenAccent,
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
+                              //     // queue a recording...
+                              //     handleRecordAnswer();
+                              //   },
+                              //   child: Container(
+                              //     alignment: Alignment.center,
+                              //     width: 47,
+                              //     child: Stack(
+                              //       children: [
+                              //         Center(child: Icon(Icons.mic, color: fgColor)),
+                              //         if (providerSessionLogic.isRecogingAnswer)
+                              //           Container(
+                              //             alignment: Alignment.center,
+                              //             width: 47,
+                              //             height: 47,
+                              //             child: CustomCircularProgressIndicator(
+                              //               color1: bgColor,
+                              //               color2: Colors.greenAccent,
+                              //             ),
+                              //           ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              // const SizedBox(width: 10),
                               WideButton(
                                 color: bgColor,
                                 onTap: () {
@@ -396,7 +396,7 @@ class _MenuContainerState extends State<MenuContainer> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
                                 child: Text(
-                                  '(Empty)',
+                                  '(Requires content in "Answer" field above)',
                                   style: TextStyle(
                                     color: (providerSessionLogic.answerController.text != '')
                                         ? fgColor
