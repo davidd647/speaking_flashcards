@@ -44,12 +44,21 @@ class DbChrons {
     // elements inside the forEach method... we'll see! 🤷‍♂️
     for (var rawChron in rawChronsList) {
       // print('rawChron: $rawChron');
-      chronsList.add(Chron(
-        id: rawChron['id'] as int,
-        date: rawChron['date'] as String,
-        languageCombo: rawChron['languageCombo'] as String,
-        timeStudied: rawChron['timeStudied'] as int,
-      ));
+      final newChron = Chron(
+        id: rawChron['id'],
+        date: rawChron['date'],
+        languageCombo: rawChron['languageCombo'],
+        timeStudied: rawChron['timeStudied'],
+      );
+
+      // Check if a matching date and languageCombo already exists in the chrons list
+      final exists =
+          chronsList.any((chron) => chron.date == newChron.date && chron.languageCombo == newChron.languageCombo);
+
+      // Add the newChron only if it doesn't already exist
+      if (!exists) {
+        chronsList.add(newChron);
+      }
     }
 
     return chronsList;
@@ -127,12 +136,21 @@ class DbChrons {
     );
 
     for (var x = 0; x < rawChronsList.length; x++) {
-      chrons.add(Chron(
+      final newChron = Chron(
         id: rawChronsList[x]['id'],
         date: rawChronsList[x]['date'],
         languageCombo: rawChronsList[x]['languageCombo'],
         timeStudied: rawChronsList[x]['timeStudied'],
-      ));
+      );
+
+      // Check if a matching date and languageCombo already exists in the chrons list
+      final exists =
+          chrons.any((chron) => chron.date == newChron.date && chron.languageCombo == newChron.languageCombo);
+
+      // Add the newChron only if it doesn't already exist
+      if (!exists) {
+        chrons.add(newChron);
+      }
     }
 
     return chrons;
