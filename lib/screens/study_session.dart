@@ -1,9 +1,11 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:confetti/confetti.dart';
 
 import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
@@ -76,6 +78,14 @@ class _StudySessionState extends State<StudySession> {
 
   @override
   Widget build(BuildContext context) {
+    // final fullWidth = MediaQuery.of(context).size.width;
+    // final padding = MediaQuery.of(context).padding;
+    // var keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    // double fullHeight = MediaQuery.of(context).size.height -
+    //     padding.top - // height of status bar (your battery life and stuff)
+    //     kToolbarHeight - // height of the toolbar (i.e. the AppBar)
+    //     keyboardHeight;
+
     final providerSessionLogic = Provider.of<ProviderSessionLogic>(context);
     final providerSettings = Provider.of<ProviderSettings>(context);
 
@@ -458,6 +468,29 @@ class _StudySessionState extends State<StudySession> {
                   ),
                 ),
               ),
+            // SizedBox(
+            //   width: fullWidth,
+            //   height: fullHeight,
+            //   child: Align(
+            //     alignment: Alignment.center,
+            //     child: ConfettiWidget(
+            //       emissionFrequency: 0.02,
+            //       gravity: 0.2,
+            //       numberOfParticles: providerSessionLogic.dailyStreak == 0
+            //           ? 1
+            //           : providerSessionLogic.dailyStreak < 20
+            //               ? providerSessionLogic.dailyStreak
+            //               : 20, // one star for each day of streak!
+            //       confettiController: providerSessionLogic.confettiControllerCenter,
+            //       blastDirectionality: BlastDirectionality.explosive, // don't specify a direction, blast randomly
+            //       shouldLoop: true, // start again as soon as the animation is finished
+            //       colors: const [
+            //         Colors.yellow,
+            //       ], // manually specify the colors to be used
+            //       createParticlePath: drawStar, // define a custom shape/path.
+            //     ),
+            //   ),
+            // ),
             // middle (end)
             if (providerSettings.debugMode)
               Positioned(
@@ -615,3 +648,26 @@ class _StudySessionState extends State<StudySession> {
     );
   }
 }
+
+// Path drawStar(Size size) {
+//   // Method to convert degrees to radians
+//   double degToRad(double deg) => deg * (pi / 180.0);
+
+//   const numberOfPoints = 5;
+//   final halfWidth = size.width / 2;
+//   final externalRadius = halfWidth;
+//   final internalRadius = halfWidth / 2.5;
+//   final degreesPerStep = degToRad(360 / numberOfPoints);
+//   final halfDegreesPerStep = degreesPerStep / 2;
+//   final path = Path();
+//   final fullAngle = degToRad(360);
+//   path.moveTo(size.width, halfWidth);
+
+//   for (double step = 0; step < fullAngle; step += degreesPerStep) {
+//     path.lineTo(halfWidth + externalRadius * cos(step), halfWidth + externalRadius * sin(step));
+//     path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+//         halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+//   }
+//   path.close();
+//   return path;
+// }
