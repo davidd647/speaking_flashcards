@@ -5,6 +5,7 @@ import 'package:intl/intl.dart'; // has the DateFormat class
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:fl_chart/fl_chart.dart';
+// import 'package:confetti/confetti.dart';
 
 // audio in/out
 import 'package:speaking_flashcards/models/lang.dart';
@@ -105,6 +106,19 @@ class ProviderSessionLogic with ChangeNotifier {
   double maxMins = 0;
   int numOfDays = 30;
   int debuggingTodaySetUpdated = 0;
+
+  // rewards system
+  // ConfettiController confettiControllerCenter = ConfettiController(
+  //   duration: const Duration(seconds: 10),
+  // );
+
+  void throwConfetti() async {
+    // print('START throwing confetti (10 seconds)');
+    // confettiControllerCenter.play();
+    // await Future.delayed(const Duration(seconds: 10));
+    // print('STOP throwing confetti!');
+    // confettiControllerCenter.stop();
+  }
 
   void setIsSynthing(bool synthingState) {
     isSynthing = synthingState;
@@ -553,7 +567,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
   // TIMER:
   Future<void> initTimer() async {
-    print('initTimer');
+    // print('initTimer');
     await checkNewDaySequence();
 
     if (timerIsInitialized) return;
@@ -807,9 +821,9 @@ class ProviderSessionLogic with ChangeNotifier {
       return;
     }
 
-    print('maybe we should remove all sub-spiritLevel-3 questions that are in questionsList, but have an "oder"');
-    print(' value > 5 and make sure when they are added back into questionsList, ');
-    print('that they have an "order" value incrementing from > 5');
+    // print('maybe we should remove all sub-spiritLevel-3 questions that are in questionsList, but have an "oder"');
+    // print(' value > 5 and make sure when they are added back into questionsList, ');
+    // print('that they have an "order" value incrementing from > 5');
 
     // remove all questions from fresh that are already in questions (reduce workload)
     for (var q in questionsList) {
@@ -980,12 +994,10 @@ class ProviderSessionLogic with ChangeNotifier {
     List<String> splitAnswerTerms = getCurrentQuestion().a.toLowerCase().replaceAll('?', '').split('/');
 
     // remove each answer that has no content (because if there's a "" answer, it'll accept any answer at all!)
-    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
-    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
-    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
-    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
-    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
-    print('remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    debugPrint(
+        'remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     // for each of the words spoken (or inputted)
     for (SpokenWord spokenWord in spokenWords) {
@@ -1613,6 +1625,7 @@ class ProviderSessionLogic with ChangeNotifier {
 
     // congrats needs its own conditional because it uses both synth AND an SQL query
     if (currentTask.taskName == TaskName.congrats && !checkIsBusy()) {
+      throwConfetti();
       runSynth(currentTask);
 
       getUrgentQuestions();
