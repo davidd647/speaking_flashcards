@@ -106,146 +106,138 @@ class _BatchAddState extends State<BatchAdd> {
           // final maxWidth = constraints.maxWidth;
           // final maxHeight = constraints.maxHeight;
 
-          return (providerSessionLogic.commonLangs.isEmpty)
-              ? const Center(
-                  child: Text(
-                    'Err: providerSessionLogic.commonLangs is empty',
-                    style: TextStyle(color: Colors.red),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  // show languages here...
+                  WideButton(
+                    color: containerColor,
+                    onTap: () {
+                      // Navigator.pop(context);
+                      Navigator.of(context).pushNamed(Languages.routeName);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      // width: 47,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Change Languages',
+                            style: TextStyle(color: fgColor),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
+                            style: const TextStyle(fontSize: 24),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Column(
+                  // Text(
+                  //   '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
+                  //   style: const TextStyle(fontSize: 25),
+                  // ),
+                  const SizedBox(height: 12),
+
+                  TextFormField(
+                    keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
+                    controller: batchAddController,
+                    onChanged: (content) {
+                      checkNumOfQuestions();
+                    },
+                    keyboardType: TextInputType.multiline,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: fgColor,
+                    ),
+                    // maxLines: null, // This makes it expandable to any number of lines
+                    maxLines: 5,
+                    minLines: 5, // Optional, but good to set a starting point
+                    decoration: InputDecoration(
+                      hintText: "Enter your batch here (in CSV format)\nE.g. \"question,answer\"",
+                      hintStyle: TextStyle(color: fgColor),
+                      border: const OutlineInputBorder(),
+                    ),
+                    textInputAction: TextInputAction.newline, // For iOS to show a return key that makes a new line
+                  ),
+                  if (numOfQuestions != '0') const SizedBox(height: 10),
+                  if (numOfQuestions != '0')
+                    Text('Number of Questions: $numOfQuestions', style: TextStyle(color: fgColor)),
+                  const SizedBox(height: 10),
+                  WideButton(
+                    color: (invalidRow != '' || batchAddController.text.trim() == '')
+                        ? Colors.grey.shade200
+                        : containerColor,
+                    // disabled: invalidRow != '' ? true : false,
+                    onTap: () {
+                      if (invalidRow != '') return;
+                      if (batchAddController.text.trim() == '') return;
+
+                      addFromCSV();
+                    },
+                    child: Row(
                       children: [
-                        const SizedBox(height: 12),
-                        // show languages here...
-                        WideButton(
-                          color: containerColor,
-                          onTap: () {
-                            // Navigator.pop(context);
-                            Navigator.of(context).pushNamed(Languages.routeName);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            // width: 47,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Change Languages',
-                                  style: TextStyle(color: fgColor),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
-                                  style: const TextStyle(fontSize: 24),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // Text(
-                        //   '${providerSessionLogic.qDisplayFlags} ${providerSessionLogic.aDisplayFlags}',
-                        //   style: const TextStyle(fontSize: 25),
-                        // ),
-                        const SizedBox(height: 12),
-
-                        TextFormField(
-                          keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
-                          controller: batchAddController,
-                          onChanged: (content) {
-                            checkNumOfQuestions();
-                          },
-                          keyboardType: TextInputType.multiline,
+                        const SizedBox(width: 10),
+                        Icon(Icons.add,
+                            color: (invalidRow != '' || batchAddController.text.trim() == '')
+                                ? Colors.grey[300]
+                                : fgColor),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Add Batch',
                           style: TextStyle(
-                            fontSize: 15,
-                            color: fgColor,
-                          ),
-                          // maxLines: null, // This makes it expandable to any number of lines
-                          maxLines: 5,
-                          minLines: 5, // Optional, but good to set a starting point
-                          decoration: InputDecoration(
-                            hintText: "Enter your batch here (in CSV format)\nE.g. \"question,answer\"",
-                            hintStyle: TextStyle(color: fgColor),
-                            border: const OutlineInputBorder(),
-                          ),
-                          textInputAction:
-                              TextInputAction.newline, // For iOS to show a return key that makes a new line
+                              color: invalidRow != '' || batchAddController.text.trim() == ''
+                                  ? Colors.grey[400]
+                                  : fgColor),
                         ),
-                        if (numOfQuestions != '0') const SizedBox(height: 10),
-                        if (numOfQuestions != '0')
-                          Text('Number of Questions: $numOfQuestions', style: TextStyle(color: fgColor)),
-                        const SizedBox(height: 10),
-                        WideButton(
-                          color: (invalidRow != '' || batchAddController.text.trim() == '')
-                              ? Colors.grey.shade200
-                              : containerColor,
-                          // disabled: invalidRow != '' ? true : false,
-                          onTap: () {
-                            if (invalidRow != '') return;
-                            if (batchAddController.text.trim() == '') return;
-
-                            addFromCSV();
-                          },
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 10),
-                              Icon(Icons.add,
-                                  color: (invalidRow != '' || batchAddController.text.trim() == '')
-                                      ? Colors.grey[300]
-                                      : fgColor),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Add Batch',
-                                style: TextStyle(
-                                    color: invalidRow != '' || batchAddController.text.trim() == ''
-                                        ? Colors.grey[400]
-                                        : fgColor),
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (invalidRow != '') const SizedBox(height: 10),
-                        if (invalidRow != '') Text(invalidRow, style: const TextStyle(color: Colors.red)),
-                        const SizedBox(height: 10),
-                        // WideButton(
-                        //   color: containerColor,
-                        //   // disabled: true,
-                        //   onTap: () async {
-                        //     // if the target language is one of the selected languages, incorporate it in the URL...
-                        //     String targetLangFlag = codeToFlag(providerSessionLogic.selectedLangCombo.saLang);
-                        //     String urlAddendum = '';
-                        //     if (targetLangFlag == '🇨🇳') {
-                        //       urlAddendum = '/?lang=Mandarin';
-                        //     } else if (targetLangFlag == '🇯🇵') {
-                        //       urlAddendum = '/?lang=Japanese';
-                        //     } else if (targetLangFlag == '🇰🇷') {
-                        //       urlAddendum = '/?lang=Korean';
-                        //     } else if (targetLangFlag == '🇺🇸' || targetLangFlag == '🇨🇦') {
-                        //       urlAddendum = '/?lang=English';
-                        //     }
-
-                        //     final Uri url = Uri.parse('https://speaking-flashcards-web.web.app$urlAddendum');
-                        //     if (!await launchUrl(url)) {
-                        //       throw Exception('Could not launch $url');
-                        //     }
-                        //   },
-                        //   child: Row(
-                        //     children: [
-                        //       const SizedBox(width: 10),
-                        //       Icon(Icons.exit_to_app_sharp, color: fgColor),
-                        //       const SizedBox(width: 10),
-                        //       Text('Open website to copy batch from ${providerSessionLogic.aDisplayFlags}',
-                        //           style: TextStyle(color: fgColor)),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
-                );
+                  if (invalidRow != '') const SizedBox(height: 10),
+                  if (invalidRow != '') Text(invalidRow, style: const TextStyle(color: Colors.red)),
+                  const SizedBox(height: 10),
+                  // WideButton(
+                  //   color: containerColor,
+                  //   // disabled: true,
+                  //   onTap: () async {
+                  //     // if the target language is one of the selected languages, incorporate it in the URL...
+                  //     String targetLangFlag = codeToFlag(providerSessionLogic.selectedLangCombo.saLang);
+                  //     String urlAddendum = '';
+                  //     if (targetLangFlag == '🇨🇳') {
+                  //       urlAddendum = '/?lang=Mandarin';
+                  //     } else if (targetLangFlag == '🇯🇵') {
+                  //       urlAddendum = '/?lang=Japanese';
+                  //     } else if (targetLangFlag == '🇰🇷') {
+                  //       urlAddendum = '/?lang=Korean';
+                  //     } else if (targetLangFlag == '🇺🇸' || targetLangFlag == '🇨🇦') {
+                  //       urlAddendum = '/?lang=English';
+                  //     }
+
+                  //     final Uri url = Uri.parse('https://speaking-flashcards-web.web.app$urlAddendum');
+                  //     if (!await launchUrl(url)) {
+                  //       throw Exception('Could not launch $url');
+                  //     }
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       const SizedBox(width: 10),
+                  //       Icon(Icons.exit_to_app_sharp, color: fgColor),
+                  //       const SizedBox(width: 10),
+                  //       Text('Open website to copy batch from ${providerSessionLogic.aDisplayFlags}',
+                  //           style: TextStyle(color: fgColor)),
+                  //     ],
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          );
         },
       ),
     );

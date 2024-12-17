@@ -46,114 +46,107 @@ class _SettingsState extends State<Settings> {
           // final maxWidth = constraints.maxWidth;
           // final maxHeight = constraints.maxHeight;
 
-          return (providerSessionLogic.commonLangs.isEmpty)
-              ? const Center(
-                  child: Text(
-                    'Err: providerSessionLogic.commonLangs is empty',
-                    style: TextStyle(color: Colors.red),
+          return Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Column(
+              children: [
+                SwitchListTile(
+                  activeColor: Colors.blue,
+                  title: Text(
+                    'Show Queue',
+                    style: TextStyle(color: fgColor),
                   ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: Column(
-                    children: [
-                      SwitchListTile(
-                        activeColor: Colors.blue,
-                        title: Text(
-                          'Show Queue',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        subtitle: Text(
-                          'Shows all questions in the order they will be asked on the main screen.',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        value: providerSettings.showQueue,
-                        onChanged: (val) {
-                          providerSettings.toggleShowQueue();
-                        },
-                      ),
-                      SwitchListTile(
-                        activeColor: Colors.blue,
-                        title: Text(
-                          'Allow Auto Recog',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        subtitle: Text(
-                          'When you are correct - after the next question is read, the microphone will start recording the answer immediately.',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        value: providerSessionLogic.allowAutoRecog,
-                        onChanged: (val) {
-                          providerSessionLogic.toggleallowAutoRecog();
-                        },
-                      ),
-
-                      SwitchListTile(
-                        activeColor: Colors.blue,
-                        title: Text(
-                          'Darkness Matches OS',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        subtitle: Text(
-                          'Let display match OS lightness/darkness (overrides Dark Mode option)',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        value: providerSettings.darknessMatchesOS,
-                        onChanged: (val) {
-                          providerSettings.toggleDarknessMatchesOS();
-                        },
-                      ),
-
-                      Opacity(
-                        opacity: providerSettings.darknessMatchesOS ? 0.5 : 1,
-                        child: SwitchListTile(
-                          activeColor: Colors.blue,
-                          title: Text(
-                            'Dark Mode',
-                            style: TextStyle(color: fgColor),
-                          ),
-                          subtitle: Text(
-                            'A display mode better suited for studying in dark environments.',
-                            style: TextStyle(color: fgColor),
-                          ),
-                          value: providerSettings.darkMode,
-                          onChanged: (val) {
-                            providerSettings.toggledarkMode();
-                          },
-                        ),
-                      ),
-
-                      SwitchListTile(
-                        activeColor: Colors.blue,
-                        title: Text(
-                          'Debug Mode',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        subtitle: Text(
-                          'Display system properties',
-                          style: TextStyle(color: fgColor),
-                        ),
-                        value: providerSettings.debugMode,
-                        onChanged: (val) {
-                          providerSettings.toggleDebugMode();
-                        },
-                      ),
-                      // const SizedBox(height: 24),
-                      // WideButton(
-                      //   onTap: () {},
-                      //   child: const Row(
-                      //     // mainAxisAlignment: MainAxisAlignment.end,
-                      //     children: [
-                      //       SizedBox(width: 10),
-                      //       Icon(Icons.arrow_forward_ios_sharp),
-                      //       SizedBox(width: 10),
-                      //       Text('About'),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
+                  subtitle: Text(
+                    'Shows all questions in the order they will be asked on the main screen.',
+                    style: TextStyle(color: fgColor),
                   ),
-                );
+                  value: providerSettings.showQueue,
+                  onChanged: (val) {
+                    providerSettings.toggleShowQueue();
+                  },
+                ),
+                SwitchListTile(
+                  activeColor: Colors.blue,
+                  title: Text(
+                    'Allow Auto Recog',
+                    style: TextStyle(color: fgColor),
+                  ),
+                  subtitle: Text(
+                    'When you are correct - after the next question is read, the microphone will start recording the answer immediately.',
+                    style: TextStyle(color: fgColor),
+                  ),
+                  value: providerSessionLogic.allowAutoRecog,
+                  onChanged: (val) {
+                    providerSessionLogic.toggleallowAutoRecog();
+                  },
+                ),
+
+                SwitchListTile(
+                  activeColor: Colors.blue,
+                  title: Text(
+                    'Darkness Matches OS',
+                    style: TextStyle(color: fgColor),
+                  ),
+                  subtitle: Text(
+                    'Let display match OS lightness/darkness (overrides Dark Mode option)',
+                    style: TextStyle(color: fgColor),
+                  ),
+                  value: providerSettings.darknessMatchesOS,
+                  onChanged: (val) {
+                    providerSettings.toggleDarknessMatchesOS();
+                  },
+                ),
+
+                Opacity(
+                  opacity: providerSettings.darknessMatchesOS ? 0.5 : 1,
+                  child: SwitchListTile(
+                    activeColor: Colors.blue,
+                    title: Text(
+                      'Dark Mode',
+                      style: TextStyle(color: fgColor),
+                    ),
+                    subtitle: Text(
+                      'A display mode better suited for studying in dark environments.',
+                      style: TextStyle(color: fgColor),
+                    ),
+                    value: providerSettings.darkMode,
+                    onChanged: (val) {
+                      providerSettings.toggledarkMode();
+                    },
+                  ),
+                ),
+
+                SwitchListTile(
+                  activeColor: Colors.blue,
+                  title: Text(
+                    'Debug Mode',
+                    style: TextStyle(color: fgColor),
+                  ),
+                  subtitle: Text(
+                    'Display system properties',
+                    style: TextStyle(color: fgColor),
+                  ),
+                  value: providerSettings.debugMode,
+                  onChanged: (val) {
+                    providerSettings.toggleDebugMode();
+                  },
+                ),
+                // const SizedBox(height: 24),
+                // WideButton(
+                //   onTap: () {},
+                //   child: const Row(
+                //     // mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       SizedBox(width: 10),
+                //       Icon(Icons.arrow_forward_ios_sharp),
+                //       SizedBox(width: 10),
+                //       Text('About'),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
+          );
         },
       ),
     );
