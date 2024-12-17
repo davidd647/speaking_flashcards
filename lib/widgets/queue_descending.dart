@@ -71,12 +71,30 @@ class QuestionQueueDescending extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (!providerSettings.debugMode && question.level < 3)
+                  // if (!providerSettings.debugMode && question.spiritLevel > 0 && question.level == 0 )
+                  //   Container(
+                  //     width: 18,
+                  //     height: 18,
+                  //     padding: const EdgeInsets.all(2),
+                  //     child: WedgeWidget(percentage: 0.33, color: textColor),
+                  //   ),
+                  // if (!providerSettings.debugMode && question.spiritLevel > 0 && question.level  == 2)
+                  //   Container(
+                  //     width: 18,
+                  //     height: 18,
+                  //     padding: const EdgeInsets.all(2),
+                  //     child: WedgeWidget(percentage: question.level * 0.33, color: textColor),
+                  //   ),
+                  if (!providerSettings.debugMode && question.spiritLevel > 0 && question.level < 3)
                     Container(
                       width: 18,
                       height: 18,
                       padding: const EdgeInsets.all(2),
-                      child: WedgeWidget(percentage: question.level * 0.33, color: textColor),
+                      child: WedgeWidget(
+                        // if the spiritlevel is > 0, so even if "level" is 0 right now, we should show at least a small wedge...
+                        percentage: question.level == 0 ? 0.33 : question.level * 0.33,
+                        color: textColor,
+                      ),
                     ),
                   if (question.level >= 3)
                     SizedBox(
@@ -149,7 +167,7 @@ class WedgeWidget extends StatelessWidget {
   final double percentage; // The percentage of the circle to draw
   final Color color;
 
-  WedgeWidget({required this.percentage, required this.color});
+  const WedgeWidget({super.key, required this.percentage, required this.color});
 
   @override
   Widget build(BuildContext context) {
