@@ -8,7 +8,7 @@ class Recog {
   SpeechToText stt = SpeechToText();
   bool recogEnabled = false;
 
-  List<dynamic> locales = [];
+  List<LocaleName> locales = [];
   Function? _finalResCallback;
   Function? _intermittentResCallback;
 
@@ -80,7 +80,8 @@ class Recog {
 
   List<Lang> getLangs() {
     List<Lang> langs = [];
-    for (var locale in locales) {
+
+    for (LocaleName locale in locales) {
       langs.add(
         Lang(
           name: locale.name,
