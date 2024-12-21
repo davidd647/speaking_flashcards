@@ -1,4 +1,4 @@
-import 'dart:math';
+// import 'dart:math';
 import 'dart:ui' as ui;
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
@@ -194,8 +194,8 @@ class _StudySessionState extends State<StudySession> {
                       1,
                     ],
                     colors: [
-                      bgColor.withOpacity(1),
-                      bgColor.withOpacity(0),
+                      bgColor.withValues(alpha: 1),
+                      bgColor.withValues(alpha: 0),
                     ],
                   ),
                 ),
