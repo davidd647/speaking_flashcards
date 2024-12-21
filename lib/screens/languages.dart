@@ -65,6 +65,29 @@ class _LanguagesState extends State<Languages> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.red),
                 ),
+              if (providerSettings.debugMode)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Synth:'),
+                        ...providerSessionLogic.synthLangs.map((lang) => Text(lang.code)),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Recog:'),
+                        ...providerSessionLogic.recogLangs.map((lang) => Text(lang.code)),
+                      ],
+                    ),
+                  ],
+                ),
               if (providerSessionLogic.commonLangs.isNotEmpty)
                 Row(
                   children: [
