@@ -26,7 +26,7 @@ class StudySession extends StatefulWidget {
   State<StudySession> createState() => _StudySessionState();
 }
 
-class _StudySessionState extends State<StudySession> {
+class _StudySessionState extends State<StudySession> with WidgetsBindingObserver {
   late ProviderSessionLogic providerSessionLogic;
   late ProviderSettings providerSettings;
 
@@ -64,6 +64,9 @@ class _StudySessionState extends State<StudySession> {
   void initState() {
     super.initState();
 
+    // Register this State as a lifecycle observer
+    WidgetsBinding.instance.addObserver(this);
+
     providerSettings = Provider.of<ProviderSettings>(context, listen: false);
     providerSettings.init();
     providerSessionLogic = Provider.of<ProviderSessionLogic>(context, listen: false);
@@ -74,6 +77,18 @@ class _StudySessionState extends State<StudySession> {
       brightness = MediaQuery.of(context).platformBrightness;
       providerSettings.updateSystemDarkModeState(brightness == Brightness.dark);
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // check if it's a NEW DAY now...
+      providerSessionLogic.checkNewDaySequence();
+      // check if it's DARK or not...
+      brightness = MediaQuery.of(context).platformBrightness;
+      providerSettings.updateSystemDarkModeState(brightness == Brightness.dark);
+    }
   }
 
   @override
@@ -547,7 +562,7 @@ class _StudySessionState extends State<StudySession> {
                   child: Row(
                     children: [
                       FlagBox(
-                        flag: providerSessionLogic.qDisplayFlags,
+                        flag: providerSessionLogic.aDisplayFlags,
                         label: 'A',
                         textColor: fgColor,
                       ),
