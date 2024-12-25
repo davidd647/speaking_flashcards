@@ -123,6 +123,17 @@ class _QuestionLangsState extends State<QuestionLangs> {
     Color containerColor = Colors.grey.shade200;
     Color fgColor = Colors.black;
 
+    // check for selected lang to use in dropdown
+    // but do it up here so that we can also check if it's chinese... because Chinese codes are effed up.
+    var selectedLang = providerSessionLogic.commonLangs.firstWhere(
+        (lang) => lang.code == providerSessionLogic.selectedLangCombo.sqLang,
+        orElse: () => providerSessionLogic.commonLangs[0]);
+    if (providerSessionLogic.selectedLangCombo.sqLang == 'zh-CN' &&
+        providerSessionLogic.selectedLangCombo.rqLang == 'cmn_CN') {
+      selectedLang = providerSessionLogic.commonLangs
+          .firstWhere((lang) => lang.code == 'mnd-chn', orElse: () => providerSessionLogic.commonLangs[0]);
+    }
+
     if ((!providerSettings.darknessMatchesOS && providerSettings.darkMode) ||
         (providerSettings.darknessMatchesOS && providerSettings.systemIsInDarkMode)) {
       containerColor = Colors.grey.shade600;
@@ -136,9 +147,7 @@ class _QuestionLangsState extends State<QuestionLangs> {
         labelText: 'Question Language',
         labelStyle: TextStyle(color: fgColor),
       ),
-      value: providerSessionLogic.commonLangs.firstWhere(
-          (lang) => lang.code == providerSessionLogic.selectedLangCombo.sqLang,
-          orElse: () => providerSessionLogic.commonLangs[0]),
+      value: selectedLang,
       isExpanded: true,
       items: providerSessionLogic.commonLangs.map((Lang lang) {
         return DropdownMenuItem(
