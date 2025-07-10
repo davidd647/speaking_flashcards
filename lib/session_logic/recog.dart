@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -6,7 +8,6 @@ import 'package:speaking_flashcards/models/spoken_word.dart';
 
 class Recog {
   SpeechToText stt = SpeechToText();
-  bool recogEnabled = false;
 
   List<LocaleName> locales = [];
   Function? _finalResCallback;
@@ -14,9 +15,14 @@ class Recog {
 
   String status = '👍';
 
+  bool recogEnabled = false;
+
   Future<void> init(setIsRecoging) async {
     if (recogEnabled) return;
     recogEnabled = await stt.initialize(
+      options: [
+        if (Platform.isAndroid) SpeechToText.androidIntentLookup,
+      ],
       onStatus: (res) {
         if (res == 'listening') {
           setIsRecoging(true);
@@ -34,7 +40,21 @@ class Recog {
       debugLogging: true,
     );
 
-    locales = await stt.locales();
+    // print('recog init value has been captured: $recogEnabled');
+
+    // locales = await stt.locales();
+    // print('locales: $locales');
+
+    // print('Attempting to fetch locales...');
+    try {
+      locales = await stt.locales().timeout(const Duration(seconds: 5), onTimeout: () {
+        // print('Locales fetch timed out!');
+        return []; // Return empty list as fallback
+      });
+      // print('locales fetched successfully: $locales');
+    } catch (e) {
+      // print('Error fetching locales: $e');
+    }
   }
 
   void startListening({recogDuration, localeId, finalResCallback, intermittentResCallback}) async {
