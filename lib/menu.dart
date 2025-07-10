@@ -547,7 +547,7 @@ class _MenuContainerState extends State<MenuContainer> {
               const SizedBox(height: 50),
               const Center(
                 child: Text(
-                  'version: 1.1.17+51',
+                  'version: 1.2.1+52',
                   // make it white because the drawer is always a black or dark shade
                   style: TextStyle(color: Colors.white),
                 ),
