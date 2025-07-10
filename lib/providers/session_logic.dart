@@ -132,11 +132,15 @@ class ProviderSessionLogic with ChangeNotifier {
   }
 
   Future<void> initLangs() async {
+    // INIT SYNTH LANGS
     await synth.init(setIsSynthing);
-    await recog.init(setIsRecoging);
+    synthLangs = synth.getLangs(); //get synthLangs first because recog langs are more likely to mess up and
+    // this makes it clearer that recog langs messed up (because I can turn on debug mode
+    // and see that synth langs are available)
 
+    // INIT RECOG LANGS
+    await recog.init(setIsRecoging);
     recogLangs = recog.getLangs();
-    synthLangs = synth.getLangs();
 
     allLangs = await getUnifiedLangs(recogLangs, synthLangs);
 
@@ -372,8 +376,11 @@ class ProviderSessionLogic with ChangeNotifier {
       // update levels of all questions (lvl>0) in the currently visible questionsList...
       for (var x = 0; x < questionsList.length; x++) {
         if (questionsList[x].level > 0) questionsList[x].level--;
+
+        // putting 'notifyListeners()' inside this loop ensures that even the very last questionsList
+        // changes are reflected on screen... 🤞
+        notifyListeners();
       }
-      notifyListeners();
     } else {
       debugPrint('IS NOT A NEW DAY');
       if (todayChron != null) {
@@ -684,6 +691,8 @@ class ProviderSessionLogic with ChangeNotifier {
       );
       runCongratsAsap = false;
     }
+
+    answerController.text = '';
   }
 
   void queueGetHint() {
@@ -762,14 +771,21 @@ class ProviderSessionLogic with ChangeNotifier {
       );
 
       if (prevQuestion != null) {
-        grandChild = Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Question:\n${prevQuestion!.q}'),
-            Text('Guess:\n$prevGuess'),
-            Text('nAnswer:\n${prevQuestion!.a}'),
-          ],
+        grandChild = SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Question:'),
+              Text('${prevQuestion!.q}\n'),
+              const Text('Guess:', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
+              Text(prevGuess, style: const TextStyle(fontSize: 20)),
+              const Text('Answer:', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
+              Text(prevQuestion!.a, style: const TextStyle(fontSize: 20)),
+            ],
+          ),
         );
       }
 
@@ -783,7 +799,7 @@ class ProviderSessionLogic with ChangeNotifier {
         child: grandChild,
       );
 
-      _showToast!(child, 3);
+      _showToast!(child, 10);
     }
 
     notifyListeners();
@@ -940,6 +956,12 @@ class ProviderSessionLogic with ChangeNotifier {
       appendTask: SessionTask(taskName: TaskName.sfx, value: 'good', language: ''),
     );
 
+    if (taskDetails.taskName == TaskName.submitByText) {
+      sessionTaskDelegator(
+          appendTask: SessionTask(
+              taskName: TaskName.synth, value: prevQuestion!.a.split('/')[0], language: prevQuestion!.saLang));
+    }
+
     int previouslyDue = due;
 
     // update questions due:
@@ -993,10 +1015,10 @@ class ProviderSessionLogic with ChangeNotifier {
     List<String> splitAnswerTerms = getCurrentQuestion().a.toLowerCase().replaceAll('?', '').split('/');
 
     // remove each answer that has no content (because if there's a "" answer, it'll accept any answer at all!)
-    debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    debugPrint(
-        'remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
-    debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    // debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    // debugPrint(
+    //     'remove each answer that has no content (because if there\'s a "" answer, it\'ll accept any answer at all!)');
+    // debugPrint('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     // for each of the words spoken (or inputted)
     for (SpokenWord spokenWord in spokenWords) {
@@ -1456,6 +1478,26 @@ class ProviderSessionLogic with ChangeNotifier {
 
     if (assessAnswer(userInput)) {
       await userCorrect(taskDetails);
+      if (_showToast != null && prevQuestion != null) {
+        Widget child = Container(
+          constraints: const BoxConstraints(minHeight: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            color: Colors.greenAccent.withValues(alpha: 0.9),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('✔️', style: TextStyle(fontSize: 42)),
+              Text(prevQuestion!.a.split('/')[0]),
+            ],
+          ),
+        );
+
+        _showToast!(child, 3);
+      }
     } else {
       sessionTaskDelegator(
         appendTask: SessionTask(taskName: TaskName.sfx, value: 'bad', language: ''),
