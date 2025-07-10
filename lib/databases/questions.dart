@@ -13,7 +13,7 @@ class DbQuestions {
     final dbPath = await sql.getDatabasesPath();
 
     // ignore: avoid_print
-    print('dbPath: $dbPath');
+    // print('dbPath: $dbPath');
 
     return sql.openDatabase(path.join(dbPath, '$dbName.db'), version: 1, onCreate: (Database db, int version) async {
       // int id;
