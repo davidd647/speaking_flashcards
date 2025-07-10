@@ -56,6 +56,7 @@ class _StudySessionState extends State<StudySession> with WidgetsBindingObserver
       child: child,
       gravity: ToastGravity.CENTER,
       toastDuration: Duration(seconds: duration),
+      isDismissable: true,
     );
   }
 
@@ -576,6 +577,20 @@ class _StudySessionState extends State<StudySession> with WidgetsBindingObserver
                           alignment: Alignment.centerLeft,
                           child: TextFormField(
                             keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
+                            cursorColor: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
+
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
+                                    width: 2.0), // Bottom border when not focused
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
+                                    width: 2.0), // Bottom border when focused
+                              ),
+                            ),
                             controller: providerSessionLogic.answerController,
                             // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
                             onEditingComplete: () {},
