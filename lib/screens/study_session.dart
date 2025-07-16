@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:confetti/confetti.dart';
@@ -575,37 +576,50 @@ class _StudySessionState extends State<StudySession> with WidgetsBindingObserver
                           margin: const EdgeInsets.only(left: 0, right: 2),
                           padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
                           alignment: Alignment.centerLeft,
-                          child: TextFormField(
-                            keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
-                            cursorColor: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
-
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
-                                    width: 2.0), // Bottom border when not focused
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
-                                    width: 2.0), // Bottom border when focused
-                              ),
-                            ),
-                            controller: providerSessionLogic.answerController,
-                            // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
-                            onEditingComplete: () {},
-                            onFieldSubmitted: (res) {
-                              // print('res: $res');
-                              // don't do anything if user pressed 'submit' when the text field was empty:
-                              if (res == '') {
-                                FocusScope.of(context).unfocus();
-                                return;
-                              }
-
-                              // submit the typed answer:
-                              providerSessionLogic.queueSubmitTyped();
+                          child: CallbackShortcuts(
+                            bindings: <ShortcutActivator, VoidCallback>{
+                              const SingleActivator(LogicalKeyboardKey.keyJ, meta: true): () {
+                                providerSessionLogic.queueSynthQuestion();
+                              },
+                              const SingleActivator(LogicalKeyboardKey.keyK, meta: true): () {
+                                providerSessionLogic.queueSynthInput();
+                              },
+                              const SingleActivator(LogicalKeyboardKey.keyL, meta: true): () {
+                                providerSessionLogic.queueSubmitTyped();
+                              },
                             },
-                            style: TextStyle(fontSize: 15, color: fgColor),
+                            child: TextFormField(
+                              keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
+                              cursorColor: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
+
+                              decoration: InputDecoration(
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
+                                      width: 2.0), // Bottom border when not focused
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
+                                      width: 2.0), // Bottom border when focused
+                                ),
+                              ),
+                              controller: providerSessionLogic.answerController,
+                              // "onEditingComplete: () {}" keeps the user from automatically escaping keyboard on submit
+                              onEditingComplete: () {},
+                              onFieldSubmitted: (res) {
+                                // print('res: $res');
+                                // don't do anything if user pressed 'submit' when the text field was empty:
+                                if (res == '') {
+                                  FocusScope.of(context).unfocus();
+                                  return;
+                                }
+
+                                // submit the typed answer:
+                                providerSessionLogic.queueSubmitTyped();
+                              },
+                              style: TextStyle(fontSize: 15, color: fgColor),
+                            ),
                           ),
                         ),
                       ),
