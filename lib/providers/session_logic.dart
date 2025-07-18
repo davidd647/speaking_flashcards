@@ -783,7 +783,7 @@ class ProviderSessionLogic with ChangeNotifier {
               const Text('Guess:', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
               Text(prevGuess, style: const TextStyle(fontSize: 20)),
               const Text('Answer:', style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10)),
-              Text(prevQuestion!.a, style: const TextStyle(fontSize: 20)),
+              Text(prevQuestion!.a.split('/')[0], style: const TextStyle(fontSize: 20)),
             ],
           ),
         );
@@ -952,15 +952,34 @@ class ProviderSessionLogic with ChangeNotifier {
   Future<void> userCorrect(SessionTask taskDetails) async {
     await updateCorrectQuestionState();
 
+    if (_showToast != null && prevQuestion != null) {
+      Widget child = Container(
+        constraints: const BoxConstraints(minHeight: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Colors.greenAccent.withValues(alpha: 0.9),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('✔️', style: TextStyle(fontSize: 42)),
+            Text(prevQuestion!.a.split('/')[0]),
+          ],
+        ),
+      );
+
+      _showToast!(child, 3);
+    }
+
     sessionTaskDelegator(
       appendTask: SessionTask(taskName: TaskName.sfx, value: 'good', language: ''),
     );
 
-    if (taskDetails.taskName == TaskName.submitByText) {
-      sessionTaskDelegator(
-          appendTask: SessionTask(
-              taskName: TaskName.synth, value: prevQuestion!.a.split('/')[0], language: prevQuestion!.saLang));
-    }
+    sessionTaskDelegator(
+        appendTask: SessionTask(
+            taskName: TaskName.synth, value: prevQuestion!.a.split('/')[0], language: prevQuestion!.saLang));
 
     int previouslyDue = due;
 
@@ -1370,26 +1389,26 @@ class ProviderSessionLogic with ChangeNotifier {
 
         // IF VOICE SUBMISSION IS CORRECT:
         if (assessAnswer(collectedRes)) {
-          if (_showToast != null && prevQuestion != null) {
-            Widget child = Container(
-              constraints: const BoxConstraints(minHeight: 150),
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
-                color: Colors.greenAccent.withValues(alpha: 0.9),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('✔️'),
-                  Text(prevQuestion!.a),
-                ],
-              ),
-            );
+          // if (_showToast != null && prevQuestion != null) {
+          //   Widget child = Container(
+          //     constraints: const BoxConstraints(minHeight: 150),
+          //     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(25.0),
+          //       color: Colors.greenAccent.withValues(alpha: 0.9),
+          //     ),
+          //     child: Column(
+          //       mainAxisSize: MainAxisSize.min,
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         const Text('✔️'),
+          //         Text(prevQuestion!.a),
+          //       ],
+          //     ),
+          //   );
 
-            _showToast!(child, 3);
-          }
+          //   _showToast!(child, 3);
+          // }
 
           firstRecogGuessHintPlayed = false;
 
@@ -1478,26 +1497,6 @@ class ProviderSessionLogic with ChangeNotifier {
 
     if (assessAnswer(userInput)) {
       await userCorrect(taskDetails);
-      if (_showToast != null && prevQuestion != null) {
-        Widget child = Container(
-          constraints: const BoxConstraints(minHeight: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: Colors.greenAccent.withValues(alpha: 0.9),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('✔️', style: TextStyle(fontSize: 42)),
-              Text(prevQuestion!.a.split('/')[0]),
-            ],
-          ),
-        );
-
-        _showToast!(child, 3);
-      }
     } else {
       sessionTaskDelegator(
         appendTask: SessionTask(taskName: TaskName.sfx, value: 'bad', language: ''),
@@ -1508,7 +1507,9 @@ class ProviderSessionLogic with ChangeNotifier {
 
       // tell the user the answer
       Question currentQ = getCurrentQuestion();
-      showHintInfo();
+      // showHintInfo(); // this one doesn't show previous guess...
+      showPreviousGuessInfo(); // this one shows previous guess (so we can contrast with answer... good!)
+
       sessionTaskDelegator(
           appendTask: SessionTask(taskName: TaskName.synth, value: currentQ.a, language: currentQ.saLang));
 
@@ -1530,6 +1531,8 @@ class ProviderSessionLogic with ChangeNotifier {
         language: newQ.sqLang,
       ));
 
+      // print(
+      //     'this following conditional seems wrong... why trigger recog after submitByText? is it doing something else to hold things together maybe?');
       if (skipped && allowAutoRecog) {
         Question currentQ = getCurrentQuestion();
         sessionTaskDelegator(
