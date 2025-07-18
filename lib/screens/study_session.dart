@@ -12,6 +12,7 @@ import 'package:speaking_flashcards/providers/session_logic.dart';
 import 'package:speaking_flashcards/providers/settings.dart';
 import 'package:speaking_flashcards/models/chron.dart';
 import 'package:speaking_flashcards/helpers/code_to_flag.dart';
+import 'package:speaking_flashcards/helpers/shortcutkey_helper.dart';
 import 'package:speaking_flashcards/widgets/colored_inkwell_button.dart';
 import 'package:speaking_flashcards/widgets/colored_circular_inkwell_button.dart';
 import 'package:speaking_flashcards/widgets/flag_box.dart';
@@ -193,401 +194,413 @@ class _StudySessionState extends State<StudySession> with WidgetsBindingObserver
           final maxWidth = constraints.maxWidth;
           final maxHeight = constraints.maxHeight;
 
-          return Stack(children: [
-            // top
-            if (providerSettings.showQueue) QuestionQueueDescending(maxHeight: maxHeight, maxWidth: maxWidth),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: maxHeight * 0.6,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: const [
-                      0.42,
-                      1,
-                    ],
-                    colors: [
-                      bgColor.withValues(alpha: 1),
-                      bgColor.withValues(alpha: 0),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 10,
-              top: 50,
-              right: 100,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Text(
-                  //   // display time in the format ~m~~s (for brevity):
-                  //   providerSessionLogic.secondsPassed < 120
-                  //       ? 'Studied: ${providerSessionLogic.secondsPassed}s'
-                  //       : 'Studied: ${providerSessionLogic.secondsPassed ~/ 60}m${providerSessionLogic.secondsPassed % 60 < 10 ? '0' : ''}${providerSessionLogic.secondsPassed % 60}s ${providerSessionLogic.secondsPassed > 60 * 5 ? '⭐️' : ''}',
-                  //   style: TextStyle(
-                  //     fontSize: 12.0,
-                  //     color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
-                  //   ),
-                  // ),
-                  Text(
-                    'Studied: $studiedTime',
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
-                      // overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  // if (providerSessionLogic.dailyStreak != 0)
-                  Text(
-                    'Streak: ${providerSessionLogic.dailyStreak}  ${providerSessionLogic.todaysChrons.fold(0, (sum, chron) => sum + chron.timeStudied) > 60 * 5 ? '⭐️' : ''}',
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: providerSessionLogic.dailyStreak != 0 ? fgColor : Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Positioned(
-              right: 10,
-              top: 50,
-              child: Text(
-                'Today: ${providerSessionLogic.dueInitially - providerSessionLogic.due}/${providerSessionLogic.dueInitially}',
-                style: TextStyle(color: fgColor),
-              ),
-            ),
-            Positioned(
-              top: 75,
-              right: 10,
-              child: SizedBox(
-                width: 75,
-                height: 10,
-                child: LinearProgressIndicator(
-                  // if there's no questions due, DON'T divide by zero!
-                  // otherwise, measure progress by remaining over initially due:
-                  value: providerSessionLogic.dueInitially != 0
-                      ? ((providerSessionLogic.dueInitially - providerSessionLogic.due) /
-                          providerSessionLogic.dueInitially)
-                      : 1,
-                  backgroundColor: containerColor,
-                  color: fgColor,
-                ),
-              ),
-            ),
-            Positioned(
-              left: 10,
-              right: 10,
-              top: 100,
-              child: Row(
-                mainAxisAlignment: maxWidth > 1000 ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                    child: ColoredInkWellButton(
-                      color: providerSessionLogic.questionsList.isEmpty ? Colors.lightBlue[100] : containerColor,
-                      width: maxWidth / 4 - 12.5,
-                      height: maxWidth / 4 - 20,
-                      onTap: () {
-                        // open menu
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                      child: FittedBox(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 15),
-                            Icon(Icons.add,
-                                color: providerSessionLogic.questionsList.isEmpty
-                                    ? const Color.fromARGB(255, 44, 44, 44)
-                                    : fgColor),
-                            // Text('', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                            const SizedBox(height: 15),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (maxWidth > 1000) const SizedBox(width: 20),
-                  if (providerSessionLogic.questionsList.isNotEmpty)
-                    Container(
-                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                      child: ColoredInkWellButton(
-                        color: containerColor,
-                        width: maxWidth / 4 - 12.5,
-                        height: maxWidth / 4 - 20,
-                        onTap: () {
-                          providerSessionLogic.queueSynthQuestion();
-                        },
-                        child: FittedBox(
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            const SizedBox(height: 15),
-                            Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                            Text('Question',
-                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                            const SizedBox(height: 15),
-                          ]),
-                        ),
-                      ),
-                    ),
-                  if (maxWidth > 1000) const SizedBox(width: 20),
-                  if (providerSessionLogic.questionsList.isNotEmpty)
-                    Container(
-                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                      child: ColoredInkWellButton(
-                        color: containerColor,
-                        width: maxWidth / 4 - 12.5,
-                        height: maxWidth / 4 - 20,
-                        onTap: () {
-                          providerSessionLogic.queueSynthInput();
-                        },
-                        child: FittedBox(
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            const SizedBox(height: 15),
-                            Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                            Text('Input',
-                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                            const SizedBox(height: 15),
-                          ]),
-                        ),
-                        // child: const Icon(Icons.bar_chart_sharp),
-                      ),
-                    ),
-                  if (maxWidth > 1000) const SizedBox(width: 20),
-                  if (providerSessionLogic.questionsList.isNotEmpty &&
-                      providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
-                      providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel == 0)
-                    Container(
-                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                      child: ColoredInkWellButton(
-                        color: containerColor,
-                        width: maxWidth / 4 - 12.5,
-                        height: maxWidth / 4 - 20,
-                        onTap: () {
-                          providerSessionLogic.queueGetHint();
-                        },
-                        child: FittedBox(
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            const SizedBox(height: 15),
-                            Icon(Icons.question_mark, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                            Text('Hint',
-                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                            const SizedBox(height: 15),
-                          ]),
-                        ),
-                        // child: const Icon(Icons.bar_chart_sharp),
-                      ),
-                    ),
-                  if (providerSessionLogic.questionsList.isNotEmpty &&
-                      providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
-                      providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel != 0)
-                    Container(
-                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
-                      child: ColoredInkWellButton(
-                        color: containerColor,
-                        width: maxWidth / 4 - 12.5,
-                        height: maxWidth / 4 - 20,
-                        onTap: () {
-                          providerSessionLogic.firstRecogGuessHintPlayed = false;
-                          handleSkip();
-                        },
-                        child: FittedBox(
-                          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            const SizedBox(height: 15),
-                            Icon(Icons.skip_next, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
-                            Text('Skip',
-                                style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
-                            const SizedBox(height: 15),
-                          ]),
-                        ),
-                        // child: const Icon(Icons.bar_chart_sharp),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            if (providerSettings.debugMode)
+          return CallbackShortcuts(
+            bindings: <ShortcutActivator, VoidCallback>{
+              const PhysicalSingleActivator(PhysicalKeyboardKey.keyJ, meta: true): () {
+                providerSessionLogic.queueSynthQuestion();
+              },
+              const PhysicalSingleActivator(PhysicalKeyboardKey.keyK, meta: true): () {
+                providerSessionLogic.queueSynthInput();
+              },
+              const PhysicalSingleActivator(PhysicalKeyboardKey.keyL, meta: true): () {
+                if (providerSessionLogic.questionsList.isNotEmpty &&
+                    providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
+                    providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel == 0) {
+                  providerSessionLogic.queueGetHint();
+                }
+                if (providerSessionLogic.questionsList.isNotEmpty &&
+                    providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
+                    providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel != 0) {
+                  providerSessionLogic.queueSubmitTyped();
+                }
+              },
+              const PhysicalSingleActivator(PhysicalKeyboardKey.keyR, meta: true): () {
+                providerSessionLogic.queueRecog();
+              },
+            },
+            child: Stack(children: [
+              // top
+              if (providerSettings.showQueue) QuestionQueueDescending(maxHeight: maxHeight, maxWidth: maxWidth),
               Positioned(
-                top: 200,
-                left: 10,
-                right: 10,
-                child: Text(debuggingText, style: TextStyle(color: fgColor)),
-              ),
-            // middle
-
-            if (providerSessionLogic.questionsList.isEmpty)
-              Positioned(
-                left: (maxWidth / 2) - ((maxWidth / 4) / 2),
-                top: maxHeight / 2 - ((maxWidth / 4) / 2),
+                top: 0,
+                left: 0,
+                right: 0,
+                height: maxHeight * 0.6,
                 child: Container(
-                  width: maxWidth / 4,
-                  height: maxWidth / 4,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    '↖️\nAdd flashcards to start',
-                    style: TextStyle(
-                      color: Colors.red,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: const [
+                        0.42,
+                        1,
+                      ],
+                      colors: [
+                        bgColor.withValues(alpha: 1),
+                        bgColor.withValues(alpha: 0),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
-            if (providerSessionLogic.questionsList.isNotEmpty)
               Positioned(
-                left: (maxWidth / 2) - ((maxWidth / 4) / 2),
-                top: maxHeight / 2 - ((maxWidth / 4) / 2),
-                child: providerSessionLogic.allLangs.isNotEmpty
-                    ? ColoredCircularInkWell(
-                        width: maxWidth / 4,
-                        onTap: () {
-                          // stop focusing on the keyboard if the keyboard is focused:
-                          FocusScope.of(context).unfocus();
-
-                          if (providerSessionLogic.questionsList.isNotEmpty) {
-                            providerSessionLogic.queueRecog();
-                          }
-                        },
-                        // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
-                        color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
-                        child: Icon(
-                          Icons.mic,
-                          color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
-                        ),
-                      )
-                    : Container(
-                        width: maxWidth / 4,
-                        height: maxWidth / 4,
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'INITIALIZING LANGUAGES...\n\nThis may take 30 minutes...',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                left: 10,
+                top: 50,
+                right: 100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Text(
+                    //   // display time in the format ~m~~s (for brevity):
+                    //   providerSessionLogic.secondsPassed < 120
+                    //       ? 'Studied: ${providerSessionLogic.secondsPassed}s'
+                    //       : 'Studied: ${providerSessionLogic.secondsPassed ~/ 60}m${providerSessionLogic.secondsPassed % 60 < 10 ? '0' : ''}${providerSessionLogic.secondsPassed % 60}s ${providerSessionLogic.secondsPassed > 60 * 5 ? '⭐️' : ''}',
+                    //   style: TextStyle(
+                    //     fontSize: 12.0,
+                    //     color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
+                    //   ),
+                    // ),
+                    Text(
+                      'Studied: $studiedTime',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: providerSessionLogic.userIsActive ? fgColor : Colors.grey,
+                        // overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    // if (providerSessionLogic.dailyStreak != 0)
+                    Text(
+                      'Streak: ${providerSessionLogic.dailyStreak}  ${providerSessionLogic.todaysChrons.fold(0, (sum, chron) => sum + chron.timeStudied) > 60 * 5 ? '⭐️' : ''}',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: providerSessionLogic.dailyStreak != 0 ? fgColor : Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            if (providerSessionLogic.isRecoging)
-              Center(
+
+              Positioned(
+                right: 10,
+                top: 50,
+                child: Text(
+                  'Today: ${providerSessionLogic.dueInitially - providerSessionLogic.due}/${providerSessionLogic.dueInitially}',
+                  style: TextStyle(color: fgColor),
+                ),
+              ),
+              Positioned(
+                top: 75,
+                right: 10,
                 child: SizedBox(
-                  width: 124,
-                  height: 124,
-                  child: CustomCircularProgressIndicator(
-                    color1: bgColor,
-                    color2: Colors.greenAccent,
+                  width: 75,
+                  height: 10,
+                  child: LinearProgressIndicator(
+                    // if there's no questions due, DON'T divide by zero!
+                    // otherwise, measure progress by remaining over initially due:
+                    value: providerSessionLogic.dueInitially != 0
+                        ? ((providerSessionLogic.dueInitially - providerSessionLogic.due) /
+                            providerSessionLogic.dueInitially)
+                        : 1,
+                    backgroundColor: containerColor,
+                    color: fgColor,
                   ),
                 ),
               ),
-            // SizedBox(
-            //   width: fullWidth,
-            //   height: fullHeight,
-            //   child: Align(
-            //     alignment: Alignment.center,
-            //     child: ConfettiWidget(
-            //       emissionFrequency: 0.02,
-            //       gravity: 0.2,
-            //       numberOfParticles: providerSessionLogic.dailyStreak == 0
-            //           ? 1
-            //           : providerSessionLogic.dailyStreak < 20
-            //               ? providerSessionLogic.dailyStreak
-            //               : 20, // one star for each day of streak!
-            //       confettiController: providerSessionLogic.confettiControllerCenter,
-            //       blastDirectionality: BlastDirectionality.explosive, // don't specify a direction, blast randomly
-            //       shouldLoop: true, // start again as soon as the animation is finished
-            //       colors: const [
-            //         Colors.yellow,
-            //       ], // manually specify the colors to be used
-            //       createParticlePath: drawStar, // define a custom shape/path.
-            //     ),
-            //   ),
-            // ),
-            // middle (end)
-            if (providerSettings.debugMode)
               Positioned(
-                bottom: 150,
-                left: 10,
-                height: 100,
-                child: SingleChildScrollView(
-                  child: Text(taskHistoryText, style: TextStyle(color: fgColor)),
-                ),
-              ),
-            // bottom
-            if (providerSessionLogic.questionsList.isNotEmpty)
-              Positioned(
-                bottom: 42 + 35,
-                left: 10,
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 42),
-                  width: maxWidth - 20,
-                  color: containerColor,
-                  child: Row(
-                    children: [
-                      FlagBox(
-                        flag: providerSessionLogic.qDisplayFlags,
-                        label: 'Q',
-                        textColor: fgColor,
-                      ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        child: Text(
-                          // also need to check that there's a question with an order of zero:
-                          (providerSessionLogic.questionsList.firstWhereOrNull((q) {
-                                    return q.order == 0;
-                                  }) ==
-                                  null)
-                              ? '(No flashcards yet)'
-                              : providerSessionLogic.questionsList.firstWhere((q) {
-                                  return q.order == 0;
-                                }).q,
-                          style: TextStyle(fontSize: 15, color: fgColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            if (providerSessionLogic.questionsList.isNotEmpty)
-              Positioned(
-                bottom: 21,
                 left: 10,
                 right: 10,
-                child: Container(
-                  color: containerColor,
-                  child: Row(
-                    children: [
-                      FlagBox(
-                        flag: providerSessionLogic.aDisplayFlags,
-                        label: 'A',
-                        textColor: fgColor,
+                top: 100,
+                child: Row(
+                  mainAxisAlignment: maxWidth > 1000 ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                      child: ColoredInkWellButton(
+                        color: providerSessionLogic.questionsList.isEmpty ? Colors.lightBlue[100] : containerColor,
+                        width: maxWidth / 4 - 12.5,
+                        height: maxWidth / 4 - 20,
+                        onTap: () {
+                          // open menu
+                          Scaffold.of(context).openEndDrawer();
+                        },
+                        child: FittedBox(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 15),
+                              Icon(Icons.add,
+                                  color: providerSessionLogic.questionsList.isEmpty
+                                      ? const Color.fromARGB(255, 44, 44, 44)
+                                      : fgColor),
+                              // Text('', style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                              const SizedBox(height: 15),
+                            ],
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        fit: FlexFit.tight,
-                        child: Container(
-                          height: 42,
-                          margin: const EdgeInsets.only(left: 0, right: 2),
-                          padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
-                          alignment: Alignment.centerLeft,
-                          child: CallbackShortcuts(
-                            bindings: <ShortcutActivator, VoidCallback>{
-                              const SingleActivator(LogicalKeyboardKey.keyJ, meta: true): () {
-                                providerSessionLogic.queueSynthQuestion();
-                              },
-                              const SingleActivator(LogicalKeyboardKey.keyK, meta: true): () {
-                                providerSessionLogic.queueSynthInput();
-                              },
-                              const SingleActivator(LogicalKeyboardKey.keyL, meta: true): () {
-                                providerSessionLogic.queueSubmitTyped();
-                              },
-                            },
+                    ),
+                    if (maxWidth > 1000) const SizedBox(width: 20),
+                    if (providerSessionLogic.questionsList.isNotEmpty)
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                        child: ColoredInkWellButton(
+                          color: containerColor,
+                          width: maxWidth / 4 - 12.5,
+                          height: maxWidth / 4 - 20,
+                          onTap: () {
+                            providerSessionLogic.queueSynthQuestion();
+                          },
+                          child: FittedBox(
+                            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                              const SizedBox(height: 15),
+                              Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                              Text('Question',
+                                  style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                              const SizedBox(height: 15),
+                            ]),
+                          ),
+                        ),
+                      ),
+                    if (maxWidth > 1000) const SizedBox(width: 20),
+                    if (providerSessionLogic.questionsList.isNotEmpty)
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                        child: ColoredInkWellButton(
+                          color: containerColor,
+                          width: maxWidth / 4 - 12.5,
+                          height: maxWidth / 4 - 20,
+                          onTap: () {
+                            providerSessionLogic.queueSynthInput();
+                          },
+                          child: FittedBox(
+                            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                              const SizedBox(height: 15),
+                              Icon(Icons.play_arrow, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                              Text('Input',
+                                  style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                              const SizedBox(height: 15),
+                            ]),
+                          ),
+                          // child: const Icon(Icons.bar_chart_sharp),
+                        ),
+                      ),
+                    if (maxWidth > 1000) const SizedBox(width: 20),
+                    if (providerSessionLogic.questionsList.isNotEmpty &&
+                        providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
+                        providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel == 0)
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                        child: ColoredInkWellButton(
+                          color: containerColor,
+                          width: maxWidth / 4 - 12.5,
+                          height: maxWidth / 4 - 20,
+                          onTap: () {
+                            providerSessionLogic.queueGetHint();
+                          },
+                          child: FittedBox(
+                            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                              const SizedBox(height: 15),
+                              Icon(Icons.question_mark, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                              Text('Hint',
+                                  style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                              const SizedBox(height: 15),
+                            ]),
+                          ),
+                          // child: const Icon(Icons.bar_chart_sharp),
+                        ),
+                      ),
+                    if (providerSessionLogic.questionsList.isNotEmpty &&
+                        providerSessionLogic.currentQuestionIndex < providerSessionLogic.questionsList.length &&
+                        providerSessionLogic.questionsList[providerSessionLogic.currentQuestionIndex].spiritLevel != 0)
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 125, maxWidth: 125),
+                        child: ColoredInkWellButton(
+                          color: containerColor,
+                          width: maxWidth / 4 - 12.5,
+                          height: maxWidth / 4 - 20,
+                          onTap: () {
+                            providerSessionLogic.firstRecogGuessHintPlayed = false;
+                            handleSkip();
+                          },
+                          child: FittedBox(
+                            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                              const SizedBox(height: 15),
+                              Icon(Icons.skip_next, color: providerSessionLogic.isBusy ? disabledColor : fgColor),
+                              Text('Skip',
+                                  style: TextStyle(color: providerSessionLogic.isBusy ? disabledColor : fgColor)),
+                              const SizedBox(height: 15),
+                            ]),
+                          ),
+                          // child: const Icon(Icons.bar_chart_sharp),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (providerSettings.debugMode)
+                Positioned(
+                  top: 200,
+                  left: 10,
+                  right: 10,
+                  child: Text(debuggingText, style: TextStyle(color: fgColor)),
+                ),
+              // middle
+
+              if (providerSessionLogic.questionsList.isEmpty)
+                Positioned(
+                  left: (maxWidth / 2) - ((maxWidth / 4) / 2),
+                  top: maxHeight / 2 - ((maxWidth / 4) / 2),
+                  child: Container(
+                    width: maxWidth / 4,
+                    height: maxWidth / 4,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      '↖️\nAdd flashcards to start',
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              if (providerSessionLogic.questionsList.isNotEmpty)
+                Positioned(
+                  left: (maxWidth / 2) - ((maxWidth / 4) / 2),
+                  top: maxHeight / 2 - ((maxWidth / 4) / 2),
+                  child: providerSessionLogic.allLangs.isNotEmpty
+                      ? ColoredCircularInkWell(
+                          width: maxWidth / 4,
+                          onTap: () {
+                            // stop focusing on the keyboard if the keyboard is focused:
+                            FocusScope.of(context).unfocus();
+
+                            if (providerSessionLogic.questionsList.isNotEmpty) {
+                              providerSessionLogic.queueRecog();
+                            }
+                          },
+                          // primary: providerSessionLogic.questionsList.isEmpty ? true : false,
+                          color: providerSessionLogic.questionsList.isEmpty ? disabledColor : Colors.lightBlue[100],
+                          child: Icon(
+                            Icons.mic,
+                            color: providerSessionLogic.isBusy ? disabledColor : const Color.fromARGB(255, 44, 44, 44),
+                          ),
+                        )
+                      : Container(
+                          width: maxWidth / 4,
+                          height: maxWidth / 4,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'INITIALIZING LANGUAGES...\n\nThis may take 30 minutes...',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                ),
+              if (providerSessionLogic.isRecoging)
+                Center(
+                  child: SizedBox(
+                    width: 124,
+                    height: 124,
+                    child: CustomCircularProgressIndicator(
+                      color1: bgColor,
+                      color2: Colors.greenAccent,
+                    ),
+                  ),
+                ),
+              // SizedBox(
+              //   width: fullWidth,
+              //   height: fullHeight,
+              //   child: Align(
+              //     alignment: Alignment.center,
+              //     child: ConfettiWidget(
+              //       emissionFrequency: 0.02,
+              //       gravity: 0.2,
+              //       numberOfParticles: providerSessionLogic.dailyStreak == 0
+              //           ? 1
+              //           : providerSessionLogic.dailyStreak < 20
+              //               ? providerSessionLogic.dailyStreak
+              //               : 20, // one star for each day of streak!
+              //       confettiController: providerSessionLogic.confettiControllerCenter,
+              //       blastDirectionality: BlastDirectionality.explosive, // don't specify a direction, blast randomly
+              //       shouldLoop: true, // start again as soon as the animation is finished
+              //       colors: const [
+              //         Colors.yellow,
+              //       ], // manually specify the colors to be used
+              //       createParticlePath: drawStar, // define a custom shape/path.
+              //     ),
+              //   ),
+              // ),
+              // middle (end)
+              if (providerSettings.debugMode)
+                Positioned(
+                  bottom: 150,
+                  left: 10,
+                  height: 100,
+                  child: SingleChildScrollView(
+                    child: Text(taskHistoryText, style: TextStyle(color: fgColor)),
+                  ),
+                ),
+              // bottom
+              if (providerSessionLogic.questionsList.isNotEmpty)
+                Positioned(
+                  bottom: 42 + 35,
+                  left: 10,
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 42),
+                    width: maxWidth - 20,
+                    color: containerColor,
+                    child: Row(
+                      children: [
+                        FlagBox(
+                          flag: providerSessionLogic.qDisplayFlags,
+                          label: 'Q',
+                          textColor: fgColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: Text(
+                            // also need to check that there's a question with an order of zero:
+                            (providerSessionLogic.questionsList.firstWhereOrNull((q) {
+                                      return q.order == 0;
+                                    }) ==
+                                    null)
+                                ? '(No flashcards yet)'
+                                : providerSessionLogic.questionsList.firstWhere((q) {
+                                    return q.order == 0;
+                                  }).q,
+                            style: TextStyle(fontSize: 15, color: fgColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (providerSessionLogic.questionsList.isNotEmpty)
+                Positioned(
+                  bottom: 21,
+                  left: 10,
+                  right: 10,
+                  child: Container(
+                    color: containerColor,
+                    child: Row(
+                      children: [
+                        FlagBox(
+                          flag: providerSessionLogic.aDisplayFlags,
+                          label: 'A',
+                          textColor: fgColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: Container(
+                            height: 42,
+                            margin: const EdgeInsets.only(left: 0, right: 2),
+                            padding: const EdgeInsets.only(left: 0, right: 2, bottom: 3.0),
+                            alignment: Alignment.centerLeft,
                             child: TextFormField(
                               keyboardAppearance: showDarkKeyboard ? Brightness.dark : Brightness.light,
                               cursorColor: showDarkKeyboard ? Colors.grey.shade600 : Colors.grey.shade500,
@@ -622,71 +635,71 @@ class _StudySessionState extends State<StudySession> with WidgetsBindingObserver
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (providerSessionLogic.recogRes.length > 1)
+                Positioned(
+                  right: 12,
+                  bottom: 28,
+                  child: ColoredCircularInkWell(
+                    width: 38,
+                    color: Colors.grey.shade300,
+                    onTap: () {
+                      String allSpokenWords = '';
+                      for (var x = 0; x < providerSessionLogic.recogRes.length; x++) {
+                        allSpokenWords += '${providerSessionLogic.recogRes[x].words}\n';
+                      }
+
+                      showToast(
+                          Container(
+                            constraints: const BoxConstraints(minHeight: 150),
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.0),
+                              color: Colors.greenAccent,
+                            ),
+                            child: Text('Heard:\n$allSpokenWords'),
+                          ),
+                          5);
+                    },
+                    child: const Icon(Icons.more_vert),
+                  ),
+                ),
+
+              if (providerSessionLogic.recogStatus != '👍' &&
+                  !providerSessionLogic.recogStatus.contains('error_no_match') &&
+                  !providerSessionLogic.recogStatus.contains('error_retry') &&
+                  !providerSessionLogic.recogStatus.contains('error_speech_timeout')) // error_speech_timeout seems to
+                // be activated on Android every time you don't answer within the
+                // allotted time (at time of writing this, 5 seconds), and TBH showing the error is just irritating...
+                Positioned(
+                  left: 12,
+                  bottom: 125,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Recognition error\nYou may want to restart the app.',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                        // textAlign: TextAlign.center,
+                      ),
+                      SelectableText(
+                        providerSessionLogic.recogStatus,
+                        style: const TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                 ),
-              ),
-            if (providerSessionLogic.recogRes.length > 1)
-              Positioned(
-                right: 12,
-                bottom: 28,
-                child: ColoredCircularInkWell(
-                  width: 38,
-                  color: Colors.grey.shade300,
-                  onTap: () {
-                    String allSpokenWords = '';
-                    for (var x = 0; x < providerSessionLogic.recogRes.length; x++) {
-                      allSpokenWords += '${providerSessionLogic.recogRes[x].words}\n';
-                    }
-
-                    showToast(
-                        Container(
-                          constraints: const BoxConstraints(minHeight: 150),
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.0),
-                            color: Colors.greenAccent,
-                          ),
-                          child: Text('Heard:\n$allSpokenWords'),
-                        ),
-                        5);
-                  },
-                  child: const Icon(Icons.more_vert),
-                ),
-              ),
-
-            if (providerSessionLogic.recogStatus != '👍' &&
-                !providerSessionLogic.recogStatus.contains('error_no_match') &&
-                !providerSessionLogic.recogStatus.contains('error_retry') &&
-                !providerSessionLogic.recogStatus.contains('error_speech_timeout')) // error_speech_timeout seems to
-              // be activated on Android every time you don't answer within the
-              // allotted time (at time of writing this, 5 seconds), and TBH showing the error is just irritating...
-              Positioned(
-                left: 12,
-                bottom: 125,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Recognition error\nYou may want to restart the app.',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                      // textAlign: TextAlign.center,
-                    ),
-                    SelectableText(
-                      providerSessionLogic.recogStatus,
-                      style: const TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-          ]);
+            ]),
+          );
         },
       ),
     );
